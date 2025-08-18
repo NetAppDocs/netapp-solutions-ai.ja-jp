@@ -1,0 +1,70 @@
+---
+sidebar: sidebar 
+permalink: software/ai-osmlops-kubeflow-train.html 
+keywords: Jupyter Notebook, Kubeflow Pipeline, NetApp DataOps Toolkit, MNIST, Image Recognition 
+summary: NetAppを使用したオープンソース MLOps - ワークフロー例 - Kubeflow とNetApp DataOps Toolkit を使用して画像認識モデルをトレーニングする 
+---
+= ワークフロー例 - Kubeflow とNetApp DataOps Toolkit を使用して画像認識モデルをトレーニングする
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media/
+
+
+[role="lead"]
+このセクションでは、Kubeflow とNetApp DataOps Toolkit を使用して画像認識用のニューラル ネットワークをトレーニングおよび展開する手順について説明します。これは、 NetAppストレージを組み込んだトレーニング ジョブを示す例として提供することを目的としています。
+
+
+
+== 前提条件
+
+Kubeflow パイプライン内のトレーニングおよびテストのステップに使用するために必要な構成を含む Dockerfile を作成します。  Dockerfileの例は以下のとおりです。
+
+[source]
+----
+FROM pytorch/pytorch:latest
+RUN pip install torchvision numpy scikit-learn matplotlib tensorboard
+WORKDIR /app
+COPY . /app
+COPY train_mnist.py /app/train_mnist.py
+CMD ["python", "train_mnist.py"]
+----
+要件に応じて、プログラムの実行に必要なすべてのライブラリとパッケージをインストールします。機械学習モデルをトレーニングする前に、すでに機能している Kubeflow デプロイメントがあることを前提としています。
+
+
+
+== PyTorch と Kubeflow パイプラインを使用して MNIST データで小規模な NN をトレーニングする
+
+MNIST データでトレーニングされた小さなニューラル ネットワークの例を使用します。 MNIST データセットは、0 〜 9 の数字の手書き画像で構成されています。画像のサイズは 28x28 ピクセルです。データセットは、60,000 枚のトレーニング画像と 10,000 枚の検証画像に分かれています。この実験に使用されたニューラル ネットワークは 2 層のフィードフォワード ネットワークです。トレーニングは Kubeflow Pipelines を使用して実行されます。ドキュメントを参照してください https://www.kubeflow.org/docs/components/pipelines/v1/introduction/["ここをクリックしてください。"^]詳細についてはこちらをご覧ください。  Kubeflow パイプラインには、前提条件セクションの Docker イメージが組み込まれています。
+
+image:kubeflow-pipeline.png["Kubeflow パイプライン実行の可視化"]
+
+
+
+== Tensorboard を使用して結果を視覚化する
+
+モデルをトレーニングしたら、Tensorboard を使用して結果を視覚化できます。 https://www.tensorflow.org/tensorboard["テンソルボード"^] Kubeflow ダッシュボードの機能として利用できます。ジョブに合わせてカスタム テンソルボードを作成できます。以下の例は、トレーニング精度とエポック数、およびトレーニング損失とエポック数のプロットを示しています。
+
+image:tensorboard-graph.png["トレーニング損失と精度のTensorboardグラフ"]
+
+
+
+== Katib を使用したハイパーパラメータの実験
+
+https://www.kubeflow.org/docs/components/katib/hyperparameter/["カティブ"^]は、モデルのハイパーパラメータを試すために使用できる Kubeflow 内のツールです。実験を作成するには、まず目的の指標/目標を定義します。これは通常、テストの精度です。メトリックが定義されたら、試してみたいハイパーパラメータ (オプティマイザー/学習率/レイヤー数) を選択します。 Katib は、ユーザー定義の値を使用してハイパーパラメータ スイープを実行し、目的のメトリックを満たす最適なパラメータの組み合わせを見つけます。これらのパラメータは UI の各セクションで定義できます。あるいは、必要な仕様を記述した *YAML* ファイルを定義することもできます。以下はカティブ実験の図解です。
+
+image:katib-experiment-001.png["ハイパーパラメータ付きの Katib 実験ダッシュボード"]
+
+image:katib-experiment-002.png["トライアルチェック成功"]
+
+
+
+== NetAppスナップショットを使用して追跡可能なデータを保存する
+
+モデルのトレーニング中に、追跡可能性のためにトレーニング データセットのスナップショットを保存する場合があります。これを実行するには、以下に示すように、パイプラインにスナップショット ステップを追加します。スナップショットを作成するには、 https://github.com/NetApp/netapp-dataops-toolkit/tree/main/netapp_dataops_k8s["Kubernetes 用NetApp DataOps ツールキット"^] 。
+
+image:kubeflow-snapshot.png["Kubeflow でスナップショット パイプラインを構築するためのコード"]
+
+参照 https://github.com/NetApp/netapp-dataops-toolkit/tree/main/netapp_dataops_k8s/Examples/Kubeflow["Kubeflow 用のNetApp DataOps Toolkit の例"^]詳細についてはこちらをご覧ください。

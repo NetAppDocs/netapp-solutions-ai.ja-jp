@@ -1,0 +1,149 @@
+---
+sidebar: sidebar 
+permalink: infra/ai-eseries-superpod.html 
+keywords: netapp, aipod, nvidia, dgx superpod, ai solution, design 
+summary: このNetApp Verified Architecture では、 NetApp BeeGFS ビルディング ブロックを使用したNVIDIA DGX SuperPODの設計について説明します。このソリューションは、 NVIDIAの専用承認クラスターで検証されたフルスタック データセンター プラットフォームです。 
+---
+= NVIDIA DGX SuperPODとNetApp - 設計ガイド
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media/
+
+
+[role="lead"]
+このNetApp Verified Architecture では、 NetApp BeeGFS ビルディング ブロックを使用したNVIDIA DGX SuperPODの設計について説明します。このソリューションは、 NVIDIAの専用受け入れクラスターで検証されたフルスタック データセンター プラットフォームです。
+
+image:nvidialogo.png["200,200"]
+
+アミン・ベナニ、クリスチャン・ホワイトサイド、デビッド・アーネット、サティッシュ・ティヤガラジャン（NetApp）
+
+
+
+== エグゼクティブサマリー
+
+急速に進化する今日のテクノロジー環境において、AI は消費者体験に革命をもたらし、あらゆる業界でイノベーションを推進しています。しかし、これは、AI ワークロードの厳しい要求に対応できる高性能コンピューティング (HPC) ソリューションを導入するというプレッシャーにさらされている IT 部門にとっても大きな課題となります。組織が AI の力を活用するために競争するにつれて、導入、拡張、管理が容易なソリューションの必要性が高まっています。
+
+NVIDIA DGX SuperPODは、今日の企業が直面する最も複雑な AI ワークロードをサポートするために IT 向けのターンキー ソリューションとして提供される AI データ センター インフラストラクチャ プラットフォームです。あらゆる正確なディープラーニング (DL) モデルの中核は大量のデータであり、このデータを効率的に提供および再提供できる高スループットのストレージ ソリューションが必要です。  NetApp BeeGFS ソリューションは、BeeGFS 並列ファイルシステムを備えたNetApp EF600 ストレージ アレイで構成されており、 NVIDIA DGX SuperPOD の能力を最大限に発揮できるようにします。 NetApp BeeGFS ソリューションは、SuperPOD アーキテクチャとの統合および拡張がNVIDIAによって検証されています。その結果、AI データ センターの導入と管理が簡素化され、パフォーマンスと容量の拡張性がほぼ無制限に実現します。
+
+
+
+== ソリューションの概要
+
+NetApp BeeGFS ソリューションは、高性能なNetApp EF600 NVMe ストレージ システムとスケーラブルな BeeGFS 並列ファイル システムを搭載しており、要求の厳しい AI ワークロードに対応する堅牢で効率的なストレージ基盤を提供します。共有ディスク アーキテクチャにより、高い可用性が保証され、システム上の課題に直面しても一貫したパフォーマンスとアクセス性が維持されます。このソリューションは、多様なストレージ要件に合わせてカスタマイズできる、スケーラブルで柔軟なアーキテクチャを提供します。顧客は、追加のストレージ ビルディング ブロックを統合することで、ストレージのパフォーマンスと容量を簡単に拡張し、最も要求の厳しいワークロードにも対応できます。
+
+
+
+=== ソリューション技術
+
+* NVIDIA DGX SuperPOD は、検証済みの外部接続共有ストレージを備えた DGX H100 および H200 システムを活用します。
++
+** 各 DGX SuperPOD スケーラブル ユニット (SU) は 32 個の DGX システムで構成され、FP8 精度で 640 ペタフロップスの AI パフォーマンスを実現します。  NetApp、単一の DGX SuperPOD 構成に対して少なくとも 2 つのビルディング ブロックを使用してNetApp BeeGFS ストレージ ソリューションのサイズを設定することを推奨しています。
+
+
+
+
+_ソリューションの概要_
+
+image:ef-superpod-highlevel.png["NVIDIA DGX SuperPODを使用したNetApp BeeGFS ソリューションの概要を示す図。"]
+
+* NetApp BeeGFS の構成要素は、2 つのNetApp EF600 アレイと 2 つの x86 サーバーで構成されています。
++
+** NVIDIA DGX SuperPODの基盤にNetApp EF600 オールフラッシュ アレイを採用することで、お客様は 99.999% の稼働率を誇る信頼性の高いストレージ基盤を手に入れることができます。
+** NetApp EF600 とNVIDIA DGX システム間のファイル システム層は、BeeGFS 並列ファイル システムです。 BeeGFS は、従来の並列ファイルシステムの問題点を解決するために、ドイツの Fraunhofer 高性能コンピューティング センターによって作成されました。その結果、ThinkParQ によって開発および提供され、多くのスーパーコンピューティング環境で使用されている、最新のユーザー スペース アーキテクチャを備えたファイル システムが誕生しました。
+** NetAppの BeeGFS サポートは、NetApp の優れたサポート組織と、パフォーマンスと稼働時間に関する顧客の要件を一致させます。お客様は、優れたサポート リソース、BeeGFS リリースへの早期アクセス、クォータ強制や高可用性 (HA) などの一部の BeeGFS エンタープライズ機能にアクセスできます。
+
+
+* NVIDIA SuperPOD SU とNetApp BeeGFS ビルディング ブロックを組み合わせることで、コンピューティングやストレージを簡単かつシームレスに拡張できる俊敏な AI ソリューションが実現します。
+
+
+_NetApp BeeGFS ビルディングブロック_
+
+image:ef-superpod-buildingblock.png["単一のNetApp BeeGFS ビルディング ブロックを示す図。"]
+
+
+
+=== ユースケースの概要
+
+このソリューションは、次のユースケースに適用されます。
+
+* 機械学習 (ML)、ディープラーニング (DL)、自然言語処理 (NLP)、自然言語理解 (NLU)、生成 AI (GenAI) を含む人工知能 (AI)。
+* 中規模から大規模のAIトレーニング
+* コンピュータービジョン、音声、オーディオ、言語モデル
+* メッセージ パッシング インターフェース (MPI) やその他の分散コンピューティング技術によって加速されるアプリケーションを含む HPC
+* アプリケーション ワークロードの特徴は次のとおりです。
++
+** 1GBを超えるファイルの読み取りまたは書き込み
+** 複数のクライアント（数十、数百、数千）による同じファイルの読み取りまたは書き込み
+
+
+* マルチテラバイトまたはマルチペタバイトのデータセット
+* 大規模なファイルと小規模なファイルの混在に最適化できる単一のストレージ名前空間を必要とする環境
+
+
+
+
+== テクノロジ要件
+
+このセクションでは、 NetAppソリューションを使用したNVIDIA DGX SuperPODの技術要件について説明します。
+
+
+
+=== ハードウェア要件
+
+以下の表 1 に、単一の SU のソリューションを実装するために必要なハードウェア コンポーネントを示します。ソリューションのサイズは、32 台のNVIDIA DGX H100 システムと 2 台または 3 台のNetApp BeeGFS ビルディング ブロックから始まります。単一のNetApp BeeGFS ビルディング ブロックは、2 つのNetApp EF600 アレイと 2 つの x86 サーバーで構成されます。顧客は、展開サイズの拡大に応じて追加のビルディング ブロックを追加できます。詳細については、 https://docs.nvidia.com/dgx-superpod/reference-architecture-scalable-infrastructure-h100/latest/dgx-superpod-components.html["NVIDIA DGX H100 SuperPOD リファレンス アーキテクチャ"^]そして https://fieldportal.netapp.com/content/1792438["NVA-1164-DESIGN: NetApp NVA 設計上の BeeGFS"^]。
+
+|===
+| ハードウェア | 数量 
+
+
+| NVIDIA DGX H100 または H200 | 32 
+
+
+| NVIDIA Quantum QM9700スイッチ | 8枚の葉、4本の背骨 
+
+
+| NetApp BeeGFS の構成要素 | 3 
+|===
+
+
+=== ソフトウェア要件
+
+以下の表 2 に、ソリューションを実装するために必要なソフトウェア コンポーネントを示します。ソリューションの特定の実装で使用されるソフトウェア コンポーネントは、顧客の要件に応じて異なる場合があります。
+
+|===
+| ソフトウェア 
+
+
+| NVIDIA DGX ソフトウェア スタック 
+
+
+| NVIDIAベースコマンドマネージャー 
+
+
+| ThinkParQ BeeGFS 並列ファイルシステム 
+|===
+
+
+== ソリューション検証
+
+NetApp搭載NVIDIA DGX SuperPOD は、 NetApp BeeGFS ビルディング ブロックを使用してNVIDIAの専用承認クラスターで検証されました。受け入れ基準は、 NVIDIAが実行した一連のアプリケーション、パフォーマンス、ストレス テストに基づいています。詳細については、 https://nvidia-gpugenius.highspot.com/viewer/62915e2ef093f1a97b2d1fe6?iid=62913b14052a903cff46d054&source=email.62915e2ef093f1a97b2d1fe7.4["NVIDIA DGX SuperPOD: NetApp EF600 と BeeGFS リファレンス アーキテクチャ"^] 。
+
+
+
+== まとめ
+
+NetAppとNVIDIA は、AI ソリューションのポートフォリオを市場に提供するために長年にわたって協力してきました。 NetApp EF600 オールフラッシュ アレイを搭載したNVIDIA DGX SuperPOD は、顧客が安心して導入できる実証済みの検証済みソリューションです。この完全に統合されたターンキー アーキテクチャにより、導入のリスクがなくなり、誰もが AI リーダーシップの競争に勝つための道を歩むことができます。
+
+
+
+== 詳細情報の入手方法
+
+このドキュメントに記載されている情報の詳細については、次のドキュメントや Web サイトを参照してください。
+
+* link:https://docs.nvidia.com/dgx-superpod/reference-architecture-scalable-infrastructure-h100/latest/index.html#["NVIDIA DGX SuperPODリファレンス アーキテクチャ"]
+* link:https://docs.nvidia.com/nvidia-dgx-superpod-data-center-design-dgx-h100.pdf["NVIDIA DGX SuperPODデータセンター設計リファレンスガイド"]
+* link:https://nvidiagpugenius.highspot.com/viewer/62915e2ef093f1a97b2d1fe6?iid=62913b14052a903cff46d054&source=email.62915e2ef093f1a97b2d1fe7.4["NVIDIA DGX SuperPOD: NetApp EF600 と BeeGFS"]
+

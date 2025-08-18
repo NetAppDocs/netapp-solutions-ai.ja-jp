@@ -1,0 +1,64 @@
+---
+sidebar: sidebar 
+permalink: software/ai-osmlops-kubeflow-deploy.html 
+keywords: Kubeflow, Prerequisites, Kubernetes, cluster 
+summary: NetAppを使用したオープンソース MLOps - Kubeflow のデプロイメント 
+---
+= Kubeflow デプロイメント
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media/
+
+
+[role="lead"]
+このセクションでは、Kubernetes クラスターに Kubeflow をデプロイするために完了する必要があるタスクについて説明します。
+
+
+
+== 前提条件
+
+このセクションで説明する展開演習を実行する前に、次のタスクが既に実行されていることを前提としています。
+
+. すでに稼働中の Kubernetes クラスターがあり、デプロイする予定の Kubeflow バージョンでサポートされている Kubernetes のバージョンを実行しています。サポートされているKubernetesのバージョンのリストについては、Kubeflowバージョンの依存関係を参照してください。link:https://www.kubeflow.org/docs/releases/["Kubeflowの公式ドキュメント"^] 。
+. Kubernetes クラスターにNetApp Tridentがすでにインストールされ、構成されています。Tridentの詳細については、link:https://docs.netapp.com/us-en/trident/index.html["Tridentのドキュメント"] 。
+
+
+
+
+== デフォルトのKubernetesストレージクラスを設定する
+
+Kubeflow をデプロイする前に、Kubernetes クラスター内でデフォルトの StorageClass を指定することをお勧めします。 Kubeflow のデプロイメント プロセスでは、デフォルトの StorageClass を使用して新しい永続ボリュームのプロビジョニングが試行される場合があります。デフォルトの StorageClass として StorageClass が指定されていない場合、デプロイメントは失敗する可能性があります。クラスター内でデフォルトの StorageClass を指定するには、デプロイメント ジャンプ ホストから次のタスクを実行します。クラスター内でデフォルトの StorageClass をすでに指定している場合は、この手順をスキップできます。
+
+. 既存の StorageClass の 1 つをデフォルトの StorageClass として指定します。以下のコマンド例は、StorageClassの指定を示しています。 `ontap-ai-flexvols-retain`デフォルトの StorageClass として。
+
+
+
+NOTE: その `ontap-nas-flexgroup`Tridentバックエンド タイプは、最小 PVC サイズがかなり大きくなります。デフォルトでは、Kubeflow はサイズが数 GB しかない PVC をプロビジョニングしようとします。したがって、 `ontap-nas-flexgroup` Kubeflow デプロイメントの目的で、デフォルトの StorageClass としてバックエンド タイプを指定します。
+
+....
+$ kubectl get sc
+NAME                                PROVISIONER             AGE
+ontap-ai-flexgroups-retain          csi.trident.netapp.io   25h
+ontap-ai-flexgroups-retain-iface1   csi.trident.netapp.io   25h
+ontap-ai-flexgroups-retain-iface2   csi.trident.netapp.io   25h
+ontap-ai-flexvols-retain            csi.trident.netapp.io   3s
+$ kubectl patch storageclass ontap-ai-flexvols-retain -p '{"metadata": {"annotations":{"storageclass.kubernetes.io/is-default-class":"true"}}}'
+storageclass.storage.k8s.io/ontap-ai-flexvols-retain patched
+$ kubectl get sc
+NAME                                 PROVISIONER             AGE
+ontap-ai-flexgroups-retain           csi.trident.netapp.io   25h
+ontap-ai-flexgroups-retain-iface1    csi.trident.netapp.io   25h
+ontap-ai-flexgroups-retain-iface2    csi.trident.netapp.io   25h
+ontap-ai-flexvols-retain (default)   csi.trident.netapp.io   54s
+....
+
+
+== Kubeflow のデプロイメント オプション
+
+Kubeflow をデプロイするにはさまざまなオプションがあります。参照link:https://www.kubeflow.org/docs/started/installing-kubeflow/["Kubeflowの公式ドキュメント"]展開オプションのリストを確認し、ニーズに最適なオプションを選択してください。
+
+
+NOTE: 検証のために、Kubeflow 1.7をデプロイしました。link:https://www.deploykf.org["デプロイKF"] 0.1.1。

@@ -1,0 +1,17 @@
+---
+sidebar: sidebar 
+permalink: data-analytics/dremio-lakehouse-introduction.html 
+keywords: introduction, best practices, dremio, lakehouse 
+summary: このドキュメントでは、 NetAppストレージ コントローラで Dremio を使用するためのベスト プラクティス ガイドラインについて説明します。 
+---
+= NetAppとDremioの次世代ハイブリッドIceberg Lakehouseソリューション
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media/
+
+
+[role="lead"]
+このドキュメントでは、 ONTAP S3、NAS、 StorageGRIDなどのNetAppストレージ コントローラからのさまざまなデータ ソースを使用した Dremio の展開の詳細について説明します。展開中に、TPC-DS ベンチマーク ツールを使用して、さまざまなソースに対して 99 個の SQL クエリを実行しました。このドキュメントでは、 NetApp内の顧客ユースケースや、自動車部品販売の顧客に関連するユースケースについても説明します。

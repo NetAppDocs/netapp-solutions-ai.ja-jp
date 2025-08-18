@@ -1,0 +1,73 @@
+---
+sidebar: sidebar 
+permalink: software/ai-hybrid-ddlnexus-vols.html 
+keywords: NetApp AI, AI, Artificial Intelligence, ML, Machine Learning, NVIDIA, Hybrid, Hybrid Cloud, Hybrid Multicloud, Cloud, AWS, Amazon, Amazon Web Services, FSx ONTAP, FSx, NetApp ONTAP, FlexCache, SnapMirror, BlueXP 
+summary: Domino Data LabとNetAppによるハイブリッドマルチクラウドMLOps - 既存のNetAppボリュームをDominoに公開 
+---
+= 既存のNetAppボリュームをDominoに公開する
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media/
+
+
+[role="lead"]
+このセクションでは、既存のNetApp ONTAP NFS ボリュームを Domino MLOps プラットフォームに公開するために実行する必要があるタスクについて説明します。これらの同じ手順は、オンプレミスと AWS の両方に適用されます。
+
+
+
+== NetApp ONTAPボリュームを Domino に公開する理由は何ですか?
+
+NetAppボリュームを Domino と組み合わせて使用すると、次のような利点があります。
+
+* NetApp ONTAP のスケールアウト機能を活用することで、非常に大規模なデータセットに対してワークロードを実行できます。
+* データを個々のノードにコピーすることなく、複数のコンピューティング ノードにわたってワークロードを実行できます。
+* NetApp のハイブリッド マルチクラウド データ移動および同期機能を利用すると、複数のデータセンターやクラウドにわたってデータにアクセスできます。
+* 別のデータ センターまたはクラウドにデータのキャッシュをすばやく簡単に作成できるようにしたいと考えています。
+
+
+
+
+== Tridentによってプロビジョニングされていない既存の NFS ボリュームを公開する
+
+既存のNetApp ONTAP NFS ボリュームがTridentによってプロビジョニングされていない場合は、このサブセクションで説明する手順に従ってください。
+
+
+
+=== KubernetesでPVとPVCを作成する
+
+
+NOTE: オンプレミスのボリュームの場合は、オンプレミスの Kubernetes クラスターに PV と PVC を作成します。  Amazon FSx ONTAPボリュームの場合は、Amazon EKS で PV と PVC を作成します。
+
+まず、Kubernetes クラスターに永続ボリューム (PV) と永続ボリューム要求 (PVC) を作成する必要があります。 PVとPVCを作成するには、link:https://docs.dominodatalab.com/en/latest/admin_guide/4cdae9/set-up-kubernetes-pv-and-pvc/#_nfs_pvpvc_example["NFS PV/PVC の例"] Domino 管理ガイドから値を更新して、環境に反映させます。正しい値を指定してください。 `namespace` 、 `nfs.path` 、 そして `nfs.server`フィールド。さらに、対応するONTAP NFS ボリュームに保存されているデータの性質を表す一意の名前を付けることをお勧めします。たとえば、ボリュームに製造上の欠陥の画像が含まれている場合、PVに次のような名前を付けます。 `pv-mfg-defect-images` 、そしてPVC、 `pvc-mfg-defect-images` 。
+
+
+
+=== Domino に外部データボリュームを登録する
+
+次に、Domino に外部データ ボリュームを登録する必要があります。外部データボリュームを登録するには、link:https://docs.dominodatalab.com/en/latest/admin_guide/9c3564/register-external-data-volumes/["確認方法"] Domino 管理者ガイドを参照してください。ボリュームを登録するときは、「ボリューム タイプ」ドロップダウン メニューから必ず「NFS」を選択してください。  「NFS」を選択すると、「使用可能なボリューム」リストに PVC が表示されます。
+
+image:ddlnexus-003.png["入出力ダイアログまたは書かれたコンテンツを示す図"]
+
+
+
+== Tridentによってプロビジョニングされた既存のボリュームを公開する
+
+既存のボリュームがTridentによってプロビジョニングされた場合は、このサブセクションで概説されている手順に従ってください。
+
+
+
+=== 既存のPVCを編集する
+
+ボリュームがTridentによってプロビジョニングされている場合は、ボリュームに対応する永続ボリューム要求 (PVC) がすでに存在します。このボリュームをDominoに公開するには、PVCを編集し、次のラベルをラベルリストに追加する必要があります。 `metadata.labels`分野：
+
+....
+"dominodatalab.com/external-data-volume": "Generic"
+....
+
+
+=== Domino に外部データボリュームを登録する
+
+次に、Domino に外部データ ボリュームを登録する必要があります。外部データボリュームを登録するには、link:https://docs.dominodatalab.com/en/latest/admin_guide/9c3564/register-external-data-volumes/["確認方法"] Domino 管理者ガイドを参照してください。ボリュームを登録するときは、「ボリューム タイプ」ドロップダウン メニューから必ず「汎用」を選択してください。  「Generic」を選択すると、「使用可能なボリューム」リストに PVC が表示されます。

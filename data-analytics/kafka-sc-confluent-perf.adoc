@@ -1,0 +1,114 @@
+---
+sidebar: sidebar 
+permalink: data-analytics/kafka-sc-confluent-perf.html 
+keywords: setup, verification results, Object store, correctness test, Tiering functionality, Tier fetch benchmark, Produce-consume, workload generator, Retention 
+summary: このページでは、このソリューションのパラメータ内での Confluent のパフォーマンス検証について説明します。 
+---
+= Confluent パフォーマンス検証
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media/
+
+
+[role="lead"]
+NetApp ONTAP上の階層化ストレージについて、Confluent Platform を使用して検証を実施しました。  NetAppチームと Confluent チームは協力してこの検証に取り組み、必要なテスト ケースを実行しました。
+
+
+
+== 合流セットアップ
+
+セットアップには、3 つの動物園管理人、5 つのブローカー、および 256 GB の RAM と 16 個の CPU を備えた 5 つのテスト サーバーを使用しました。 NetAppストレージには、 AFF A900 HA ペアを備えたONTAP を使用しました。ストレージとブローカーは 100GbE 接続を介して接続されました。
+
+次の図は、階層型ストレージの検証に使用される構成のネットワーク トポロジを示しています。
+
+image:kafka-sc-007.png["この図は、階層型ストレージの検証に使用される構成のネットワーク トポロジを示しています。"]
+
+ツール サーバーは、Confluent ノードとの間でイベントを送受信するアプリケーション クライアントとして機能します。
+
+
+
+== Confluent階層型ストレージ構成
+
+次のテストパラメータを使用しました。
+
+....
+confluent.tier.fetcher.num.threads=80
+confluent.tier.archiver.num.threads=80
+confluent.tier.enable=true
+confluent.tier.feature=true
+confluent.tier.backend=S3
+confluent.tier.s3.bucket=kafkabucket1-1
+confluent.tier.s3.region=us-east-1
+confluent.tier.s3.cred.file.path=/data/kafka/.ssh/credentials
+confluent.tier.s3.aws.endpoint.override=http://wle-mendocino-07-08/
+confluent.tier.s3.force.path.style.access=true
+bootstrap.server=192.168.150.172:9092,192.168.150.120:9092,192.168.150.164:9092,192.168.150.198:9092,192.168.150.109:9092,192.168.150.165:9092,192.168.150.119:9092,192.168.150.133:9092
+debug=true
+jmx.port=7203
+num.partitions=80
+num.records=200000000
+#object PUT size - 512MB and fetch 100MB – netapp
+segment.bytes=536870912
+max.partition.fetch.bytes=1048576000
+#GET size is max.partition.fetch.bytes/num.partitions
+length.key.value=2048
+trogdor.agent.nodes=node0,node1,node2,node3,node4
+trogdor.coordinator.hostname.port=192.168.150.155:8889
+num.producers=20
+num.head.consumers=20
+num.tail.consumers=1
+test.binary.task.max.heap.size=32G
+test.binary.task.timeout.sec=3600
+producer.timeout.sec=3600
+consumer.timeout.sec=3600
+....
+検証には、HTTP プロトコルを使用したONTAPを使用しましたが、HTTPS も機能しました。アクセスキーと秘密鍵は、 `confluent.tier.s3.cred.file.path`パラメータ。
+
+
+
+== NetAppストレージ コントローラ – ONTAP
+
+検証のために、 ONTAPで単一の HA ペア構成を構成しました。
+
+image:kafka-sc-008.png["この図は、検証のために環境が単一の HA ペアとしてどのように構成されたかを示しています。"]
+
+
+
+== 検証結果
+
+検証のために以下の 5 つのテストケースを完了しました。最初の 2 つは機能テストであり、残りの 3 つはパフォーマンス テストでした。
+
+
+
+=== オブジェクトストアの正確性テスト
+
+このテストでは、API 呼び出しを使用して、階層化ストレージに使用されるオブジェクト ストアに対して get、put、delete などの基本操作を実行します。
+
+
+
+=== 階層化機能の正確性テスト
+
+このテストでは、オブジェクト ストレージのエンドツーエンドの機能をチェックします。トピックを作成し、新しく作成されたトピックへのイベント ストリームを生成し、ブローカーがセグメントをオブジェクト ストレージにアーカイブするのを待機し、イベント ストリームを消費し、消費されたストリームが生成されたストリームと一致することを検証します。このテストは、オブジェクト ストア障害注入ありとなしの状態で実行しました。  ONTAPのノードの 1 つでサービス マネージャ サービスを停止し、エンドツーエンドの機能がオブジェクト ストレージで動作することを検証することで、ノード障害をシミュレートしました。
+
+
+
+=== 階層フェッチベンチマーク
+
+このテストでは、階層化オブジェクト ストレージの読み取りパフォーマンスを検証し、ベンチマークによって生成されたセグメントからの高負荷状態での範囲フェッチ読み取り要求をチェックしました。このベンチマークでは、Confluent は階層フェッチ要求に対応するカスタム クライアントを開発しました。
+
+
+
+=== 生産・消費ワークロードジェネレータ
+
+このテストは、セグメントのアーカイブを通じてオブジェクト ストアへの書き込みワークロードを間接的に生成します。読み取りワークロード (読み取られたセグメント) は、コンシューマー グループがセグメントを取得したときにオブジェクト ストレージから生成されました。このワークロードは TOCC スクリプトによって生成されました。このテストでは、並列スレッドでのオブジェクト ストレージの読み取りと書き込みのパフォーマンスをチェックしました。階層化機能の正確性テストと同様に、オブジェクト ストア障害注入の有無でテストを行いました。
+
+
+
+=== 保持ワークロードジェネレータ
+
+このテストでは、トピック保持のワークロードが大きい場合のオブジェクト ストレージの削除パフォーマンスをチェックしました。保持ワークロードは、テスト トピックと並行して多数のメッセージを生成する TOCC スクリプトを使用して生成されました。テスト トピックでは、サイズ ベースおよび時間ベースの積極的な保持設定が構成されていたため、イベント ストリームがオブジェクト ストアから継続的に消去されていました。その後、セグメントはアーカイブされました。これにより、ブローカーによるオブジェクト ストレージ内の多数の削除と、オブジェクト ストア削除操作のパフォーマンスの収集が行われました。
+
+検証の詳細については、 https://docs.confluent.io/platform/current/kafka/tiered-storage.html["合流"^] Webサイト。

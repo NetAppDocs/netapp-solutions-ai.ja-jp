@@ -1,0 +1,17 @@
+---
+sidebar: sidebar 
+permalink: data-analytics/bda-ai-abstract.html 
+keywords:  
+summary:  
+---
+= 概要
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media/
+
+
+[role="lead"]
+このドキュメントでは、ビッグデータ分析および高性能コンピューティング (HPC) システムからデータを移動して、人工知能 (AI) ワークフローで使用できるようにする方法について説明します。 AI は通常、NFS エクスポートを通じて NFS データを処理します。ただし、AI データはビッグ データ分析および高性能コンピューティング (HPC) プラットフォームに保存されている可能性があります。これは、Hadoop 分散ファイル システム (HDFS)、バイナリ ラージ オブジェクト (Blob)、S3 ストレージ、または IBM の General Parallel File System (GPFS) のいずれかになります。このドキュメントでは、Hadoop ネイティブ コマンド、 NetApp In-Place Analytics Module (NIPAM)、およびNetApp XCP を使用して、ビッグ データ分析プラットフォームと GPFS から NFS にデータを移動する方法について説明します。このドキュメントでは、ビッグデータや HPC から AI にデータを移行することによるビジネス上のメリットについても説明します。

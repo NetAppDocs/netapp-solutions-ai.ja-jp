@@ -1,0 +1,23 @@
+---
+sidebar: sidebar 
+permalink: videos/ai-ml-videos.html 
+keywords: video, demonstration, deployment 
+summary:  
+---
+= NetAppのAIソリューションに関するビデオを見る
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media/
+
+
+[role="lead"]
+NetApp がAI と機械学習の取り組みをどのように強化しているかをご覧ください。これらの厳選されたビデオ プレイリストでは、 NetApp AI ソリューションと MLOps ワークフローを紹介し、高度な分析のための導入戦略、自動化、データ管理に焦点を当てています。
+
+.NetApp AIソリューション
+AI インフラストラクチャ、統合システム、エンタープライズ AI の展開を網羅した包括的なビデオ プレイリスト。link:https://www.youtube.com/playlist?list=PLdXI3bZJEw7nSrRhuolRPYqvSlGLuTOAO["NetApp AIソリューションのプレイリストを見る"^]
+
+.機械学習運用（MLOps）
+MLOps ワークフロー、データ パイプライン、運用のベスト プラクティスに関するビデオ シリーズ。link:https://www.youtube.com/playlist?list=PLdXI3bZJEw7n1sWK-QGq4QMI1VBJS-ZZW["MLOps プレイリストを見る"^]

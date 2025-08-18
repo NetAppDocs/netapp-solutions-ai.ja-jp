@@ -1,0 +1,19 @@
+---
+sidebar: sidebar 
+permalink: data-analytics/kafka-nfs-conclusion.html 
+keywords: conclusion 
+summary: 厄介な名前変更問題に対するNetAppソリューションは、これまで NFS と互換性がなかったワークロードに対して、シンプルで安価な集中管理型のストレージ形式を提供します。 
+---
+= まとめ
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media/
+
+
+[role="lead"]
+厄介な名前変更問題に対するNetAppソリューションは、これまで NFS と互換性がなかったワークロードに対して、シンプルで安価な集中管理型のストレージ形式を提供します。
+
+この新しいパラダイムにより、顧客は災害復旧やデータ保護の目的で移行やミラーリングが容易な、管理しやすい Kafka クラスターを作成できるようになります。また、NFS には、CPU 使用率の低減、リカバリ時間の短縮、ストレージ効率の大幅な向上、 NetApp ONTAPによるパフォーマンスの向上など、さらなるメリットがあることもわかりました。

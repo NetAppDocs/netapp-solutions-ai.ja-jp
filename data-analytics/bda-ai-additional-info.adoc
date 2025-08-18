@@ -1,0 +1,27 @@
+---
+sidebar: sidebar 
+permalink: data-analytics/bda-ai-additional-info.html 
+keywords: additional information 
+summary:  
+---
+= 詳細情報の入手方法
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media/
+
+
+[role="lead"]
+このドキュメントに記載されている情報の詳細については、次のドキュメントや Web サイトを参照してください。
+
+* NetApp FlexGroupボリュームのベストプラクティスと実装ガイド
++
+https://www.netapp.com/pdf.html?item=/media/12385-tr4571pdf.pdf[]
+
+* NetApp製品ドキュメント
++
+https://www.netapp.com/us/documentation/index.aspx[]
+
+

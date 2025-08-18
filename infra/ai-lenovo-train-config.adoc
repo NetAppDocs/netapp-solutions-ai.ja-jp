@@ -1,0 +1,71 @@
+---
+sidebar: sidebar 
+permalink: infra/ai-lenovo-train-config.html 
+keywords: solution architecture, storage controller 
+summary: このセクションでは、テストされた構成、ネットワーク インフラストラクチャ、SR670 V2 サーバー、およびストレージ プロビジョニングの詳細について説明します。 
+---
+= テスト構成
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media/
+
+
+[role="lead"]
+このセクションでは、テストされた構成、ネットワーク インフラストラクチャ、SR670 V2 サーバー、およびNetAppストレージ プロビジョニングの詳細について説明します。
+
+
+
+== ソリューションアーキテクチャ
+
+この検証には、次の表に示すソリューション コンポーネントを使用しました。
+
+|===
+| ソリューションコンポーネント | 詳細 
+
+
+| Lenovo ThinkSystem サーバー  a| 
+* 2台のSR670 V2サーバー（各サーバーにNVIDIA A100 80GB GPUカード8枚搭載）
+* 各サーバーには、2つのIntel Xeon Platinum 8360Y CPU（28個の物理コア）と1TBのRAMが搭載されています。
+
+
+
+
+| Linux（Ubuntu – 20.04、CUDA 11.8） |  
+
+
+| NetApp AFFストレージシステム（HAペア）  a| 
+* NetApp ONTAP 9.10.1 ソフトウェア
+* 24x 960GB SSD
+* NFSプロトコル
+* コントローラごとに 1 つのインターフェース グループ (ifgrp)、マウント ポイント用の 4 つの論理 IP アドレス
+
+
+|===
+この検証では、MLPerf v2.0 で指定された ImageNet 基底セットを備えた ResNet v2.0 を使用しました。データセットは、NFS プロトコルを使用してNetApp AFFストレージ システムに保存されます。  SR670 は、100GbE スイッチを介してNetApp AFF A400ストレージ システムに接続されていました。
+
+ImageNet は頻繁に使用される画像データセットです。約 130 万枚の画像が含まれており、合計サイズは 144 GB になります。平均画像サイズは108KBです。
+
+次の図は、テストされた構成のネットワーク トポロジを示しています。
+
+image:a400-thinksystem-007.png["この図は、コンピューティング層 (Lenovo ThinkSystem SR670 V2)、ネットワーク層 (Lenovo Ethernet スイッチ)、およびストレージ層 ( NetApp AFF A400ストレージ コントローラ) を示しています。すべてのネットワーク接続が含まれています。"]
+
+
+
+== ストレージ コントローラ
+
+次の表にストレージ構成を示します。
+
+|===
+| コントローラ | Aggregate | FlexGroupボリューム | 総量 | ボリューム サイズ | オペレーティング システムのマウント ポイント 
+
+
+| コントローラ1 | 攻撃1 | /a400-100g | 9.9 TB | 19 TB | /a400-100g 
+
+
+| コントローラー2 | 攻撃2 | /a400-100g | 9.9 TB |  | /a400-100g 
+|===
+
+NOTE: /a400-100g フォルダーには、ResNet 検証に使用されるデータセットが含まれています。

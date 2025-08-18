@@ -1,0 +1,19 @@
+---
+sidebar: sidebar 
+permalink: infra/ai-lenovo-train-plan.html 
+keywords: test plan, validation, image recognition training, processes 
+summary: 今回の検証では、MLPerf v2.0 の仕様に従って画像認識トレーニングを実行しました。具体的には、ImageNet データセットを使用して ResNet v2.0 モデルをトレーニングしました。主な指標は、望ましい精度に到達するまでの時間です。スケールアウトの効率をより適切に判断できるように、トレーニング帯域幅を 1 秒あたりの画像数で報告します。 
+---
+= テスト計画
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media/
+
+
+[role="lead"]
+今回の検証では、MLPerf v2.0 の仕様に従って画像認識トレーニングを実行しました。具体的には、ImageNet データセットを使用して ResNet v2.0 モデルをトレーニングし、精度が 76.1% に達するまでトレーニングしました。主な指標は、望ましい精度に到達するまでの時間です。スケールアウトの効率をより適切に判断できるように、トレーニング帯域幅を 1 秒あたりの画像数で報告します。
+
+主なテスト ケースでは、同時に実行される複数の独立したトレーニング プロセス (ノードごとに 1 つ) を評価しました。これは、複数のデータ サイエンティストが使用する共有システムという主なユース ケースをシミュレートします。  2 番目のテスト ケースでは、スケールアウトの効率を評価しました。

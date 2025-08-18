@@ -1,0 +1,49 @@
+---
+sidebar: sidebar 
+permalink: data-analytics/kafka-sc-conclusion.html 
+keywords: conclusion, where to find additional information 
+summary: この検証テストでは、 NetApp ONTAPストレージ コントローラを搭載した Confluent で 31.74 GBps の階層化スループットを達成しました。 
+---
+= まとめ
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media/
+
+
+[role="lead"]
+この検証テストでは、 NetApp ONTAPストレージ コントローラを搭載した Confluent で 31.74 GBps の階層化スループットを達成しました。
+
+
+
+== 詳細情報の入手方法
+
+このドキュメントに記載されている情報の詳細については、次のドキュメントや Web サイトを参照してください。
+
+* Confluent とは何ですか?
++
+https://www.confluent.io/apache-kafka-vs-confluent/["https://www.confluent.io/apache-kafka-vs-confluent/"^]
+
+* S3シンクパラメータの詳細
++
+https://docs.confluent.io/kafka-connect-s3-sink/current/configuration_options.html["https://docs.confluent.io/kafka-connect-s3-sink/current/configuration_options.html#s3-configuration-options"^]
+
+* Apache Kafka
++
+https://en.wikipedia.org/wiki/Apache_Kafka["https://en.wikipedia.org/wiki/Apache_Kafka"^]
+
+* ONTAPのベストプラクティスにおける S3
++
+https://www.netapp.com/pdf.html?item=/media/17219-tr4814.pdf["https://www.netapp.com/pdf.html?item=/media/17219-tr4814.pdf"^]
+
+* S3 オブジェクトストレージ管理
++
+https://docs.netapp.com/us-en/ontap/s3-config/s3-support-concept.html["https://docs.netapp.com/us-en/ontap/s3-config/s3-support-concept.html"^]
+
+* NetApp製品ドキュメント
++
+https://www.netapp.com/support-and-training/documentation/["https://www.netapp.com/support-and-training/documentation/"^]
+
+

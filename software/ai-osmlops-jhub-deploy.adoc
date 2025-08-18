@@ -1,0 +1,154 @@
+---
+sidebar: sidebar 
+permalink: software/ai-osmlops-jhub-deploy.html 
+keywords: AI, control plane, MLOps, JupyterHub 
+summary: NetAppを使用したオープンソース MLOps - JupyterHub の導入 
+---
+= JupyterHub デプロイメント
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media/
+
+
+[role="lead"]
+このセクションでは、Kubernetes クラスターに JupyterHub をデプロイするために完了する必要があるタスクについて説明します。
+
+
+NOTE: JupyterHub は Kubernetes 以外のプラットフォームにもデプロイできます。  Kubernetes 以外のプラットフォームに JupyterHub をデプロイすることは、このソリューションの範囲外です。
+
+
+
+== 前提条件
+
+このセクションで説明する展開演習を実行する前に、次のタスクが既に実行されていることを前提としています。
+
+. すでに動作中の Kubernetes クラスターがあります。
+. Kubernetes クラスターにNetApp Tridentがすでにインストールされ、構成されています。Tridentの詳細については、link:https://docs.netapp.com/us-en/trident/index.html["Tridentのドキュメント"^] 。
+
+
+
+
+== Helmをインストールする
+
+JupyterHub は、Kubernetes の一般的なパッケージ マネージャーである Helm を使用してデプロイされます。  JupyterHub をデプロイする前に、Kubernetes コントロール ノードに Helm をインストールする必要があります。  Helmをインストールするには、 https://helm.sh/docs/intro/install/["インストール手順"^]公式 Helm ドキュメントに記載されています。
+
+
+
+== デフォルトのKubernetesストレージクラスを設定する
+
+JupyterHub をデプロイする前に、Kubernetes クラスター内でデフォルトの StorageClass を指定する必要があります。クラスター内でデフォルトのストレージクラスを指定するには、link:ai-osmlops-kubeflow-deploy.html["Kubeflow デプロイメント"]セクション。クラスター内でデフォルトの StorageClass をすでに指定している場合は、この手順をスキップできます。
+
+
+
+== JupyterHubをデプロイする
+
+上記の手順を完了すると、JupyterHub をデプロイする準備が整います。  JupyterHub のデプロイメントには次の手順が必要です。
+
+
+
+=== JupyterHub デプロイメントを構成する
+
+デプロイメントの前に、それぞれの環境に合わせて JupyterHub デプロイメントを最適化することをお勧めします。  *config.yaml* ファイルを作成し、Helm チャートを使用してデプロイ中にそれを利用できます。
+
+*config.yaml* ファイルの例は次の場所にあります。 https://github.com/jupyterhub/zero-to-jupyterhub-k8s/blob/HEAD/jupyterhub/values.yaml[]
+
+
+NOTE: この config.yaml ファイルでは、 NetApp Trident StorageClass の *(singleuser.storage.dynamic.storageClass)* パラメータを設定できます。これは、個々のユーザー ワークスペースのボリュームをプロビジョニングするために使用されるストレージ クラスです。
+
+
+
+=== 共有ボリュームの追加
+
+すべての JupyterHub ユーザーに共有ボリュームを使用する場合は、それに応じて *config.yaml* を調整できます。たとえば、jupyterhub-shared-volume という共有 PersistentVolumeClaim がある場合、次のようにすべてのユーザー ポッドで /home/shared としてマウントできます。
+
+[source, shell]
+----
+singleuser:
+  storage:
+    extraVolumes:
+      - name: jupyterhub-shared
+        persistentVolumeClaim:
+          claimName: jupyterhub-shared-volume
+    extraVolumeMounts:
+      - name: jupyterhub-shared
+        mountPath: /home/shared
+----
+
+NOTE: これはオプションの手順であり、これらのパラメータは必要に応じて調整できます。
+
+
+
+=== Helm ChartでJupyterHubをデプロイする
+
+Helm に JupyterHub Helm チャート リポジトリを認識させます。
+
+[source, shell]
+----
+helm repo add jupyterhub https://hub.jupyter.org/helm-chart/
+helm repo update
+----
+次のような出力が表示されます。
+
+[source, shell]
+----
+Hang tight while we grab the latest from your chart repositories...
+...Skip local chart repository
+...Successfully got an update from the "stable" chart repository
+...Successfully got an update from the "jupyterhub" chart repository
+Update Complete. ⎈ Happy Helming!⎈
+----
+次に、config.yaml が含まれているディレクトリから次のコマンドを実行して、config.yaml で構成されたチャートをインストールします。
+
+[source, shell]
+----
+helm upgrade --cleanup-on-fail \
+  --install my-jupyterhub jupyterhub/jupyterhub \
+  --namespace my-namespace \
+  --create-namespace \
+  --values config.yaml
+----
+
+NOTE: この例では、
+
+<helm-release-name> は my-jupyterhub に設定されており、これが JupyterHub リリースの名前になります。  <k8s-namespace> は、JupyterHub をインストールする名前空間である my-namespace に設定されています。  --create-namespace フラグは、名前空間がまだ存在しない場合に名前空間を作成するために使用されます。  --values フラグは、必要な構成オプションを含む config.yaml ファイルを指定します。
+
+
+
+=== デプロイメントの確認
+
+ステップ 2 の実行中に、次のコマンドでポッドが作成されていることを確認できます。
+
+[source, shell]
+----
+kubectl get pod --namespace <k8s-namespace>
+----
+ハブとプロキシ ポッドが実行状態になるまで待ちます。
+
+[source, shell]
+----
+NAME                    READY     STATUS    RESTARTS   AGE
+hub-5d4ffd57cf-k68z8    1/1       Running   0          37s
+proxy-7cb9bc4cc-9bdlp   1/1       Running   0          37s
+----
+
+
+=== JupyterHub にアクセスする
+
+JupyterHub にアクセスするために使用できる IP を見つけます。出力例のように、proxy-public サービスの EXTERNAL-IP が使用可能になるまで、次のコマンドを実行します。
+
+
+NOTE: config.yaml ファイルで NodePort サービスを使用しましたが、設定に基づいて環境に合わせて調整できます (例: LoadBalancer)。
+
+[source, shell]
+----
+kubectl --namespace <k8s-namespace> get service proxy-public
+----
+[source, shell]
+----
+NAME           TYPE           CLUSTER-IP     EXTERNAL-IP     PORT(S)        AGE
+proxy-public   NodePort   10.51.248.230   104.196.41.97   80:30000/TCP   1m
+----
+JupyterHub を使用するには、ブラウザにプロキシ パブリック サービスの外部 IP を入力します。

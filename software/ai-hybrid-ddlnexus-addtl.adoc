@@ -1,0 +1,49 @@
+---
+sidebar: sidebar 
+permalink: software/ai-hybrid-ddlnexus-addtl.html 
+keywords: NetApp AI, AI, Artificial Intelligence, ML, Machine Learning, NVIDIA, Hybrid, Hybrid Cloud, Hybrid Multicloud, Cloud, AWS, Amazon, Amazon Web Services, FSx ONTAP, FSx, NetApp ONTAP, FlexCache, SnapMirror, BlueXP 
+summary: Domino Data Lab とNetAppによるハイブリッド マルチクラウド MLOps - 追加情報の入手先 
+---
+= 詳細情報の入手方法
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media/
+
+
+[role="lead"]
+このドキュメントに記載されている情報の詳細については、次のドキュメントや Web サイトを参照してください。
+
+* ドミノデータラボ
++
+link:https://domino.ai["https://domino.ai"]
+
+* ドミノネクサス
++
+link:https://domino.ai/platform/nexus["https://domino.ai/platform/nexus"]
+
+* NetAppBlueXP
++
+link:https://bluexp.netapp.com["https://bluexp.netapp.com"]
+
+* NetApp ONTAPデータ管理ソフトウェア
++
+link:https://www.netapp.com/data-management/ontap-data-management-software/["https://www.netapp.com/data-management/ontap-data-management-software/"]
+
+* NetApp AIソリューション
++
+link:https://www.netapp.com/artificial-intelligence/["https://www.netapp.com/artificial-intelligence/"]
+
+
+
+
+
+== 謝辞
+
+* Domino Data Lab、技術提携担当 SA ディレクター、Josh Mineroff 氏
+* ニコラス・ジャブロンスキー、Domino Data Lab フィールド CTO
+* NetApp 、ソリューション アーキテクト、Prabu Arjunan 氏
+* ブライアン・ヤング、 NetApp 、テクノロジーアライアンスパートナー、グローバルアライアンスディレクター
+

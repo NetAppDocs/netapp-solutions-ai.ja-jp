@@ -1,0 +1,21 @@
+---
+sidebar: sidebar 
+permalink: videos.html 
+summary: NetAppの多くのソリューションの機能を説明するビデオとデモのシリーズ 
+keywords: netapp, solutions, videos, demos 
+---
+= NetAppソリューション: ビデオとデモ
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+
+
+[role="lead"]
+NetApp の多くのソリューションの特定の機能を紹介するビデオとデモの概要。
+
+* link:https://www.youtube.com/playlist?list=PLdXI3bZJEw7nSrRhuolRPYqvSlGLuTOAO["NetApp AIソリューション"^]
+* link:https://www.youtube.com/playlist?list=PLdXI3bZJEw7n1sWK-QGq4QMI1VBJS-ZZW["MLOps"^]
+

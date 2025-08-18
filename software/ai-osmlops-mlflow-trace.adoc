@@ -1,0 +1,47 @@
+---
+sidebar: sidebar 
+permalink: software/ai-osmlops-mlflow-trace.html 
+keywords: AI, control plane, MLOps, MLflow 
+summary: NetAppを使用したオープンソース MLOps - NetAppと MLflow を使用したデータセットからモデルへのトレーサビリティ 
+---
+= NetAppと MLflow によるデータセットからモデルへのトレーサビリティ
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media/
+
+
+[role="lead"]
+その https://github.com/NetApp/netapp-dataops-toolkit/tree/main/netapp_dataops_k8s["Kubernetes 用NetApp DataOps ツールキット"^]データセットからモデル、またはワークスペースからモデルへのトレーサビリティを実装するために、MLflow の実験追跡機能と組み合わせて使用できます。
+
+データセットからモデルへ、またはワークスペースからモデルへのトレーサビリティを実装するには、次のサンプルコード スニペットに示すように、トレーニング実行の一部として DataOps ツールキットを使用してデータセットまたはワークスペース ボリュームのスナップショットを作成します。このコードは、MLflow 実験追跡サーバーに記録する特定のトレーニング実行に関連付けられたタグとして、データ ボリューム名とスナップショット名を保存します。
+
+[source]
+----
+...
+from netapp_dataops.k8s import create_volume_snapshot
+
+with mlflow.start_run() :
+    ...
+
+    namespace = "my_namespace" # Kubernetes namespace in which dataset volume PVC resides
+    dataset_volume_name = "project1" # Name of PVC corresponding to dataset volume
+    snapshot_name = "run1" # Name to assign to your new snapshot
+
+    # Create snapshot
+    create_volume_snapshot(
+        namespace=namespace,
+        pvc_name=dataset_volume_name,
+        snapshot_name=snapshot_name,
+        printOutput=True
+    )
+
+    # Log data volume name and snapshot name as "tags"
+    # associated with this training run in mlflow.
+    mlflow.set_tag("data_volume_name", dataset_volume_name)
+    mlflow.set_tag("snapshot_name", snapshot_name)
+
+    ...
+----

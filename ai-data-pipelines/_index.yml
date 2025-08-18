@@ -1,0 +1,72 @@
+---
+indexpage:
+  title: NetApp MLOps とデータ管理ソリューション
+  summary: NetApp の包括的な MLOps およびデータ管理ソリューションを使用して、AI/ML ワークフローを合理化します。当社のソリューションは、オープンソース
+    プラットフォームからエンタープライズ グレードのツールまで、データの一貫性とパフォーマンスを確保しながら、ハイブリッド クラウド環境全体での効率的なモデル開発、展開、スケーリングを可能にします。
+  lead: NetApp の包括的な MLOps およびデータ管理ソリューションを使用して、AI/ML ワークフローを合理化します。当社のソリューションは、オープンソース
+    プラットフォームからエンタープライズ グレードのツールまで、データの一貫性とパフォーマンスを確保しながら、ハイブリッド クラウド環境全体での効率的なモデル開発、展開、スケーリングを可能にします。
+  tiles:
+  - title: オープンソースのMLOpsプラットフォーム
+    links:
+    - title: NetAppによるオープンソース MLOps
+      url: "../software/ai-osmlops-intro.html"
+    - title: AIPod用のNetApp Trident構成
+      url: "../software/ai-osmlops-trident-backend.html"
+    - title: Apache Airflow の展開と統合
+      url: "../software/ai-osmlops-airflow-deploy.html"
+    - title: JupyterHubのデプロイメントとデータ操作
+      url: "../software/ai-osmlops-jhub-deploy.html"
+    - title: MLflowの展開とトレーサビリティ
+      url: "../software/ai-osmlops-mlflow-deploy.html"
+  - title: 高度なMLOpsワークフロー
+    links:
+    - title: Kubeflow のデプロイメントとノートブック
+      url: "../software/ai-osmlops-kubeflow-deploy.html"
+    - title: Kubeflow で画像認識モデルをトレーニングする
+      url: "../software/ai-osmlops-kubeflow-train.html"
+    - title: 単一ノードのAIワークロード実行
+      url: "../software/ai-osmlops-train-singlenode.html"
+    - title: 分散AIワークロード実行
+      url: "../software/ai-osmlops-train-distributed.html"
+    - title: SnapMirrorによるデータ取り込み
+      url: "../software/ai-osmlops-jhub-ingest.html"
+  - title: エンタープライズMLOpsソリューション
+    links:
+    - title: Domino Data Lab を使用したハイブリッド MLOps
+      url: "../software/ai-hybrid-ddlnexus-intro.html"
+    - title: Domino による環境間データアクセス
+      url: "../software/ai-hybrid-ddlnexus-data.html"
+    - title: NVIDIA AI Enterprise とNetApp 、VMware
+      url: "../software/ai-nvaie-vmw-intro.html"
+    - title: NVIDIA NGCソフトウェア統合
+      url: "../software/ai-nvaie-vmw-ngcsetup.html"
+  - title: クラウド MLOps と AWS の統合
+    links:
+    - title: Amazon FSx for ONTAP MLOps
+      url: "../cloud/ai-mlops-fsxn-intro.html"
+    - title: SageMaker で FSx ONTAP をプライベート S3 として統合する
+      url: "../cloud/ai-mlops-fsxn-s3.html"
+    - title: SageMaker モデルトレーニング用の FSx ONTAP
+      url: "../cloud/ai-mlops-fsxn-sagemaker.html"
+    - title: FSx で簡素化された MLOps パイプラインを構築する
+      url: "../cloud/ai-mlops-fsxn-cictcd.html"
+  - title: ベクターデータベースとAIアプリケーション
+    links:
+    - title: NetAppによるベクトルデータベースソリューション
+      url: "../vector-db/ai-vdb-solution-with-netapp.html"
+    - title: Kubernetes を使用した Milvus クラスターのセットアップ
+      url: "../vector-db/ai-vdb-milvus-setup.html"
+    - title: SnapCenterによるベクターデータベース保護
+      url: "../vector-db/ai-vdb-dp-snapcenter.html"
+    - title: ベクターデータベースのパフォーマンス検証
+      url: "../vector-db/ai-vdb-perf-validation.html"
+    - title: ベクターデータベースの使用例
+      url: "../vector-db/ai-vdb-usecases.html"
+  - title: データ管理ツールとストレージ
+    links:
+    - title: NetApp DataOps ツールキット
+      url: "../software/dataops-toolkit.html"
+    - title: 自動運転向けStorageGRIDデータレイク
+      url: "../infra/ai-storagegrid-datalake-adas.html"
+    - title: SnapMirrorによる災害復旧
+      url: "../vector-db/ai-vdb-dr-snapmirror.html"

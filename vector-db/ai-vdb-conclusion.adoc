@@ -1,0 +1,68 @@
+---
+sidebar: sidebar 
+permalink: vector-db/ai-vdb-conclusion.html 
+keywords: vector database, conclusion 
+summary: 結論 - NetApp向けベクトルデータベースソリューション 
+---
+= まとめ
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media/
+
+
+[role="lead"]
+このセクションでは、 NetAppのベクトル データベース ソリューションについて説明します。
+
+
+
+== まとめ
+
+最後に、このドキュメントでは、Milvus や pgvector などのベクトル データベースをNetAppストレージ ソリューションに導入および管理する方法の包括的な概要を示します。  NetApp ONTAPとStorageGRIDオブジェクトストレージを活用するためのインフラストラクチャガイドラインについて説明し、ファイルとオブジェクトストアを通じて AWS FSx ONTAPの Milvus データベースを検証しました。
+
+私たちは、NetApp のファイルとオブジェクトの二重性について調査し、ベクター データベースのデータだけでなく、他のアプリケーションでもその有用性を実証しました。また、NetApp のエンタープライズ管理製品であるSnapCenterが、ベクター データベース データのバックアップ、リストア、クローン機能を提供し、データの整合性と可用性を確保する方法についても説明しました。
+
+このドキュメントでは、NetApp のハイブリッド クラウド ソリューションがオンプレミスとクラウド環境全体でデータのレプリケーションと保護を提供し、シームレスで安全なデータ管理エクスペリエンスを実現する方法についても詳しく説明します。  NetApp ONTAP上の Milvus や pgvecto などのベクトル データベースのパフォーマンス検証に関する洞察を提供し、その効率性と拡張性に関する貴重な情報を提供しました。
+
+最後に、LLM を使用した RAG と NetApp の内部 ChatAI という 2 つの生成 AI の使用例について説明しました。これらの実用的な例は、このドキュメントで概説されている概念と実践の実際の応用と利点を強調しています。全体として、このドキュメントは、NetApp の強力なストレージ ソリューションを活用してベクター データベースを管理しようとしているすべての人にとって包括的なガイドとして役立ちます。
+
+
+
+=== 謝辞
+
+著者は、このホワイト ペーパーをNetApp の顧客とNetApp の分野にとって価値あるものにするためにフィードバックとコメントを提供してくれた以下の協力者およびその他の関係者に心から感謝の意を表します。
+
+. Sathish Thyagarajan 氏、 NetApp 、 ONTAP AI & Analytics、テクニカル マーケティング エンジニア
+. マイク・オグルスビー、 NetAppテクニカル マーケティング エンジニア
+. AJ マハジャン、 NetAppシニア ディレクター
+. Joe Scott、 NetAppワークロード パフォーマンス エンジニアリング マネージャー
+. Puneet Dhawan、 NetApp 、FSX製品管理担当シニアディレクター
+. Yuval Kalderon、 NetApp FSx 製品チーム シニア プロダクト マネージャー
+
+
+
+
+=== 詳細情報の入手方法
+
+このドキュメントに記載されている情報の詳細については、次のドキュメントや Web サイトを参照してください。
+
+* Milvusドキュメント - https://milvus.io/docs/overview.md[]
+* Milvus スタンドアロン ドキュメント - https://milvus.io/docs/v2.0.x/install_standalone-docker.md[]
+* NetApp製品ドキュメントhttps://www.netapp.com/support-and-training/documentation/[]
+* インスタクラスタ -link:https://www.instaclustr.com/support/documentation/?_bt=&_bk=&_bm=&_bn=x&_bg=&utm_term=&utm_campaign=&utm_source=adwords&utm_medium=ppc&hsa_acc=1467100120&hsa_cam=20766399079&hsa_grp=&hsa_ad=&hsa_src=x&hsa_tgt=&hsa_kw=&hsa_mt=&hsa_net=adwords&hsa_ver=3&gad_source=1&gclid=CjwKCAjw26KxBhBDEiwAu6KXtzOZhN0dl0H1smOMcj9nsC0qBQphdMqFR7IrVQqeG2Y4aHWydUMj2BoCdFwQAvD_BwE["installcluster ドキュメント"]
+
+
+
+
+=== バージョン履歴
+
+|===
+
+
+| version | 日付 | ドキュメントのバージョン履歴 
+
+
+| バージョン1.0 | 2024年4月 | 初版リリース 
+|===

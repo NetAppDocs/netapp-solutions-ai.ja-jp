@@ -1,0 +1,92 @@
+---
+sidebar: sidebar 
+permalink: software/ai-nvaie-vmw-ngcsetup.html 
+keywords: NetApp AI, AI, Artificial Intelligence, ML, Machine Learning, NVIDIA, NVIDIA AI Enterprise, NVAIE, VMware, NGC 
+summary: NetAppと VMware を使用したNVIDIA AI Enterprise - NVIDIA NGC ソフトウェアの活用 - セットアップ 
+---
+= セットアップ
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media/
+
+
+[role="lead"]
+このセクションでは、 NVIDIA AI Enterprise 環境内でNVIDIA NGC エンタープライズ ソフトウェアを利用するために実行する必要がある初期セットアップ タスクについて説明します。
+
+
+
+== 前提条件
+
+このセクションで説明する手順を実行する前に、 NVIDIA AI Entrpriseホストソフトウェアが、link:ai-nvaie-vmw-setup.html["初期セットアップ"]ページ。
+
+
+
+== vGPU を搭載した Ubuntu ゲスト VM を作成する
+
+まず、vGPU を搭載した Ubuntu 20.04 ゲスト VM を作成する必要があります。  vGPUを搭載したUbuntu 20.04ゲストVMを作成するには、link:https://docs.nvidia.com/ai-enterprise/deployment-guide-vmware/0.1.0/first-vm.html["NVIDIA AI エンタープライズ導入ガイド"] 。
+
+
+
+== NVIDIAゲスト ソフトウェアのダウンロードとインストール
+
+次に、前の手順で作成したゲスト VM 内に必要なNVIDIAゲスト ソフトウェアをインストールする必要があります。ゲストVM内で必要なNVIDIAゲストソフトウェアをダウンロードしてインストールするには、link:https://docs.nvidia.com/ai-enterprise/latest/quick-start-guide/index.html["NVIDIA AI エンタープライズ クイック スタート ガイド"] 。
+
+
+NOTE: セクション 5.4 で概説されている検証タスクを実行する場合、ガイドの作成以降に CUDA コンテナ イメージが更新されているため、異なる CUDA コンテナ イメージ バージョン タグを使用する必要がある場合があります。検証では、「nvidia/cuda:11.0.3-base-ubuntu20.04」を使用しました。
+
+
+
+== AI/分析フレームワークコンテナをダウンロード
+
+次に、必要な AI または分析フレームワーク コンテナー イメージをNVIDIA NGC からダウンロードして、ゲスト VM 内で使用できるようにする必要があります。ゲストVM内でフレームワークコンテナをダウンロードするには、link:https://docs.nvidia.com/ai-enterprise/deployment-guide-vmware/0.1.0/installing-ai.html["NVIDIA AI エンタープライズ導入ガイド"] 。
+
+
+
+== NetApp DataOps ツールキットのインストールと設定
+
+次に、ゲスト VM 内に従来の環境向けのNetApp DataOps Toolkit をインストールする必要があります。 NetApp DataOps Toolkit を使用すると、ゲスト VM 内のターミナルから直接ONTAPシステム上のスケールアウト データ ボリュームを管理できます。ゲスト VM 内にNetApp DataOps Toolkit をインストールするには、次のタスクを実行します。
+
+. pip をインストールします。
++
+....
+$ sudo apt update
+$ sudo apt install python3-pip
+$ python3 -m pip install netapp-dataops-traditional
+....
+. ゲスト VM ターミナルからログアウトし、再度ログインします。
+. NetApp DataOps ツールキットを構成します。この手順を完了するには、 ONTAPシステムの API アクセスの詳細が必要になります。ストレージ管理者からこれらを取得する必要がある場合があります。
++
+....
+$ netapp_dataops_cli.py config
+
+Enter ONTAP management LIF hostname or IP address (Recommendation: Use SVM management interface): 172.22.10.10
+Enter SVM (Storage VM) name: NVAIE-client
+Enter SVM NFS data LIF hostname or IP address: 172.22.13.151
+Enter default volume type to use when creating new volumes (flexgroup/flexvol) [flexgroup]:
+Enter export policy to use by default when creating new volumes [default]:
+Enter snapshot policy to use by default when creating new volumes [none]:
+Enter unix filesystem user id (uid) to apply by default when creating new volumes (ex. '0' for root user) [0]:
+Enter unix filesystem group id (gid) to apply by default when creating new volumes (ex. '0' for root group) [0]:
+Enter unix filesystem permissions to apply by default when creating new volumes (ex. '0777' for full read/write permissions for all users and groups) [0777]:
+Enter aggregate to use by default when creating new FlexVol volumes: aff_a400_01_NVME_SSD_1
+Enter ONTAP API username (Recommendation: Use SVM account): admin
+Enter ONTAP API password (Recommendation: Use SVM account):
+Verify SSL certificate when calling ONTAP API (true/false): false
+Do you intend to use this toolkit to trigger BlueXP Copy and Sync operations? (yes/no): no
+Do you intend to use this toolkit to push/pull from S3? (yes/no): no
+Created config file: '/home/user/.netapp_dataops/config.json'.
+....
+
+
+
+
+== ゲストVMテンプレートを作成する
+
+最後に、ゲスト VM に基づいて VM テンプレートを作成する必要があります。このテンプレートを使用すると、 NVIDIA NGC ソフトウェアを利用するためのゲスト VM をすばやく作成できます。
+
+ゲスト VM に基づいて VM テンプレートを作成するには、VMware vSphere にログインし、ゲスト VM 名を右クリックして、「クローン」を選択し、「テンプレートにクローン...」を選択して、ウィザードに従います。
+
+image:nvaie-003.png["入出力ダイアログまたは書かれたコンテンツを示す図"]

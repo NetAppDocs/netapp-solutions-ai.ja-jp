@@ -1,0 +1,30 @@
+---
+sidebar: sidebar 
+permalink: data-analytics/cdm-fod-conclusion.html 
+keywords: conclusion 
+summary: この検証に基づいて、データ サイエンティストとエンジニアは、 NetApp Cloud Volumes ONTAPの S3 バケットを介して AWS SageMaker Jupyter Notebook の NFS データにアクセスできるようになります。このアプローチにより、追加のソフトウェアを必要とせずに、NFS と S3 の両方から同じデータに簡単にアクセスして共有できるようになります。 
+---
+= まとめ
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media/
+
+
+[role="lead"]
+この検証に基づいて、データ サイエンティストとエンジニアは、 NetApp Cloud Volumes ONTAPの S3 バケットを介して AWS SageMaker Jupyter Notebook の NFS データにアクセスできるようになります。このアプローチにより、追加のソフトウェアを必要とせずに、NFS と S3 の両方から同じデータに簡単にアクセスして共有できるようになります。
+
+
+
+== 詳細情報の入手方法
+
+このドキュメントに記載されている情報の詳細については、次のドキュメントや Web サイトを参照してください。
+
+* SageMaker BlazingText を使用したテキスト分類
+* ONTAPバージョンとS3オブジェクト ストレージのサポート
++
+https://docs.netapp.com/us-en/ontap/s3-config/ontap-version-support-s3-concept.html["https://docs.netapp.com/us-en/ontap/s3-config/ontap-version-support-s3-concept.html"^]
+
+

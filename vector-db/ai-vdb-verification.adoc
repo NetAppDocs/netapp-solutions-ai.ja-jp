@@ -1,0 +1,24 @@
+---
+sidebar: sidebar 
+permalink: vector-db/ai-vdb-verification.html 
+keywords: Solution Overview vector database 
+summary: ソリューション検証の概要 - NetApp向けベクターデータベースソリューション 
+---
+= ソリューションの概要
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media/
+
+
+[role="lead"]
+当社では、5 つの主要領域に重点を置いた包括的なソリューション検証を実施しました。その詳細は以下に記載されています。各セクションでは、顧客が直面している課題、 NetAppが提供するソリューション、そしてそれによって顧客にもたらされるメリットについて詳しく説明します。
+
+. link:ai-vdb-milvus-setup.html["オンプレミスでの Kubernetes を使用した Milvus クラスターのセットアップ"]顧客は、ストレージとコンピューティング、効果的なインフラストラクチャ管理、およびデータ管理に基づいて独立して拡張するという課題に直面しています。このセクションでは、クラスター データと顧客データの両方にNetAppストレージ コントローラーを利用して、Kubernetes に Milvus クラスターをインストールするプロセスについて詳しく説明します。
+. link:vector-database-milvus-with-Amazon-FSx ONTAP-for- NetApp- ONTAP.html[Milvus とAmazon FSx ONTAP for NetApp ONTAP – ファイルとオブジェクトの二重性] このセクションでは、クラウドにベクトルデータベースをデプロイする必要がある理由と、Docker コンテナ内のAmazon FSx ONTAP for NetApp ONTAPにベクトルデータベース (milvus スタンドアロン) をデプロイする手順について説明します。
+. link:ai-vdb-dp-snapcenter.html["NetApp SnapCenterを使用したベクトル データベース保護。"]このセクションでは、 SnapCenter がONTAPにあるベクター データベース データと Milvus データをどのように保護するかについて詳しく説明します。この例では、顧客データ用に NFS ONTAPボリューム (vol1) から派生した NAS バケット (milvusdbvol1) を使用し、Milvus クラスタ構成データ用に別の NFS ボリューム (vectordbpv) を使用しました。
+. link:ai-vdb-dr-snapmirror.html["NetApp SnapMirrorを使用した災害復旧"]このセクションでは、ベクター データベースの災害復旧 (DR) の重要性と、NetApp の災害復旧製品 SnapMirror がベクター データベースに DR ソリューションを提供する方法について説明します。
+. link:ai-vdb-perf-validation.html["パフォーマンス検証"]このセクションでは、Milvus や pgvecto.rs などのベクトル データベースのパフォーマンス検証を詳しく検討し、LLM ライフサイクル内での RAG および推論ワークロードをサポートする I/O プロファイルやネットアップ ストレージ コントローラの動作などのストレージ パフォーマンス特性に焦点を当てます。これらのデータベースをONTAPストレージ ソリューションと組み合わせた場合のパフォーマンスの差別化要因を評価し、特定します。私たちの分析は、1 秒あたりに処理されるクエリ数 (QPS) などの主要なパフォーマンス指標に基づいて行われます。
+

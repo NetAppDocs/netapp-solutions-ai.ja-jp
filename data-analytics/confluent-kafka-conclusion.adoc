@@ -1,0 +1,72 @@
+---
+sidebar: sidebar 
+permalink: data-analytics/confluent-kafka-conclusion.html 
+keywords: conclusion 
+summary: このドキュメントでは、Confluent Kafka 認定テスト、パフォーマンス結果、チューニング、Kafka コネクタ、セルフリバランス機能など、 NetAppストレージで Kafka を使用するためのベスト プラクティス ガイドラインを示します。 
+---
+= まとめ
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media/
+
+
+[role="lead"]
+このドキュメントでは、検証テスト、階層化ストレージのパフォーマンス結果、チューニング、Confluent S3 コネクタ、自己バランス機能など、Confluent 階層化ストレージをNetAppストレージと共に使用するためのベスト プラクティス ガイドラインを示します。  ILM ポリシー、検証のための複数のパフォーマンス テストによる Confluent のパフォーマンス、業界標準の S3 API を考慮すると、 NetApp StorageGRIDオブジェクト ストレージは Confluent 階層型ストレージに最適な選択肢です。
+
+
+
+== 詳細情報の入手方法
+
+このドキュメントに記載されている情報の詳細については、次のドキュメントや Web サイトを参照してください。
+
+* Apache Kafkaとは
++
+https://www.confluent.io/what-is-apache-kafka/["https://www.confluent.io/what-is-apache-kafka/"^]
+
+* NetApp製品ドキュメント
++
+https://www.netapp.com/support-and-training/documentation/["https://www.netapp.com/support-and-training/documentation/"^]
+
+* S3シンクパラメータの詳細
++
+https://docs.confluent.io/kafka-connect-s3-sink/current/configuration_options.html["https://docs.confluent.io/kafka-connect-s3-sink/current/configuration_options.html#s3-configuration-options"^]
+
+* Apache Kafka
++
+https://en.wikipedia.org/wiki/Apache_Kafka["https://en.wikipedia.org/wiki/Apache_Kafka"^]
+
+* Confluent Platform の無限ストレージ
++
+https://www.confluent.io/blog/infinite-kafka-storage-in-confluent-platform/["https://www.confluent.io/blog/infinite-kafka-storage-in-confluent-platform/"^]
+
+* Confluent 階層型ストレージ - ベストプラクティスとサイジング
++
+https://docs.confluent.io/platform/current/kafka/tiered-storage.html#best-practices-and-recommendations["https://docs.confluent.io/platform/current/kafka/tiered-storage.html#best-practices-and-recommendations"^]
+
+* Confluent Platform 用 Amazon S3 シンクコネクタ
++
+https://docs.confluent.io/kafka-connect-s3-sink/current/overview.html["https://docs.confluent.io/kafka-connect-s3-sink/current/overview.html"^]
+
+* Kafka のサイズ設定
++
+https://eventsizer.io["https://eventsizer.io"]
+
+* StorageGRIDのサイズ設定
++
+https://fusion.netapp.com/["https://fusion.netapp.com/"^]
+
+* Kafkaのユースケース
++
+https://kafka.apache.org/uses["https://kafka.apache.org/uses"^]
+
+* Confluent Platform 6.0 における Kafka クラスターの自己バランス
++
+https://www.confluent.io/blog/self-balancing-kafka-clusters-in-confluent-platform-6-0/["https://www.confluent.io/blog/self-balancing-kafka-clusters-in-confluent-platform-6-0/"^]
+
++
+https://www.confluent.io/blog/confluent-platform-6-0-delivers-the-most-powerful-event-streaming-platform-to-date/["https://www.confluent.io/blog/confluent-platform-6-0-delivers-the-most-powerful-event-streaming-platform-to-date/"^]
+
+

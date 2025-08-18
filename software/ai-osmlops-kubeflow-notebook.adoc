@@ -1,0 +1,19 @@
+---
+sidebar: sidebar 
+permalink: software/ai-osmlops-kubeflow-notebook.html 
+keywords: Jupyter, Notebook, Workspace, Kubeflow 
+summary: NetAppによるオープンソース MLOps - データ サイエンティストや開発者向けに Jupyter Notebook ワークスペースをプロビジョニングする 
+---
+= データ サイエンティストまたは開発者向けに Jupyter Notebook ワークスペースをプロビジョニングする
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media/
+
+
+[role="lead"]
+Kubeflow は、データ サイエンティストのワークスペースとして機能する新しい Jupyter Notebook サーバーを迅速にプロビジョニングできます。  Kubeflowコンテキスト内のJupyter Notebookの詳細については、 https://www.kubeflow.org/docs/components/notebooks/["Kubeflowの公式ドキュメント"^] 。
+
+image:aicp-009.png["入出力ダイアログまたは書かれたコンテンツを示す図"]

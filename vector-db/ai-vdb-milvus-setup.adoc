@@ -1,0 +1,228 @@
+---
+sidebar: sidebar 
+permalink: vector-db/ai-vdb-milvus-setup.html 
+keywords: vector database 
+summary: Milvus クラスタのセットアップ - NetApp 向けベクター データベース ソリューション 
+---
+= オンプレミスでの Kubernetes を使用した Milvus クラスターのセットアップ
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media/
+
+
+[role="lead"]
+このセクションでは、 NetAppのベクトル データベース ソリューション用の milvus クラスターのセットアップについて説明します。
+
+
+
+== オンプレミスでの Kubernetes を使用した Milvus クラスターのセットアップ
+
+ストレージとコンピューティングを独立して拡張し、効果的なインフラストラクチャ管理とデータ管理を行うという顧客の課題に対し、Kubernetes とベクター データベースを組み合わせることで、大規模なデータ操作を管理するための強力でスケーラブルなソリューションが実現します。 Kubernetes はリソースを最適化し、コンテナを管理し、ベクトル データベースは高次元データと類似性検索を効率的に処理します。この組み合わせにより、大規模なデータセットに対する複雑なクエリを迅速に処理し、増大するデータ量に合わせてシームレスに拡張できるため、ビッグデータ アプリケーションや AI ワークロードに最適です。
+
+. このセクションでは、クラスター データと顧客データの両方にNetAppストレージ コントローラーを利用して、Kubernetes に Milvus クラスターをインストールするプロセスについて詳しく説明します。
+. Milvus クラスターをインストールするには、さまざまな Milvus クラスター コンポーネントからのデータを保存するための永続ボリューム (PV) が必要です。これらのコンポーネントには、etcd (インスタンス 3 つ)、pulsar-bookie-journal (インスタンス 3 つ)、pulsar-bookie-ledgers (インスタンス 3 つ)、pulsar-zookeeper-data (インスタンス 3 つ) が含まれます。
++
+
+NOTE: Milvus クラスターでは、Milvus クラスターの信頼性の高いストレージとメッセージ ストリームの公開/サブスクリプションをサポートする基盤エンジンとして、Pulsar または Kafka のいずれかを使用できます。  NFS を使用した Kafka については、 NetApp はONTAP 9.12.1 以降で改善を行っており、これらの機能強化と、RHEL 8.7 または 9.1 以降に含まれる NFSv4.1 および Linux の変更により、NFS 経由で Kafka を実行するときに発生する可能性がある「silly rename」問題が解決されています。NetApp NFS ソリューションを使用した Kafka の実行に関する詳細情報については、以下を参照してください。link:../data-analytics/kafka-nfs-introduction.html["このリンク"] 。
+
+. NetApp ONTAPから単一の NFS ボリュームを作成し、それぞれ 250 GB のストレージを持つ 12 個の永続ボリュームを確立しました。ストレージ サイズはクラスターのサイズに応じて異なります。たとえば、各 PV が 50 GB である別のクラスターがあります。詳細については、以下の PV YAML ファイルの 1 つを参照してください。このようなファイルは合計 12 個あります。各ファイルでは、storageClassName は「default」に設定されており、ストレージとパスは各 PV ごとに一意です。
++
+[source, yaml]
+----
+root@node2:~# cat sai_nfs_to_default_pv1.yaml
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: karthik-pv1
+spec:
+  capacity:
+    storage: 250Gi
+  volumeMode: Filesystem
+  accessModes:
+  - ReadWriteOnce
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: default
+  local:
+    path: /vectordbsc/milvus/milvus1
+  nodeAffinity:
+    required:
+      nodeSelectorTerms:
+      - matchExpressions:
+        - key: kubernetes.io/hostname
+          operator: In
+          values:
+          - node2
+          - node3
+          - node4
+          - node5
+          - node6
+root@node2:~#
+----
+. 各PV YAMLファイルに対して「kubectl apply」コマンドを実行して永続ボリュームを作成し、「kubectl get pv」を使用して作成を確認します。
++
+[source, bash]
+----
+root@node2:~# for i in $( seq 1 12 ); do kubectl apply -f sai_nfs_to_default_pv$i.yaml; done
+persistentvolume/karthik-pv1 created
+persistentvolume/karthik-pv2 created
+persistentvolume/karthik-pv3 created
+persistentvolume/karthik-pv4 created
+persistentvolume/karthik-pv5 created
+persistentvolume/karthik-pv6 created
+persistentvolume/karthik-pv7 created
+persistentvolume/karthik-pv8 created
+persistentvolume/karthik-pv9 created
+persistentvolume/karthik-pv10 created
+persistentvolume/karthik-pv11 created
+persistentvolume/karthik-pv12 created
+root@node2:~#
+----
+. Milvus は、顧客データを保存するために、MinIO、Azure Blob、S3 などのオブジェクト ストレージ ソリューションをサポートしています。このガイドでは、S3 を利用します。次の手順は、 ONTAP S3 とStorageGRIDオブジェクト ストアの両方に適用されます。  Milvus クラスターをデプロイするには Helm を使用します。 Milvus のダウンロード場所から構成ファイル values.yaml をダウンロードします。このドキュメントで使用した values.yaml ファイルについては、付録を参照してください。
+. ログ、etcd、zookeeper、bookkeeper などの各セクションで、「storageClass」が「default」に設定されていることを確認します。
+. MinIO セクションで、MinIO を無効にします。
+. ONTAPまたはStorageGRIDオブジェクト ストレージから NAS バケットを作成し、オブジェクト ストレージ認証情報を使用して外部 S3 に含めます。
++
+[source, yaml]
+----
+###################################
+# External S3
+# - these configs are only used when `externalS3.enabled` is true
+###################################
+externalS3:
+  enabled: true
+  host: "192.168.150.167"
+  port: "80"
+  accessKey: "24G4C1316APP2BIPDE5S"
+  secretKey: "Zd28p43rgZaU44PX_ftT279z9nt4jBSro97j87Bx"
+  useSSL: false
+  bucketName: "milvusdbvol1"
+  rootPath: ""
+  useIAM: false
+  cloudProvider: "aws"
+  iamEndpoint: ""
+  region: ""
+  useVirtualHost: false
+
+----
+. Milvus クラスターを作成する前に、PersistentVolumeClaim (PVC) に既存のリソースがないことを確認してください。
++
+[source, bash]
+----
+root@node2:~# kubectl get pvc
+No resources found in default namespace.
+root@node2:~#
+----
+. Helm と values.yaml 構成ファイルを使用して、Milvus クラスターをインストールして起動します。
++
+[source, bash]
+----
+root@node2:~# helm upgrade --install my-release milvus/milvus --set global.storageClass=default  -f values.yaml
+Release "my-release" does not exist. Installing it now.
+NAME: my-release
+LAST DEPLOYED: Thu Mar 14 15:00:07 2024
+NAMESPACE: default
+STATUS: deployed
+REVISION: 1
+TEST SUITE: None
+root@node2:~#
+----
+. PersistentVolumeClaims (PVC) のステータスを確認します。
++
+[source, bash]
+----
+root@node2:~# kubectl get pvc
+NAME                                                             STATUS   VOLUME         CAPACITY   ACCESS MODES   STORAGECLASS   AGE
+data-my-release-etcd-0                                           Bound    karthik-pv8    250Gi      RWO            default        3s
+data-my-release-etcd-1                                           Bound    karthik-pv5    250Gi      RWO            default        2s
+data-my-release-etcd-2                                           Bound    karthik-pv4    250Gi      RWO            default        3s
+my-release-pulsar-bookie-journal-my-release-pulsar-bookie-0      Bound    karthik-pv10   250Gi      RWO            default        3s
+my-release-pulsar-bookie-journal-my-release-pulsar-bookie-1      Bound    karthik-pv3    250Gi      RWO            default        3s
+my-release-pulsar-bookie-journal-my-release-pulsar-bookie-2      Bound    karthik-pv1    250Gi      RWO            default        3s
+my-release-pulsar-bookie-ledgers-my-release-pulsar-bookie-0      Bound    karthik-pv2    250Gi      RWO            default        3s
+my-release-pulsar-bookie-ledgers-my-release-pulsar-bookie-1      Bound    karthik-pv9    250Gi      RWO            default        3s
+my-release-pulsar-bookie-ledgers-my-release-pulsar-bookie-2      Bound    karthik-pv11   250Gi      RWO            default        3s
+my-release-pulsar-zookeeper-data-my-release-pulsar-zookeeper-0   Bound    karthik-pv7    250Gi      RWO            default        3s
+root@node2:~#
+----
+. ポッドのステータスを確認します。
++
+[source, bash]
+----
+root@node2:~# kubectl get pods -o wide
+NAME                                            READY   STATUS      RESTARTS        AGE    IP              NODE    NOMINATED NODE   READINESS GATES
+<content removed to save page space>
+----
++
+ポッドのステータスが「実行中」であり、期待どおりに動作していることを確認してください。
+
+. Milvus およびNetAppオブジェクト ストレージでのデータの書き込みと読み取りをテストします。
++
+** 「prepare_data_netapp_new.py」Python プログラムを使用してデータを書き込みます。
++
+[source, python]
+----
+root@node2:~# date;python3 prepare_data_netapp_new.py ;date
+Thu Apr  4 04:15:35 PM UTC 2024
+=== start connecting to Milvus     ===
+=== Milvus host: localhost         ===
+Does collection hello_milvus_ntapnew_update2_sc exist in Milvus: False
+=== Drop collection - hello_milvus_ntapnew_update2_sc ===
+=== Drop collection - hello_milvus_ntapnew_update2_sc2 ===
+=== Create collection `hello_milvus_ntapnew_update2_sc` ===
+=== Start inserting entities       ===
+Number of entities in hello_milvus_ntapnew_update2_sc: 3000
+Thu Apr  4 04:18:01 PM UTC 2024
+root@node2:~#
+----
+** 「verify_data_netapp.py」Python ファイルを使用してデータを読み取ります。
++
+....
+root@node2:~# python3 verify_data_netapp.py
+=== start connecting to Milvus     ===
+=== Milvus host: localhost         ===
+
+Does collection hello_milvus_ntapnew_update2_sc exist in Milvus: True
+{'auto_id': False, 'description': 'hello_milvus_ntapnew_update2_sc', 'fields': [{'name': 'pk', 'description': '', 'type': <DataType.INT64: 5>, 'is_primary': True, 'auto_id': False}, {'name': 'random', 'description': '', 'type': <DataType.DOUBLE: 11>}, {'name': 'var', 'description': '', 'type': <DataType.VARCHAR: 21>, 'params': {'max_length': 65535}}, {'name': 'embeddings', 'description': '', 'type': <DataType.FLOAT_VECTOR: 101>, 'params': {'dim': 16}}]}
+Number of entities in Milvus: hello_milvus_ntapnew_update2_sc : 3000
+
+=== Start Creating index IVF_FLAT  ===
+
+=== Start loading                  ===
+
+=== Start searching based on vector similarity ===
+
+hit: id: 2998, distance: 0.0, entity: {'random': 0.9728033590489911}, random field: 0.9728033590489911
+hit: id: 2600, distance: 0.602496862411499, entity: {'random': 0.3098157043984633}, random field: 0.3098157043984633
+hit: id: 1831, distance: 0.6797959804534912, entity: {'random': 0.6331477114129169}, random field: 0.6331477114129169
+hit: id: 2999, distance: 0.0, entity: {'random': 0.02316334456872482}, random field: 0.02316334456872482
+hit: id: 2524, distance: 0.5918987989425659, entity: {'random': 0.285283165889066}, random field: 0.285283165889066
+hit: id: 264, distance: 0.7254047393798828, entity: {'random': 0.3329096143562196}, random field: 0.3329096143562196
+search latency = 0.4533s
+
+=== Start querying with `random > 0.5` ===
+
+query result:
+-{'random': 0.6378742006852851, 'embeddings': [0.20963514, 0.39746657, 0.12019053, 0.6947492, 0.9535575, 0.5454552, 0.82360446, 0.21096309, 0.52323616, 0.8035404, 0.77824664, 0.80369574, 0.4914803, 0.8265614, 0.6145269, 0.80234545], 'pk': 0}
+search latency = 0.4476s
+
+=== Start hybrid searching with `random > 0.5` ===
+
+hit: id: 2998, distance: 0.0, entity: {'random': 0.9728033590489911}, random field: 0.9728033590489911
+hit: id: 1831, distance: 0.6797959804534912, entity: {'random': 0.6331477114129169}, random field: 0.6331477114129169
+hit: id: 678, distance: 0.7351570129394531, entity: {'random': 0.5195484662306603}, random field: 0.5195484662306603
+hit: id: 2644, distance: 0.8620758056640625, entity: {'random': 0.9785952878381153}, random field: 0.9785952878381153
+hit: id: 1960, distance: 0.9083120226860046, entity: {'random': 0.6376039340439571}, random field: 0.6376039340439571
+hit: id: 106, distance: 0.9792704582214355, entity: {'random': 0.9679994241326673}, random field: 0.9679994241326673
+search latency = 0.1232s
+Does collection hello_milvus_ntapnew_update2_sc2 exist in Milvus: True
+{'auto_id': True, 'description': 'hello_milvus_ntapnew_update2_sc2', 'fields': [{'name': 'pk', 'description': '', 'type': <DataType.INT64: 5>, 'is_primary': True, 'auto_id': True}, {'name': 'random', 'description': '', 'type': <DataType.DOUBLE: 11>}, {'name': 'var', 'description': '', 'type': <DataType.VARCHAR: 21>, 'params': {'max_length': 65535}}, {'name': 'embeddings', 'description': '', 'type': <DataType.FLOAT_VECTOR: 101>, 'params': {'dim': 16}}]}
+....
++
+上記の検証に基づき、 NetAppストレージ コントローラを使用して Kubernetes 上に Milvus クラスタを展開することで実証されているように、Kubernetes とベクトル データベースを統合すると、大規模なデータ操作を管理するための堅牢でスケーラブルかつ効率的なソリューションが顧客に提供されます。このセットアップにより、顧客は高次元データを処理し、複雑なクエリを迅速かつ効率的に実行できるようになるため、ビッグデータ アプリケーションや AI ワークロードに最適なソリューションになります。さまざまなクラスター コンポーネントに永続ボリューム (PV) を使用し、 NetApp ONTAPから単一の NFS ボリュームを作成することで、最適なリソース使用率とデータ管理が保証されます。 PersistentVolumeClaims (PVC) とポッドのステータスを検証し、データの書き込みと読み取りをテストするプロセスにより、信頼性が高く一貫性のあるデータ操作が保証されます。顧客データにONTAPまたはStorageGRIDオブジェクト ストレージを使用すると、データのアクセス性とセキュリティがさらに強化されます。全体として、この設定により、増大するデータ ニーズに合わせてシームレスに拡張できる、回復力に優れた高性能なデータ管理ソリューションが顧客に提供されます。
+
+
+
+

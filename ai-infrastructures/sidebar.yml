@@ -1,0 +1,37 @@
+---
+section: ai-infrastructures
+title: AI統合インフラストラクチャ
+url: "/ai-infrastructures/index.html"
+entries:
+- title: NVIDIA DGX システムを搭載したNetApp AIPod
+  pdf-filename: NVA-1173 NetApp AIPodとNVIDIA DGX システム
+  entries:
+  - title: はじめに
+    url: "/infra/ai-aipod-nv-intro.html"
+  - title: ハードウェア コンポーネント
+    url: "/infra/ai-aipod-nv-hw.html"
+  - title: ソフトウェアコンポーネント
+    url: "/infra/ai-aipod-nv-sw.html"
+  - title: アーキテクチャ
+    url: "/infra/ai-aipod-nv-architecture.html"
+  - title: 展開例の詳細
+    url: "/infra/ai-aipod-nv-deploy.html"
+  - title: 検証とサイジングのガイダンス
+    url: "/infra/ai-aipod-nv-validation.html"
+  - title: 結論と追加情報
+    url: "/infra/ai-aipod-nv-conclusion.html"
+- title: NVIDIA OVX 対応の Lenovo 搭載NetApp AIPod
+  pdf-filename: 'NVA-1172-DESIGN: NVIDIA OVX 対応のNetApp AIPodと Lenovo'
+  url: "/infra/ai-aipod-lenovo-nva1172.html"
+- title: NVIDIA DGX SuperPODと EF シリーズ
+  pdf-filename: NVIDIA DGX SuperPODとNetApp EFシリーズ
+  url: "/infra/ai-eseries-superpod.html"
+- title: Eシリーズストレージを搭載したNetApp上のBeeGFS
+  pdf-filename: Eシリーズストレージを搭載したNetApp上のBeeGFS
+  url: "/infra/ai-eseries-beegfs.html"
+- title: EシリーズストレージでIBM Spectrum Scaleを導入
+  pdf-filename: EシリーズストレージでIBM Spectrum Scaleを導入
+  url: "/infra/ai-eseries-spectrumscale.html"
+- title: AI向けONTAPとLenovo ThinkSystem
+  pdf-filename: AI向けNetApp ONTAPとLenovo ThinkSystem SR670
+  url: "/infra/ai-lenovo-train-intro.html"

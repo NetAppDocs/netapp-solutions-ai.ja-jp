@@ -1,0 +1,89 @@
+---
+sidebar: sidebar 
+permalink: infra/ai-aipod-nv-conclusion.html 
+keywords: NetApp AI, AI, Artificial Intelligence, ML, Machine Learning, NVIDIA, NVIDIA AI Enterprise, NVIDIA BasePOD, NVIDIA DGX 
+summary: NetApp AIPodとNVIDIA DGX システム - 詳細情報の入手先 
+---
+= NVA-1173 NetApp AIPodとNVIDIA DGX システム - まとめと追加情報
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media/
+
+
+[role="lead"]
+このセクションには、 NVIDIA DGX システムを搭載したNetApp AIPodに関する追加情報の参照が含まれています。
+
+
+
+== まとめ
+
+DGX BasePOD アーキテクチャは、同様に高度なストレージとデータ管理機能を必要とする次世代のディープラーニング プラットフォームです。  DGX BasePOD とNetApp AFFシステムを組み合わせることで、 NetApp AIPodと DGX システムのアーキテクチャをほぼあらゆる規模で実装できます。  AFF は、 NetApp ONTAPの優れたクラウド統合とソフトウェア定義機能と組み合わせることで、エッジ、コア、クラウドにわたる包括的なデータ パイプラインを実現し、DL プロジェクトを成功させます。
+
+
+
+== 追加情報
+
+このドキュメントに記載されている情報の詳細については、次のドキュメントや Web サイトを参照してください。
+
+* NetApp ONTAPデータ管理ソフトウェア — ONTAP情報ライブラリ
++
+https://docs.netapp.com/us-en/ontap-family/["https://docs.netapp.com/us-en/ontap-family/"^]
+
+* NetApp AFF A90ストレージシステム -
++
+https://www.netapp.com/pdf.html?item=/media/7828-ds-3582-aff-a-series-ai-era.pdf["https://www.netapp.com/pdf.html?item=/media/7828-ds-3582-aff-a-series-ai-era.pdf"]
+
+* NetApp ONTAP RDMA情報 -
++
+link:https://docs.netapp.com/us-en/ontap/nfs-rdma/index.html["https://docs.netapp.com/us-en/ontap/nfs-rdma/index.html"]
+
+* NetApp DataOps ツールキット
++
+https://github.com/NetApp/netapp-dataops-toolkit["https://github.com/NetApp/netapp-dataops-toolkit"^]
+
+* NetAppTrident
++
+link:https://docs.netapp.com/us-en/netapp-solutions-containers/openshift/os-trident-overview.html["概要"^]
+
+* NetApp GPUDirect ストレージブログ -
++
+https://www.netapp.com/blog/ontap-reaches-171-gpudirect-storage/["https://www.netapp.com/blog/ontap-reaches-171-gpudirect-storage/"]
+
+* NVIDIA DGX BasePOD
++
+https://www.nvidia.com/en-us/data-center/dgx-basepod/["https://www.nvidia.com/en-us/data-center/dgx-basepod/"^]
+
+* NVIDIA DGX H100 システム
++
+https://www.nvidia.com/en-us/data-center/dgx-h100/["https://www.nvidia.com/en-us/data-center/dgx-h100/"^]
+
+* NVIDIAネットワーク
++
+https://www.nvidia.com/en-us/networking/["https://www.nvidia.com/en-us/networking/"^]
+
+* NVIDIA Magnum IO™ GPUDirect™ ストレージ
++
+https://docs.nvidia.com/gpudirect-storage["https://docs.nvidia.com/gpudirect-storage"]
+
+* NVIDIAベースコマンド
++
+https://www.nvidia.com/en-us/data-center/base-command/["https://www.nvidia.com/en-us/data-center/base-command/"]
+
+* NVIDIAベースコマンドマネージャー
++
+https://www.nvidia.com/en-us/data-center/base-command/manager["https://www.nvidia.com/en-us/data-center/base-command/manager"]
+
+* NVIDIA AIエンタープライズ
++
+https://www.nvidia.com/en-us/data-center/products/ai-enterprise/["https://www.nvidia.com/en-us/data-center/products/ai-enterprise/"^]
+
+
+
+
+
+== 謝辞
+
+このドキュメントは、 NetAppソリューションおよびONTAPエンジニアリング チーム (David Arnette、Olga Kornievskaia、Dustin Fischer、Srikanth Kaligotla、Mohit Kumar、および Raghuram Sudhaakar) によって作成されました。著者らは、継続的なサポートをいただいたNVIDIAおよびNVIDIA DGX BasePODエンジニアリング チームにも感謝の意を表します。

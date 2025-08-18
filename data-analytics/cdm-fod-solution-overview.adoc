@@ -1,0 +1,19 @@
+---
+sidebar: sidebar 
+permalink: data-analytics/cdm-fod-solution-overview.html 
+keywords: tr4967, 4967, introduction, overview 
+summary: データ サイエンティストやエンジニアは、NFS 形式で保存されたデータにアクセスする必要がよくありますが、AWS は S3 バケット アクセスのみをサポートしているため、AWS SageMaker の S3 プロトコルからこのデータに直接アクセスするのは難しい場合があります。ただし、 NetApp ONTAP は、NFS と S3 のデュアルプロトコル アクセスを有効にすることでソリューションを提供します。このソリューションにより、データ サイエンティストやエンジニアは、 NetApp Cloud Volumes ONTAPの S3 バケットを介して AWS SageMaker ノートブックの NFS データにアクセスできるようになります。このアプローチにより、追加のソフトウェアを必要とせずに、NFS と S3 の両方から同じデータに簡単にアクセスして共有できるようになります。 
+---
+= TR-4967: NetAppファイル・オブジェクト・デュアリティと AWS SageMaker によるクラウドデータ管理
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media/
+
+
+カーティケヤン ナガリンガム、NetApp
+
+[role="lead"]
+データ サイエンティストやエンジニアは、NFS 形式で保存されたデータにアクセスする必要がよくありますが、AWS は S3 バケット アクセスのみをサポートしているため、AWS SageMaker の S3 プロトコルからこのデータに直接アクセスするのは難しい場合があります。ただし、 NetApp ONTAP は、NFS と S3 のデュアルプロトコル アクセスを有効にすることでソリューションを提供します。このソリューションにより、データ サイエンティストやエンジニアは、 NetApp Cloud Volumes ONTAPの S3 バケットを介して AWS SageMaker ノートブックの NFS データにアクセスできるようになります。このアプローチにより、追加のソフトウェアを必要とせずに、NFS と S3 の両方から同じデータに簡単にアクセスして共有できるようになります。

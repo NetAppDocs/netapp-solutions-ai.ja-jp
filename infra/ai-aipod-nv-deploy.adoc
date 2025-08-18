@@ -1,0 +1,393 @@
+---
+sidebar: sidebar 
+permalink: infra/ai-aipod-nv-deploy.html 
+keywords: NetApp AI, AI, Artificial Intelligence, ML, Machine Learning, NVIDIA, NVIDIA AI Enterprise, NVIDIA BasePOD, NVIDIA DGX 
+summary: NetApp AIPodとNVIDIA DGX システム - 導入 
+---
+= NVA-1173 NetApp AIPodとNVIDIA DGX システム - 導入の詳細
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media/
+
+
+[role="lead"]
+このセクションでは、このソリューションの検証中に使用される展開の詳細について説明します。使用される IP アドレスは例であり、展開環境に基づいて変更する必要があります。この構成の実装に使用される特定のコマンドの詳細については、適切な製品ドキュメントを参照してください。
+
+下の図は、1 つの DGX H100 システムと 1 つの HA ペアのAFF A90コントローラの詳細なネットワークおよび接続情報を示しています。次のセクションの展開ガイダンスは、この図の詳細に基づいています。
+
+_NetApp AIpod ネットワーク構成_
+
+image:aipod-nv-a90-netdetail.png["入出力ダイアログまたは書かれたコンテンツを示す図"]
+
+次の表は、最大 16 個の DGX システムと 2 個のAFF A90 HA ペアのケーブル割り当ての例を示しています。
+
+|===
+| スイッチとポート | デバイス | デバイスポート 
+
+
+| スイッチ1ポート1～16 | DGX-H100-01から-16 | enp170s0f0np0、スロット1ポート1 
+
+
+| スイッチ1ポート17-32 | DGX-H100-01から-16 | enp170s0f1np1、スロット1ポート2 
+
+
+| スイッチ1ポート33-36 | AFF-A90-01から-04 | ポートe6a 
+
+
+| スイッチ1ポート37-40 | AFF-A90-01から-04 | ポートe11a 
+
+
+| スイッチ1ポート41-44 | AFF-A90-01から-04 | ポートe2a 
+
+
+| スイッチ1ポート57-64 | ISLからスイッチ2へ | ポート57～64 
+
+
+|  |  |  
+
+
+| スイッチ2ポート1-16 | DGX-H100-01から-16 | enp41s0f0np0、スロット2ポート1 
+
+
+| スイッチ2ポート17-32 | DGX-H100-01から-16 | enp41s0f1np1、スロット2ポート2 
+
+
+| スイッチ2ポート33-36 | AFF-A90-01から-04 | ポートe6b 
+
+
+| スイッチ2ポート37-40 | AFF-A90-01から-04 | ポートe11b 
+
+
+| スイッチ2ポート41-44 | AFF-A90-01から-04 | ポートe2b 
+
+
+| スイッチ2ポート57-64 | ISLからスイッチ1へ | ポート57～64 
+|===
+次の表は、この検証で使用されたさまざまなコンポーネントのソフトウェア バージョンを示しています。
+
+|===
+| デバイス | ソフトウェア バージョン 
+
+
+| NVIDIA SN4600スイッチ | キュムラス Linux v5.9.1 
+
+
+| NVIDIA DGX システム | DGX OS v6.2.1 (Ubuntu 22.04 LTS) 
+
+
+| メラノックスOFED | 24.01 
+
+
+| NetApp AFF A90 | NetApp ONTAP 9.14.1 
+|===
+
+
+== ストレージネットワーク構成
+
+このセクションでは、イーサネット ストレージ ネットワークの構成に関する重要な詳細について説明します。 InfiniBandコンピューティングネットワークの設定については、link:https://nvdam.widen.net/s/nfnjflmzlj/nvidia-dgx-basepod-reference-architecture["NVIDIA BasePOD ドキュメント"] 。スイッチの設定の詳細については、link:https://docs.nvidia.com/networking-ethernet-software/cumulus-linux-59/["NVIDIA Cumulus Linux ドキュメント"] 。
+
+SN4600 スイッチを構成するために使用される基本的な手順を以下に概説します。このプロセスでは、ケーブル配線と基本的なスイッチ設定 (管理 IP アドレス、ライセンスなど) が完了していることを前提としています。
+
+. スイッチ間のISLボンドを構成して、マルチリンクアグリゲーション（MLAG）とフェイルオーバートラフィックを有効にします。
++
+** この検証では、テスト対象のストレージ構成に十分すぎるほどの帯域幅を提供するために8つのリンクを使用しました。
+** MLAG を有効にする具体的な手順については、Cumulus Linux のドキュメントを参照してください。
+
+
+. 両方のスイッチのクライアントポートとストレージポートの各ペアにLACP MLAGを設定します。
++
+** DGX-H100-01 の場合は各スイッチのポート swp17 (enp170s0f1np1 および enp41s0f1np1)、DGX-H100-02 の場合はポート swp18 (bond1-16)
+** 各スイッチのポート swp41 はAFF-A90-01 (e2a および e2b)、ポート swp42 はAFF-A90-02 など (bond17-20)
+** nv set interfacebondX 結合メンバー swpX
+** nv set interface ボンドx ボンド mlag id X
+
+
+. すべてのポートとMLAGボンドをデフォルトのブリッジドメインに追加します
++
+** nv set int swp1-16,33-40 ブリッジドメイン br_default
+** nv set int Bond1-20 ブリッジドメイン br_default
+
+
+. 各スイッチでRoCEを有効にする
++
+** nv roceモードロスレス設定
+
+
+. VLAN を構成する - クライアントポート用に 2 つ、ストレージポート用に 2 つ、管理用に 1 つ、L3 スイッチ間用に 1 つ
++
+** スイッチ1-
++
+*** クライアント NIC 障害発生時の L3 スイッチからスイッチへのルーティング用の VLAN 3
+*** 各 DGX システムのストレージ ポート 1 の VLAN 101 (enp170s0f0np0、スロット 1 ポート 1)
+*** 各AFF A90ストレージコントローラのポートe6aとe11aのVLAN 102
+*** 各 DGX システムおよびストレージ コントローラへの MLAG インターフェイスを使用した管理用の VLAN 301
+
+
+** スイッチ2-
++
+*** クライアント NIC 障害発生時の L3 スイッチからスイッチへのルーティング用の VLAN 3
+*** 各 DGX システムのストレージ ポート 2 の VLAN 201 (enp41s0f0np0、スロット 2 ポート 1)
+*** 各AFF A90ストレージコントローラのポートe6bとe11bのVLAN 202
+*** 各 DGX システムおよびストレージ コントローラへの MLAG インターフェイスを使用した管理用の VLAN 301
+
+
+
+
+. 各VLANに物理ポートを適切に割り当てます（例：クライアントVLANにはクライアントポート、ストレージVLANにはストレージポート）。
++
+** nv set int <swpX> ブリッジドメイン br_default アクセス <vlan id>
+** 必要に応じてボンディングされたインターフェース上で複数の VLAN を有効にするには、MLAG ポートをトランク ポートとして残しておく必要があります。
+
+
+. 各VLANのスイッチ仮想インターフェース（SVI）をゲートウェイとして設定し、L3ルーティングを有効にする
++
+** スイッチ1-
++
+*** nv set int vlan3 ip address 100.127.0.0/31
+*** nv set int vlan101 ip address 100.127.101.1/24
+*** nv set int vlan102 ip address 100.127.102.1/24
+
+
+** スイッチ2-
++
+*** nv set int vlan3 ip address 100.127.0.1/31
+*** nv set int vlan201 ip address 100.127.201.1/24
+*** nv set int vlan202 ip address 100.127.202.1/24
+
+
+
+
+. 静的ルートを作成する
++
+** 同じスイッチ上のサブネットに対して静的ルートが自動的に作成される
+** クライアントリンク障害が発生した場合にスイッチ間のルーティングを行うために追加の静的ルートが必要です。
++
+*** スイッチ1-
++
+**** nv set vrf デフォルトルータ static 100.127.128.0/17 via 100.127.0.1
+
+
+*** スイッチ2-
++
+**** nv set vrf default router static 100.127.0.0/17 via 100.127.0.0
+
+
+
+
+
+
+
+
+
+
+== ストレージシステムの構成
+
+このセクションでは、このソリューションの A90 ストレージ システムの構成に関する重要な詳細について説明します。 ONTAPシステムの構成の詳細については、link:https://docs.netapp.com/us-en/ontap/index.html["ONTAPのドキュメント"] 。以下の図は、ストレージ システムの論理構成を示しています。
+
+_NetApp A90 ストレージ クラスタの論理構成_
+
+image:aipod-nv-a90-logical.png["入出力ダイアログまたは書かれたコンテンツを示す図"]
+
+ストレージ システムを構成するために使用される基本的な手順を以下に概説します。このプロセスでは、基本的なストレージ クラスターのインストールが完了していることを前提としています。
+
+. 各コントローラに、スペア1つを除いたすべての使用可能なパーティションを含む1つのアグリゲートを構成する
++
+** aggr create -node <ノード> -aggregate <ノード>_data01 -diskcount <47>
+
+
+. 各コントローラでifgrpsを構成する
++
+** net port ifgrp create -node <ノード> -ifgrp a1a -mode multimode_lacp -distr-function port
+** net port ifgrp add-port -node <ノード> -ifgrp <ifgrp> -ports <ノード>:e2a,<ノード>:e2b
+
+
+. 各コントローラのifgrpでmgmt vlanポートを設定する
++
+** ネットポートVLAN作成 -ノードaff-a90-01 -ポートa1a -VLAN-ID 31
+** ネットポートVLAN作成 -ノードaff-a90-02 -ポートa1a -VLAN-ID 31
+** ネットポートVLAN作成 -ノードaff-a90-03 -ポートa1a -VLAN-ID 31
+** ネットポートVLAN作成 -ノードaff-a90-04 -ポートa1a -VLAN-ID 31
+
+
+. ブロードキャスト ドメインの作成
++
+** ブロードキャストドメイン作成 -ブロードキャストドメイン vlan21 -mtu 9000 -ポート aff-a90-01:e6a、aff-a90-01:e11a、aff-a90-02:e6a、aff-a90-02:e11a、aff-a90-03:e6a、aff-a90-03:e11a、aff-a90-04:e6a、aff-a90-04:e11a
+** ブロードキャストドメインを作成 -ブロードキャストドメイン vlan22 -mtu 9000 -ポート aaff-a90-01:e6b、aff-a90-01:e11b、aff-a90-02:e6b、aff-a90-02:e11b、aff-a90-03:e6b、aff-a90-03:e11b、aff-a90-04:e6b、aff-a90-04:e11b
+** ブロードキャストドメイン作成 -ブロードキャストドメイン vlan31 -mtu 9000 -ポート aff-a90-01:a1a-31,aff-a90-02:a1a-31,aff-a90-03:a1a-31,aff-a90-04:a1a-31
+
+
+. 管理SVMの作成 *
+. 管理SVMを構成する
++
+** LIFを作成する
++
+*** net int create -vserver basepod-mgmt -lif vlan31-01 -home-node aff-a90-01 -home-port a1a-31 -address 192.168.31.X -netmask 255.255.255.0
+
+
+** FlexGroupボリュームを作成する -
++
+*** ボリューム作成 -vserver basepod-mgmt -ボリューム ホーム -サイズ 10T -自動プロビジョニング -フレックスグループ -ジャンクション パス /home
+*** ボリューム作成 -vserver basepod-mgmt -ボリューム cm -サイズ 10T -自動プロビジョニング -フレックスグループ -ジャンクションパス /cm
+
+
+** 輸出ポリシーを作成する
++
+*** エクスポートポリシールール作成 -vserver basepod-mgmt -policy default -client-match 192.168.31.0/24 -rorule sys -rwrule sys -superuser sys
+
+
+
+
+. データSVMの作成 *
+. データSVMを構成する
++
+** RDMAサポート用にSVMを構成する
++
+*** vserver nfs modify -vserver basepod-data -rdma が有効
+
+
+** LIFを作成する
++
+*** net int create -vserver basepod-data -lif c1-6a-lif1 -home-node aff-a90-01 -home-port e6a -address 100.127.102.101 -netmask 255.255.255.0
+*** net int create -vserver basepod-data -lif c1-6a-lif2 -home-node aff-a90-01 -home-port e6a -address 100.127.102.102 -netmask 255.255.255.0
+*** net int create -vserver basepod-data -lif c1-6b-lif1 -home-node aff-a90-01 -home-port e6b -address 100.127.202.101 -netmask 255.255.255.0
+*** net int create -vserver basepod-data -lif c1-6b-lif2 -home-node aff-a90-01 -home-port e6b -address 100.127.202.102 -netmask 255.255.255.0
+*** net int create -vserver basepod-data -lif c1-11a-lif1 -ホームノード aff-a90-01 -ホームポート e11a -アドレス 100.127.102.103 -ネットマスク 255.255.255.0
+*** net int create -vserver basepod-data -lif c1-11a-lif2 -home-node aff-a90-01 -home-port e11a -address 100.127.102.104 -netmask 255.255.255.0
+*** net int create -vserver basepod-data -lif c1-11b-lif1 -home-node aff-a90-01 -home-port e11b -address 100.127.202.103 -netmask 255.255.255.0
+*** net int create -vserver basepod-data -lif c1-11b-lif2 -home-node aff-a90-01 -home-port e11b -address 100.127.202.104 -netmask 255.255.255.0
+*** net int create -vserver basepod-data -lif c2-6a-lif1 -home-node aff-a90-02 -home-port e6a -address 100.127.102.105 -netmask 255.255.255.0
+*** net int create -vserver basepod-data -lif c2-6a-lif2 -home-node aff-a90-02 -home-port e6a -address 100.127.102.106 -netmask 255.255.255.0
+*** net int create -vserver basepod-data -lif c2-6b-lif1 -home-node aff-a90-02 -home-port e6b -address 100.127.202.105 -netmask 255.255.255.0
+*** net int create -vserver basepod-data -lif c2-6b-lif2 -home-node aff-a90-02 -home-port e6b -address 100.127.202.106 -netmask 255.255.255.0
+*** net int create -vserver basepod-data -lif c2-11a-lif1 -home-node aff-a90-02 -home-port e11a -address 100.127.102.107 -netmask 255.255.255.0
+*** net int create -vserver basepod-data -lif c2-11a-lif2 -home-node aff-a90-02 -home-port e11a -address 100.127.102.108 -netmask 255.255.255.0
+*** net int create -vserver basepod-data -lif c2-11b-lif1 -ホームノード aff-a90-02 -ホームポート e11b -アドレス 100.127.202.107 -ネットマスク 255.255.255.0
+*** net int create -vserver basepod-data -lif c2-11b-lif2 -home-node aff-a90-02 -home-port e11b -address 100.127.202.108 -netmask 255.255.255.0
+
+
+
+
+. RDMAアクセス用にLIFを構成する
++
+** ONTAP 9.15.1 を使用した導入では、物理情報の RoCE QoS 設定には、 ONTAP CLI では使用できない OS レベルのコマンドが必要です。  RoCE サポート用のポートの構成については、 NetAppサポートにお問い合わせください。  NFS over RDMA は問題なく機能します
+** ONTAP 9.16.1 以降では、エンドツーエンドの RoCE サポートに適した設定で物理インターフェイスが自動的に構成されるようになります。
+** net int edit -vserverbasepod-data -lif * -rdma-protocols roce
+
+
+. データSVMでNFSパラメータを設定する
++
+** nfs modify -vserver basepod-data -v4.1 有効 -v4.1-pnfs 有効 -v4.1-trunking 有効 -tcp-max-transfer-size 262144
+
+
+. FlexGroupボリュームを作成する -
++
+** ボリューム作成 -vserver ベースポッドデータ -ボリュームデータ -サイズ 100T -自動プロビジョニング -フレックスグループ -ジャンクションパス /データ
+
+
+. エクスポート ポリシーの作成
++
+** エクスポートポリシールール作成 -vserver basepod-data -policy default -client-match 100.127.101.0/24 -rorule sys -rwrule sys -superuser sys
+** エクスポートポリシールール作成 -vserver basepod-data -policy default -client-match 100.127.201.0/24 -rorule sys -rwrule sys -superuser sys
+
+
+. ルートを作成する
++
+** ルートを追加 -vserver basepod_data -destination 100.127.0.0/17 -gateway 100.127.102.1 metric 20
+** ルートを追加 -vserver basepod_data -destination 100.127.0.0/17 -gateway 100.127.202.1 metric 30
+** ルートを追加 -vserver basepod_data -destination 100.127.128.0/17 -gateway 100.127.202.1 metric 20
+** ルートを追加 -vserver basepod_data -destination 100.127.128.0/17 -gateway 100.127.102.1 metric 30
+
+
+
+
+
+
+=== RoCE ストレージ アクセス用の DGX H100 構成
+
+このセクションでは、DGX H100 システムの構成に関する重要な詳細について説明します。これらの構成項目の多くは、DGX システムに展開された OS イメージに含めることも、起動時に Base Command Manager によって実装することもできます。これらは参考のためにここにリストされています。BCMでのノードとソフトウェアイメージの構成の詳細については、link:https://docs.nvidia.com/base-command-manager/index.html#overview["BCMのドキュメント"] 。
+
+. 追加パッケージをインストールする
++
+** ipmitool
+** python3-pip
+
+
+. Pythonパッケージをインストールする
++
+** パラミコ
+** マットプロットライブラリ
+
+
+. パッケージのインストール後にdpkgを再設定する
++
+** dpkg --configure -a
+
+
+. MOFEDをインストールする
+. パフォーマンスチューニングのためのmst値を設定する
++
+** mstconfig -y -d <aa:00.0,29:00.0> ADVANCED_PCI_SETTINGS=1 NUM_OF_VFS=0 MAX_ACC_OUT_READ=44 を設定します
+
+
+. 設定を変更した後はアダプタをリセットしてください
++
+** mlxfwreset -d <aa:00.0,29:00.0> -y リセット
+
+
+. PCIデバイスにMaxReadReqを設定する
++
+** setpci -s <aa:00.0,29:00.0> 68.W=5957
+
+
+. RXおよびTXリングバッファサイズを設定する
++
+** ethtool -G <enp170s0f0np0,enp41s0f0np0> 受信ポート数 8192 送信ポート数 8192
+
+
+. mlnx_qos を使用して PFC と DSCP を設定する
++
+** mlnx_qos -i <enp170s0f0np0,enp41s0f0np0> --pfc 0,0,0,1,0,0,0,0 --trust=dscp --cable_len=3
+
+
+. ネットワークポート上の RoCE トラフィックの ToS を設定する
++
+** エコー 106 > /sys/class/infiniband/<mlx5_7,mlx5_1>/tc/1/traffic_class
+
+
+. 各ストレージNICを適切なサブネット上のIPアドレスで構成します。
++
+** ストレージ NIC 1 の 100.127.101.0/24
+** ストレージ NIC 2 の 100.127.201.0/24
+
+
+. LACPボンディング用のインバンドネットワークポートを構成する（enp170s0f1np1、enp41s0f1np1）
+. 各ストレージサブネットへのプライマリパスとセカンダリパスの静的ルートを構成する
++
+** ルート追加 –net 100.127.0.0/17 gw 100.127.101.1 メトリック20
+** ルート追加 –net 100.127.0.0/17 gw 100.127.201.1 メトリック30
+** ルート追加 –net 100.127.128.0/17 gw 100.127.201.1 メトリック20
+** ルート追加 –net 100.127.128.0/17 gw 100.127.101.1 メトリック30
+
+
+. /homeボリュームをマウントする
++
+** マウント -o vers=3,nconnect=16,rsize=262144,wsize=262144 192.168.31.X:/home /home
+
+
+. マウント/データボリューム
++
+** データボリュームをマウントする際に、次のマウントオプションが使用されました。
++
+*** vers=4.1 # 複数のストレージノードへの並列アクセスのために pNFS を有効にします
+*** proto=rdma # 転送プロトコルをデフォルトのTCPではなくRDMAに設定します
+*** max_connect=16 # NFSセッショントランキングを有効にしてストレージポートの帯域幅を集約する
+*** write=eager # バッファリングされた書き込みの書き込みパフォーマンスが向上します
+*** rsize=262144,wsize=262144 # I/O転送サイズを256kに設定します
+
+
+
+
+

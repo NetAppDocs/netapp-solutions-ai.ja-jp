@@ -1,0 +1,188 @@
+---
+sidebar: sidebar 
+permalink: data-analytics/stgr-splunkss-single-site-perf.html 
+keywords: configuration, warm data, cold data, cache storage, indexer, event, generator 
+summary: このページでは、 NetApp StorageGRIDコントローラ上の Splunk SmartStore のパフォーマンスについて説明します。 
+---
+= 単一サイトのSmartStoreパフォーマンス
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media/
+
+
+[role="lead"]
+このセクションでは、 NetApp StorageGRIDコントローラ上の Splunk SmartStore のパフォーマンスについて説明します。  Splunk SmartStore は、ウォーム データをリモート ストレージ (この場合はパフォーマンス検証のStorageGRIDオブジェクト ストレージ) に移動します。
+
+image:stgr-splunkss-010.png["入出力ダイアログまたは書かれたコンテンツを示す図"]
+
+ホット/キャッシュ ストレージには EF600 を使用し、リモート ストレージにはStorageGRID 6060 を使用しました。パフォーマンス検証には次のアーキテクチャを使用しました。検索ヘッドを 2 つ、データをインデクサーに転送するヘビー フォワーダーを 4 つ、リアルタイム データを生成する Splunk イベント ジェネレーター (Eventgens) を 7 つ、データを保存するためのインデクサーを 18 個使用しました。
+
+image:stgr-splunkss-011.png["入出力ダイアログまたは書かれたコンテンツを示す図"]
+
+
+
+== 構成
+
+この表には、SmartStorage パフォーマンス検証に使用されるハードウェアがリストされています。
+
+|===
+| Splunkコンポーネント | Task | 数量 | コア | メモリ | OS 
+
+
+| 重量物輸送業者 | データの取り込みとインデクサーへのデータ転送を担当 | 4 | 16 | 32GBのRAM | スレッド 15 SP2 
+
+
+| インデクサー | ユーザーデータを管理します | 18 | 16 | 32GBのRAM | スレッド 15 SP2 
+
+
+| 検索ヘッド | ユーザーのフロントエンドはインデクサー内のデータを検索します | 2 | 16 | 32GBのRAM | スレッド 15 SP2 
+
+
+| 検索ヘッドデプロイヤー | 検索ヘッドクラスタの更新を処理します | 1 | 16 | 32GBのRAM | スレッド 15 SP2 
+
+
+| クラスターマスター | Splunkのインストールとインデクサーを管理します | 1 | 16 | 32GBのRAM | スレッド 15 SP2 
+
+
+| 監視コンソールとライセンスマスター | Splunk の導入全体を集中的に監視し、Splunk ライセンスを管理します。 | 1 | 16 | 32GBのRAM | スレッド 15 SP2 
+|===
+
+
+== SmartStoreリモートストアのパフォーマンス検証
+
+このパフォーマンス検証では、10 日分のデータに対して、すべてのインデクサーのローカル ストレージに SmartStore キャッシュを構成しました。私たちは、 `maxDataSize=auto` (バケット サイズ 750 MB) を Splunk クラスター マネージャーで作成し、変更をすべてのインデクサーにプッシュしました。アップロード パフォーマンスを測定するために、10 日間にわたって 1 日あたり 10 TB を取り込み、すべてのホット バケットを同時にウォームにロールオーバーし、SmartStore モニタリング コンソール ダッシュボードからインスタンスごとおよびデプロイメント全体のピークおよび平均スループットをキャプチャしました。
+
+この画像は 1 日に取り込まれたデータを示しています。
+
+image:stgr-splunkss-012.png["入出力ダイアログまたは書かれたコンテンツを示す図"]
+
+クラスタマスターから次のコマンドを実行しました（インデックス名は `eventgen-test`）。次に、SmartStore モニタリング コンソールのダッシュボードを使用して、インスタンスごとおよび展開全体のピークおよび平均アップロード スループットをキャプチャしました。
+
+....
+for i in rtp-idx0001 rtp-idx0002 rtp-idx0003 rtp-idx0004 rtp-idx0005 rtp-idx0006 rtp-idx0007 rtp-idx0008 rtp-idx0009 rtp-idx0010 rtp-idx0011 rtp-idx0012 rtp-idx0013011 rtdx0014 rtp-idx0015 rtp-idx0016 rtp-idx0017 rtp-idx0018 ; do  ssh $i "hostname;  date; /opt/splunk/bin/splunk _internal call /data/indexes/eventgen-test/roll-hot-buckets -auth admin:12345678; sleep 1  "; done
+....
+
+NOTE: クラスター マスターは、すべてのインデクサー (rtp-idx0001…rtp-idx0018) に対してパスワードなしの認証を行います。
+
+ダウンロードのパフォーマンスを測定するために、次のコマンドを使用して evict CLI を 2 回実行し、キャッシュからすべてのデータを削除しました。
+
+
+NOTE: クラスター マスターから次のコマンドを実行し、 StorageGRIDのリモート ストアの 10 日間のデータに対して検索ヘッドから検索を実行しました。次に、SmartStore モニタリング コンソールのダッシュボードを使用して、インスタンスごとおよび展開全体のピークおよび平均アップロード スループットをキャプチャしました。
+
+....
+for i in rtp-idx0001 rtp-idx0002 rtp-idx0003 rtp-idx0004 rtp-idx0005 rtp-idx0006 rtp-idx0007 rtp-idx0008 rtp-idx0009 rtp-idx0010 rtp-idx0011 rtp-idx0012 rtp-idx0013 rtp-idx0014 rtp-idx0015 rtp-idx0016 rtp-idx0017 rtp-idx0018 ; do  ssh $i " hostname;  date; /opt/splunk/bin/splunk _internal call /services/admin/cacheman/_evict -post:mb 1000000000 -post:path /mnt/EF600 -method POST  -auth admin:12345678;   "; done
+....
+インデクサー構成は SmartStore クラスター マスターからプッシュされました。クラスター マスターには、インデクサーに対して次の構成がありました。
+
+....
+Rtp-cm01:~ # cat /opt/splunk/etc/master-apps/_cluster/local/indexes.conf
+[default]
+maxDataSize = auto
+#defaultDatabase = eventgen-basic
+defaultDatabase = eventgen-test
+hotlist_recency_secs = 864000
+repFactor = auto
+[volume:remote_store]
+storageType = remote
+path = s3://smartstore2
+remote.s3.access_key = U64TUHONBNC98GQGL60R
+remote.s3.secret_key = UBoXNE0jmECie05Z7iCYVzbSB6WJFckiYLcdm2yg
+remote.s3.endpoint = 3.sddc.netapp.com:10443
+remote.s3.signature_version = v2
+remote.s3.clientCert =
+[eventgen-basic]
+homePath = $SPLUNK_DB/eventgen-basic/db
+coldPath = $SPLUNK_DB/eventgen-basic/colddb
+thawedPath = $SPLUNK_DB/eventgen-basic/thawed
+[eventgen-migration]
+homePath = $SPLUNK_DB/eventgen-scale/db
+coldPath = $SPLUNK_DB/eventgen-scale/colddb
+thawedPath = $SPLUNK_DB/eventgen-scale/thaweddb
+[main]
+homePath = $SPLUNK_DB/$_index_name/db
+coldPath = $SPLUNK_DB/$_index_name/colddb
+thawedPath = $SPLUNK_DB/$_index_name/thaweddb
+[history]
+homePath = $SPLUNK_DB/$_index_name/db
+coldPath = $SPLUNK_DB/$_index_name/colddb
+thawedPath = $SPLUNK_DB/$_index_name/thaweddb
+[summary]
+homePath = $SPLUNK_DB/$_index_name/db
+coldPath = $SPLUNK_DB/$_index_name/colddb
+thawedPath = $SPLUNK_DB/$_index_name/thaweddb
+[remote-test]
+homePath = $SPLUNK_DB/$_index_name/db
+coldPath = $SPLUNK_DB/$_index_name/colddb
+#for storagegrid config
+remotePath = volume:remote_store/$_index_name
+thawedPath = $SPLUNK_DB/$_index_name/thaweddb
+[eventgen-test]
+homePath = $SPLUNK_DB/$_index_name/db
+maxDataSize=auto
+maxHotBuckets=1
+maxWarmDBCount=2
+coldPath = $SPLUNK_DB/$_index_name/colddb
+#for storagegrid config
+remotePath = volume:remote_store/$_index_name
+thawedPath = $SPLUNK_DB/$_index_name/thaweddb
+[eventgen-evict-test]
+homePath = $SPLUNK_DB/$_index_name/db
+coldPath = $SPLUNK_DB/$_index_name/colddb
+#for storagegrid config
+remotePath = volume:remote_store/$_index_name
+thawedPath = $SPLUNK_DB/$_index_name/thaweddb
+maxDataSize = auto_high_volume
+maxWarmDBCount = 5000
+rtp-cm01:~ #
+....
+パフォーマンス マトリックスを収集するために、検索ヘッドで次の検索クエリを実行しました。
+
+image:stgr-splunkss-013.png["入出力ダイアログまたは書かれたコンテンツを示す図"]
+
+クラスター マスターからパフォーマンス情報を収集しました。ピークパフォーマンスは61.34GBpsでした。
+
+image:stgr-splunkss-014.png["入出力ダイアログまたは書かれたコンテンツを示す図"]
+
+平均パフォーマンスは約 29GBps でした。
+
+image:stgr-splunkss-015.png["入出力ダイアログまたは書かれたコンテンツを示す図"]
+
+
+
+== StorageGRIDのパフォーマンス
+
+SmartStore のパフォーマンスは、大量のデータから特定のパターンと文字列を検索することに基盤を置いています。この検証では、イベントは以下を使用して生成されます。 https://github.com/splunk/eventgen["イベントジェン"^]検索ヘッドを介して特定の Splunk インデックス (eventgen-test) に対して実行され、ほとんどのクエリの要求はStorageGRIDに送られます。次の画像は、クエリ データのヒットとミスを示しています。ヒット データはローカル ディスクから取得され、ミス データはStorageGRIDコントローラから取得されます。
+
+
+NOTE: 緑色はヒットデータ、オレンジ色はミスデータを示します。
+
+image:stgr-splunkss-016.png["入出力ダイアログまたは書かれたコンテンツを示す図"]
+
+StorageGRIDで検索クエリを実行すると、 StorageGRIDからの S3 取得速度の時間が次の画像に表示されます。
+
+image:stgr-splunkss-017.png["入出力ダイアログまたは書かれたコンテンツを示す図"]
+
+
+
+== StorageGRIDハードウェアの使用
+
+StorageGRIDインスタンスには、1 つのロード バランサーと 3 つのStorageGRIDコントローラーがあります。  3 つのコントローラーすべての CPU 使用率は 75% ～ 100% です。
+
+image:stgr-splunkss-018.png["入出力ダイアログまたは書かれたコンテンツを示す図"]
+
+
+
+== NetAppストレージコントローラ搭載SmartStore - 顧客にとってのメリット
+
+* *コンピューティングとストレージの分離。*  Splunk SmartStore はコンピューティングとストレージを分離し、それらを個別に拡張できるようにします。
+* *オンデマンドのデータ。*  SmartStore は、オンデマンドでデータをコンピューティングに近づけ、コンピューティングとストレージの弾力性とコスト効率を提供して、大規模なデータ保持期間の延長を実現します。
+* *AWS S3 API に準拠しています。*  SmartStore は、AWS S3 API を使用して、 StorageGRIDなどの AWS S3 および S3 API 準拠のオブジェクト ストアである復元ストレージと通信します。
+* *ストレージ要件とコストを削減します。*  SmartStore は、古いデータ (ウォーム/コールド) のストレージ要件を削減します。  NetAppストレージはデータ保護を提供し、障害と高可用性に対応するため、必要なのはデータのコピーが 1 つだけです。
+* *ハードウェア障害。*  SmartStore 展開でノード障害が発生しても、データにアクセスできなくなることはなく、ハードウェア障害やデータの不均衡からのインデクサーの回復が大幅に高速化されます。
+* アプリケーションとデータに対応したキャッシュ。
+* インデクサーの追加と削除、およびクラスターのセットアップと解体をオンデマンドで実行します。
+* ストレージ層はハードウェアに縛られなくなりました。
+

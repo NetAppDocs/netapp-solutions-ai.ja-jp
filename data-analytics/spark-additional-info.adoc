@@ -1,0 +1,73 @@
+---
+sidebar: sidebar 
+permalink: data-analytics/spark-additional-info.html 
+keywords:  
+summary:  
+---
+= 詳細情報の入手方法
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media/
+
+
+[role="lead"]
+このTRでは次の資料を参照しています。
+
+* Apache Spark のアーキテクチャとコンポーネント
++
+http://spark.apache.org/docs/latest/cluster-overview.html["http://spark.apache.org/docs/latest/cluster-overview.html"^]
+
+* Apache Sparkのユースケース
++
+https://www.qubole.com/blog/big-data/apache-spark-use-cases/["https://www.qubole.com/blog/big-data/apache-spark-use-cases/"^]
+
+* スパークNLP
++
+https://www.johnsnowlabs.com/spark-nlp/["https://www.johnsnowlabs.com/spark-nlp/"^]
+
+* バート
++
+https://arxiv.org/abs/1810.04805["https://arxiv.org/abs/1810.04805"^]
+
+* 広告クリック予測のためのディープネットワークとクロスネットワーク
++
+https://arxiv.org/abs/1708.05123["https://arxiv.org/abs/1708.05123"^]
+
+* FlexGroup
++
+https://www.netapp.com/pdf.html?item=/media/7337-tr4557pdf.pdf[]
+
+* ストリーミングETL
++
+https://www.infoq.com/articles/apache-spark-streaming["https://www.infoq.com/articles/apache-spark-streaming"^]
+
+* Hadoop向けNetApp Eシリーズソリューション
++
+https://www.netapp.com/media/16420-tr-3969.pdf["https://www.netapp.com/media/16420-tr-3969.pdf"^]
+
+
+
+* NetApp の最新データ分析ソリューション
++
+link:index.html["データ分析ソリューション"]
+
+* SnapMirror
++
+https://docs.netapp.com/us-en/ontap/data-protection/snapmirror-replication-concept.html["https://docs.netapp.com/us-en/ontap/data-protection/snapmirror-replication-concept.html"^]
+
+* XCP
++
+https://mysupport.netapp.com/documentation/docweb/index.html?productID=63942&language=en-US["https://mysupport.netapp.com/documentation/docweb/index.html?productID=63942&language=en-US"^]
+
+* BlueXPコピーと同期
++
+https://cloud.netapp.com/cloud-sync-service["https://cloud.netapp.com/cloud-sync-service"^]
+
+* データオプスツールキット
++
+https://github.com/NetApp/netapp-dataops-toolkit["https://github.com/NetApp/netapp-dataops-toolkit"^]
+
+

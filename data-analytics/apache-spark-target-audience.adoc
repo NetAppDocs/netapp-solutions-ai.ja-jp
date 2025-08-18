@@ -1,0 +1,26 @@
+---
+sidebar: sidebar 
+permalink: data-analytics/apache-spark-target-audience.html 
+keywords: audience, data scientist, engineer, devops, cloud administrator, architect 
+summary: このセクションでは、このソリューションの内容に興味を持つ可能性のある人について説明します。 
+---
+= 対象
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media/
+
+
+[role="lead"]
+分析とデータ サイエンスの世界は、IT とビジネスの複数の分野に関係しています。
+
+* データ サイエンティストには、選択したツールとライブラリを使用できる柔軟性が必要です。
+* データ エンジニアは、データがどのように流れ、どこに存在するかを知る必要があります。
+* DevOps エンジニアには、新しい AI および ML アプリケーションを CI および CD パイプラインに統合するためのツールが必要です。
+* クラウド管理者とアーキテクトは、ハイブリッド クラウド リソースをセットアップおよび管理できる必要があります。
+* ビジネス ユーザーは、分析、AI、ML、DL アプリケーションにアクセスしたいと考えています。
+
+
+この技術レポートでは、 NetApp AFF、E シリーズ、 StorageGRID、NFS ダイレクト アクセス、Apache Spark、Horovod、Keras が、これらのそれぞれの役割にどのように役立ち、ビジネスに価値をもたらすかについて説明します。

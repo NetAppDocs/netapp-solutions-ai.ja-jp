@@ -1,0 +1,67 @@
+---
+sidebar: sidebar 
+permalink: data-analytics/kafka-nfs-additional-info.html 
+keywords:  
+summary:  
+---
+= 詳細情報の入手方法
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media/
+
+
+[role="lead"]
+このドキュメントに記載されている情報の詳細については、次のドキュメントや Web サイトを参照してください。
+
+* Apache Kafka とは何ですか?
++
+https://www.confluent.io/what-is-apache-kafka/["https://www.confluent.io/what-is-apache-kafka/"^]
+
+* silly rename とは何ですか?
++
+https://linux-nfs.org/wiki/index.php/Server-side_silly_rename["https://linux-nfs.org/wiki/index.php/Server-side_silly_rename"^]
+
+* ONATP はストリーミング アプリケーション用に読み取られます。
++
+https://www.netapp.com/blog/ontap-ready-for-streaming-applications/["https://www.netapp.com/blog/ontap-ready-for-streaming-applications/"^]
+
+* NetApp製品ドキュメント
++
+https://www.netapp.com/support-and-training/documentation/["https://www.netapp.com/support-and-training/documentation/"^]
+
+* NFS とは何ですか?
++
+https://en.wikipedia.org/wiki/Network_File_System["https://en.wikipedia.org/wiki/Network_File_System"^]
+
+* Kafka パーティションの再割り当てとは何ですか?
++
+https://docs.cloudera.com/runtime/7.2.10/kafka-managing/topics/kafka-manage-cli-reassign-overview.html["https://docs.cloudera.com/runtime/7.2.10/kafka-managing/topics/kafka-manage-cli-reassign-overview.html"^]
+
+* OpenMessaging ベンチマークとは何ですか?
++
+https://openmessaging.cloud/["https://openmessaging.cloud/"^]
+
+* Kafka ブローカーを移行するにはどうすればよいですか?
++
+https://medium.com/@sanchitbansal26/how-to-migrate-kafka-cluster-with-no-downtime-58c216129058["https://medium.com/@sanchitbansal26/how-to-migrate-kafka-cluster-with-no-downtime-58c216129058"^]
+
+* Prometheus で Kafka ブローカーを監視するにはどうすればよいですか?
++
+https://www.confluent.io/blog/monitor-kafka-clusters-with-prometheus-grafana-and-confluent/[]
+
+* Apache Kafka 向けマネージド プラットフォーム
++
+https://www.instaclustr.com/platform/managed-apache-kafka/[]
+
+* Apache Kafka のサポート
++
+https://www.instaclustr.com/support-solutions/kafka-support/[]
+
+* Apache Kafka のコンサルティングサービス
++
+https://www.instaclustr.com/services/consulting/[]
+
+

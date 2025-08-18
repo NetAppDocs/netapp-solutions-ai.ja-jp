@@ -1,0 +1,29 @@
+---
+sidebar: sidebar 
+permalink: infra/ai-lenovo-train-arch.html 
+keywords: adjustments 
+summary: 検証に使用される設定は、他のユースケースに合わせて調整できます。 
+---
+= アーキテクチャの調整
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media/
+
+
+[role="lead"]
+この検証に使用される設定は、他のユースケースに合わせて調整できます。
+
+
+
+== CPU調整
+
+この検証には、Lenovo の推奨に従い、Skylake Intel Xeon Platinum 8360Y プロセッサを使用しました。このワークロードは CPU に依存しないため、同等の Cascade Lake CPU である Intel Xeon Gold 6330 プロセッサで同様のパフォーマンスが得られると予想されます。
+
+
+
+== ストレージ容量の増加
+
+追加のディスク シェルフとコントローラー モデルがある場合は、ストレージ容量のニーズに基づいて、共有ストレージ (NFS ボリューム) をオンデマンドで増やすことができます。これは、CLI から、またはストレージ コントローラのNetApp Web インターフェイスから管理者ユーザーとして実行できます。

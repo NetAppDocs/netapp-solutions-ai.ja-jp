@@ -1,0 +1,31 @@
+---
+sidebar: sidebar 
+permalink: infra/ai-aipod-nv-intro.html 
+keywords: NetApp AI, AI, Artificial Intelligence, ML, Machine Learning, NVIDIA, NVIDIA AI Enterprise, NVIDIA BasePOD, NVIDIA DGX 
+summary: NetApp AIPod with NVIDIA DGX Systems は、 NetApp ONTAP AFFストレージ システムとNVIDIAネットワークおよび DGX システムを使用したディープラーニングと人工知能向けのNVIDIA BasePOD に基づく、エンタープライズ対応のリファレンス アーキテクチャです。 
+---
+= NVA-1173 NetApp AIPodとNVIDIA DGX システム - 概要
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media/
+
+
+image:poweredbynvidia.png["200,200,エラー: グラフィック イメージがありません"]
+
+[role="lead"]
+NetAppソリューションエンジニアリング
+
+
+
+== 概要
+
+NVIDIA DGX™ システムとNetAppクラウド接続ストレージ システムを搭載した NetApp AIPod は、設計の複雑さと推測作業を排除することで、機械学習 (ML) および人工知能 (AI) ワークロードのインフラストラクチャ導入を簡素化します。次世代のワークロードに卓越したコンピューティング パフォーマンスを提供するNVIDIA DGX BasePOD™ 設計を基盤とするAIPodとNVIDIA DGX システムにより、 NetApp AFFストレージ システムが追加され、顧客は小規模から始めて中断なく拡張しながら、エッジからコア、クラウド、そしてその逆に至るまでデータをインテリジェントに管理できるようになります。  NetApp AIPod は、下の図に示すように、 NetApp AI ソリューションのより大規模なポートフォリオの一部です。
+
+_NetApp AI ソリューション ポートフォリオ_
+
+image:aipod-nv-portfolio.png["入出力ダイアログまたは書かれたコンテンツを示す図"]
+
+このドキュメントでは、 AIPodリファレンス アーキテクチャの主要コンポーネント、システム接続と構成情報、検証テストの結果、ソリューションのサイズ設定ガイダンスについて説明します。このドキュメントは、ML/DL および分析ワークロード向けの高性能インフラストラクチャの導入に関心のあるNetAppおよびパートナー ソリューション エンジニアと顧客の戦略的意思決定者を対象としています。

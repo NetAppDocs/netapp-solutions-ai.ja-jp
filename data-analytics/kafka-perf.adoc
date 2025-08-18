@@ -1,0 +1,27 @@
+---
+sidebar: sidebar 
+permalink: data-analytics/kafka-perf.html 
+keywords: performance, tests, scalability 
+summary: NetApp StorageGRIDセットアップを使用して、プロデュースおよびコンシューマー ワークロード用に 3 ～ 4 ノードの階層型ストレージ テストを実行しました。 
+---
+= スケーラビリティを考慮したパフォーマンステスト
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media/
+
+
+[role="lead"]
+NetApp StorageGRIDセットアップを使用して、プロデューサー ワークロードとコンシューマー ワークロード用に 3 ～ 4 ノードの階層型ストレージ テストを実行しました。当社のテストによると、完了までの時間とパフォーマンス結果は、 StorageGRIDノードの数に正比例しました。  StorageGRID のセットアップには少なくとも 3 つのノードが必要でした。
+
+* ストレージ ノードの数が増加すると、生成と消費の操作を完了する時間は直線的に減少しました。
+
+
+image:confluent-kafka-009.png["入出力ダイアログまたは書かれたコンテンツを示す図"]
+
+* s3 取得操作のパフォーマンスは、 StorageGRIDノードの数に基づいて直線的に増加しました。  StorageGRID は最大 200 個の StorageGRID ノードをサポートします。
+
+
+image:confluent-kafka-010.png["入出力ダイアログまたは書かれたコンテンツを示す図"]

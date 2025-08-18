@@ -1,0 +1,153 @@
+---
+section: ai-data-pipelines
+title: MLOpsとデータ管理
+url: "/ai-data-pipelines/index.html"
+entries:
+- title: NetAppによるオープンソース MLOps
+  pdf-filename: NetAppによるオープンソース MLOps
+  entries:
+  - title: はじめに
+    url: "/software/ai-osmlops-intro.html"
+  - title: 技術概要
+    url: "/software/ai-osmlops-concepts.html"
+  - title: アーキテクチャ
+    url: "/software/ai-osmlops-architecture.html"
+  - title: NetApp Trident の構成
+    entries:
+    - title: AIPod展開用のTridentバックエンド
+      url: "/software/ai-osmlops-trident-backend.html"
+    - title: AIPodデプロイメント用の Kubernetes StorageClasses
+      url: "/software/ai-osmlops-trident-sc.html"
+  - title: Apacheエアフロー
+    entries:
+    - title: Apache Airflow のデプロイメント
+      url: "/software/ai-osmlops-airflow-deploy.html"
+    - title: NetApp DataOps Toolkit を Airflow と併用する
+      url: "/software/ai-osmlops-airflow-dotk.html"
+  - title: ジュピターハブ
+    entries:
+    - title: JupyterHub のデプロイメント
+      url: "/software/ai-osmlops-jhub-deploy.html"
+    - title: JupyterHubでNetApp DataOpsツールキットを使用する
+      url: "/software/ai-osmlops-jhub-dotk.html"
+    - title: NetApp SnapMirrorでデータを取り込む
+      url: "/software/ai-osmlops-jhub-ingest.html"
+  - title: MLフロー
+    entries:
+    - title: MLflowの展開
+      url: "/software/ai-osmlops-mlflow-deploy.html"
+    - title: NetAppと MLflow によるデータセットからモデルへのトレーサビリティ
+      url: "/software/ai-osmlops-mlflow-trace.html"
+  - title: キューブフロー
+    entries:
+    - title: Kubeflow のデプロイメント
+      url: "/software/ai-osmlops-kubeflow-deploy.html"
+    - title: Jupyter Notebook ワークスペースのプロビジョニング
+      url: "/software/ai-osmlops-kubeflow-notebook.html"
+    - title: KubeflowでNetApp DataOpsツールキットを使用する
+      url: "/software/ai-osmlops-kubeflow-dotk.html"
+    - title: 画像認識モデルのトレーニング - ワークフローの例
+      url: "/software/ai-osmlops-kubeflow-train.html"
+  - title: Trident操作の例
+    url: "/software/ai-osmlops-trident-ops.html"
+  - title: AIPod展開の高パフォーマンスジョブの例
+    entries:
+    - title: 単一ノードのAIワークロードを実行する
+      url: "/software/ai-osmlops-train-singlenode.html"
+    - title: 同期分散AIワークロードを実行する
+      url: "/software/ai-osmlops-train-distributed.html"
+- title: Domino Data Lab とNetAppによるハイブリッド MLOps
+  pdf-filename: Domino Data Lab とNetAppによるハイブリッド マルチクラウド MLOps
+  entries:
+  - title: はじめに
+    url: "/software/ai-hybrid-ddlnexus-intro.html"
+  - title: 技術概要
+    url: "/software/ai-hybrid-ddlnexus-tech.html"
+  - title: アーキテクチャ
+    url: "/software/ai-hybrid-ddlnexus-arch.html"
+  - title: 初期設定
+    url: "/software/ai-hybrid-ddlnexus-setup.html"
+  - title: 既存のNetAppボリュームをDominoに公開する
+    url: "/software/ai-hybrid-ddlnexus-vols.html"
+  - title: 異なる環境間で同じデータにアクセスする
+    url: "/software/ai-hybrid-ddlnexus-data.html"
+  - title: 追加情報
+    url: "/software/ai-hybrid-ddlnexus-addtl.html"
+- title: NVIDIA AI Enterprise とNetApp 、VMware
+  pdf-filename: NVIDIA AI Enterprise とNetApp 、VMware
+  entries:
+  - title: はじめに
+    url: "/software/ai-nvaie-vmw-intro.html"
+  - title: 技術概要
+    url: "/software/ai-nvaie-vmw-tech.html"
+  - title: アーキテクチャ
+    url: "/software/ai-nvaie-vmw-arch.html"
+  - title: 初期設定
+    url: "/software/ai-nvaie-vmw-setup.html"
+  - title: NVIDIA NGCソフトウェアを使用する
+    entries:
+    - title: セットアップ
+      url: "/software/ai-nvaie-vmw-ngcsetup.html"
+    - title: ユースケース例 - TensorFlow トレーニングジョブ
+      url: "/software/ai-nvaie-vmw-tensorflow.html"
+  - title: 追加情報
+    url: "/software/ai-nvaie-vmw-addtl.html"
+- title: MLOps 向け FSx ONTAP
+  pdf-filename: MLOps 向けAmazon FSx for NetApp ONTAP (FSx ONTAP)
+  entries:
+  - title: 概要
+    url: "/cloud/ai-mlops-fsxn-intro.html"
+  - title: パート 1 - Amazon FSx for NetApp ONTAP をプライベート S3 バケットとして AWS SageMaker に統合する
+    url: "/cloud/ai-mlops-fsxn-s3.html"
+  - title: パート 2 - SageMaker でのモデルトレーニングのデータソースとしてAmazon FSx for NetApp ONTAP を活用する
+    url: "/cloud/ai-mlops-fsxn-sagemaker.html"
+  - title: パート3 - 簡素化されたMLOpsパイプラインを構築する
+    url: "/cloud/ai-mlops-fsxn-cictcd.html"
+- title: 自動運転向けStorageGRIDデータレイク
+  pdf-filename: 自動運転ワークロード向けNetApp StorageGRIDデータレイク
+  url: "/infra/ai-storagegrid-datalake-adas.html"
+- title: NetApp DataOps ツールキット
+  url: "/software/dataops-toolkit.html"
+- title: NetAppによるベクトルデータベースソリューション
+  pdf-filename: NetAppによるベクトルデータベースソリューション
+  entries:
+  - title: 概要
+    url: "/vector-db/ai-vdb-solution-with-netapp.html"
+  - title: はじめに
+    url: "/vector-db/ai-vdb-intro.html"
+  - title: ソリューションの概要
+    url: "/vector-db/ai-vdb-overview.html"
+  - title: ベクターデータベース
+    url: "/vector-db/ai-vdb-landscape.html"
+  - title: 技術要件
+    url: "/vector-db/ai-vdb-tech.html"
+  - title: 展開手順
+    url: "/vector-db/ai-vdb-deploy.html"
+  - title: ソリューション検証
+    entries:
+    - title: 概要
+      url: "/vector-db/ai-vdb-verification.html"
+    - title: オンプレミスでの Kubernetes を使用した Milvus クラスターのセットアップ
+      url: "/vector-db/ai-vdb-milvus-setup.html"
+    - title: Milvus とAmazon FSx ONTAP for NetApp ONTAP – ファイルとオブジェクトの二重性
+      url: "/vector-db/ai-vdb-milvus-fsxn.html"
+    - title: SnapCenterを使用したベクター データベースの保護
+      url: "/vector-db/ai-vdb-dp-snapcenter.html"
+    - title: SnapMirrorを使用した災害復旧
+      url: "/vector-db/ai-vdb-dr-snapmirror.html"
+    - title: パフォーマンス検証
+      url: "/vector-db/ai-vdb-perf-validation.html"
+  - title: 'PostGreSQL を使用した Instaclustr によるベクターデータベース: pgvector'
+    url: "/vector-db/ai-vdb-instaclustr-pgvector.html"
+  - title: ベクターデータベースの使用例
+    url: "/vector-db/ai-vdb-usecases.html"
+  - title: まとめ
+    url: "/vector-db/ai-vdb-conclusion.html"
+  - title: '付録A: values.yaml'
+    url: "/vector-db/ai-vdb-values.html"
+  - title: '付録B: 準備データネットアプリ新パイ'
+    url: "/vector-db/ai-vdb-dataprep.html"
+  - title: '付録 C: verify_data_netapp.py'
+    url: "/vector-db/ai-vdb-verifydata.html"
+  - title: '付録D: docker_compose.yml'
+    url: "/vector-db/ai-vdb-docker-compose.html"

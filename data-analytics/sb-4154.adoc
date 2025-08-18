@@ -1,0 +1,19 @@
+---
+sidebar: sidebar 
+permalink: data-analytics/sb-4154.html 
+keywords:  
+summary:  
+---
+= 最新のデータ分析 - さまざまな分析戦略に合わせたさまざまなソリューション
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media/
+
+
+[role="lead"]
+このホワイト ペーパーでは、 NetApp の最新データ分析ソリューション戦略について説明します。これには、ビジネス成果、顧客の課題、テクノロジのトレンド、競合のレガシー アーキテクチャ、最新のワークフロー、ユース ケース、業界、クラウド、テクノロジ パートナー、データ ムーバー、 NetApp Active IQ Digital Advisor ( Digital Advisorとも呼ばれます)、 NetApp DataOps Toolkit、Hadoop to Spark、 NetApp Trident Protect を使用したソフトウェア定義ストレージ、コンテナ、エンタープライズ データ管理、アーカイブ、および AI と分析の目標を達成するための階層化に関する詳細と、 NetAppと顧客が協力してデータ アーキテクチャを最新化する方法が含まれています。
+
+link:https://www.netapp.com/pdf.html?item=/media/58015-sb-4154.pdf["最新のデータ分析 - さまざまな分析戦略に合わせたさまざまなソリューション"^]

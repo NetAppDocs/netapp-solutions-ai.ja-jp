@@ -1,0 +1,21 @@
+---
+sidebar: sidebar 
+permalink: infra/ai-storagegrid-datalake-adas.html 
+keywords:  
+summary:  
+---
+= TR-4851: 自動運転ワークロード向けNetApp StorageGRIDデータレイク - ソリューション設計
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media/
+
+
+デビッド・アーネット、 NetApp
+
+[role="lead"]
+TR-4851 は、機械学習 (ML) およびディープラーニング (DL) ソフトウェア開発用のデータ リポジトリおよび管理システムとしてNetApp StorageGRIDオブジェクト ストレージを使用する方法を示します。このホワイト ペーパーでは、自律走行車のソフトウェア開発におけるデータ フローと要件、およびデータ ライフサイクルを合理化するStorageGRID の機能について説明します。このソリューションは、ML および DL 開発プロセスで一般的な多段階データ パイプライン ワークフローに適用されます。
+
+link:https://www.netapp.com/pdf.html?item=/media/19399-tr-4851.pdf["TR-4851: 自動運転ワークロード向けNetApp StorageGRIDデータレイク - ソリューション設計"^]

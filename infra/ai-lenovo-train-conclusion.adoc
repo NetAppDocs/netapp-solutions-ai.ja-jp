@@ -1,0 +1,65 @@
+---
+sidebar: sidebar 
+permalink: infra/ai-lenovo-train-conclusion.html 
+keywords: acknowledgements, additional information 
+summary: このNetAppと Lenovo のソリューションは、中規模エンタープライズ AI への参入に最適な柔軟なスケールアウト アーキテクチャです。  NetAppストレージは、ローカル SSD ストレージと同等以上のパフォーマンスを提供し、データ サイエンティスト、データ エンジニア、IT 意思決定者に次の利点をもたらします。 
+---
+= まとめ
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media/
+
+
+[role="lead"]
+ここで検証されたNetAppと Lenovo のソリューションは、中規模エンタープライズ AI への参入に最適な柔軟なスケールアウト アーキテクチャです。
+
+NetAppストレージは、ローカル SSD ストレージと同等以上のパフォーマンスを提供し、データ サイエンティスト、データ エンジニア、IT 意思決定者に次のようなメリットをもたらします。
+
+* AI システム、分析、その他の重要なビジネス システム間でデータを簡単に共有できます。このデータ共有により、インフラストラクチャのオーバーヘッドが削減され、パフォーマンスが向上し、企業全体のデータ管理が合理化されます。
+* コストを最小限に抑え、リソースの使用率を向上させるために、コンピューティングとストレージを独立して拡張できます。
+* 統合されたスナップショットとクローンを使用して合理化された開発および展開ワークフローにより、瞬時にスペース効率の高いユーザー ワークスペース、統合バージョン管理、および自動展開が実現します。
+* 災害復旧とビジネス継続性のためのエンタープライズ グレードのデータ保護。
+
+
+
+
+== 謝辞
+
+* Karthikeyan Nagalingam 氏、 NetAppテクニカル マーケティング エンジニア
+* Jarrett Upton、Lenovo AI Lab Systems 管理者
+
+
+
+
+== 詳細情報の入手方法
+
+このドキュメントに記載されている情報の詳細については、次のドキュメントや Web サイトを参照してください。
+
+* NetAppオールフラッシュアレイ製品ページ
++
+https://www.netapp.com/us/products/storage-systems/all-flash-array/aff-a-series.aspx["https://www.netapp.com/us/products/storage-systems/all-flash-array/aff-a-series.aspx"^]
+
+* NetApp AFF A400ページ
++
+https://docs.netapp.com/us-en/ontap-systems/a400/index.html["https://docs.netapp.com/us-en/ontap-systems/a400/index.html"]
+
+* NetApp ONTAPデータ管理ソフトウェア製品ページ
++
+http://www.netapp.com/us/products/data-management-software/ontap.aspx["http://www.netapp.com/us/products/data-management-software/ontap.aspx"^]
+
+* MLPerf
++
+https://mlperf.org/["https://mlperf.org"^]
+
+* TensorFlowベンチマーク
++
+https://github.com/tensorflow/benchmarks["https://github.com/tensorflow/benchmarks"^]
+
+* NVIDIA SMI (nvidia-smi)
++
+https://developer.nvidia.com/nvidia-system-management-interface["https://developer.nvidia.com/nvidia-system-management-interface"]
+
+

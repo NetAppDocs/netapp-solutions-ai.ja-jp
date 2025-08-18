@@ -1,0 +1,21 @@
+---
+sidebar: sidebar 
+permalink: infra/ai-eseries-nva1150-design.html 
+keywords:  
+summary:  
+---
+= NVA-1150-DESIGN: NetApp Eシリーズ システムを搭載したQuantum StorNextの設計ガイド
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media/
+
+
+ライアン・ロディン、NetApp
+
+[role="lead"]
+このドキュメントでは、 NetApp E シリーズ ストレージ システムを使用して StorNext 並列ファイル システム ソリューションを設計する方法について詳しく説明します。このソリューションは、 NetApp EF280 オールフラッシュ アレイ、 NetApp EF300 オールフラッシュ NVMe アレイ、EF600 オールフラッシュ NVMe アレイ、およびNetApp E5760 ハイブリッド システムを対象としています。メディアおよびエンターテイメント業界でテストに広く使用されているツールである Frametest ベンチマークに基づいて、パフォーマンス特性を提供します。
+
+link:https://www.netapp.com/pdf.html?item=/media/19426-nva-1150-design.pdf["NVA-1150-DESIGN: NetApp Eシリーズ システムを搭載したQuantum StorNextの設計ガイド"^]

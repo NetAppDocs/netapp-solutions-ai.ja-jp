@@ -1,0 +1,30 @@
+---
+indexpage:
+  title: NetApp AIインフラストラクチャと統合システム
+  summary: NetApp の検証済みリファレンス アーキテクチャと統合システムを使用して、エンタープライズ対応の AI インフラストラクチャを導入します。  NetApp
+    AIPodソリューションから高性能ストレージ プラットフォームまで、当社の設計は要求の厳しい AI/ML ワークロードに必要なパフォーマンス、スケーラビリティ、信頼性を実現します。
+  lead: NetApp の検証済みリファレンス アーキテクチャと統合システムを使用して、エンタープライズ対応の AI インフラストラクチャを導入します。  NetApp
+    AIPodソリューションから高性能ストレージ プラットフォームまで、当社の設計は要求の厳しい AI/ML ワークロードに必要なパフォーマンス、スケーラビリティ、信頼性を実現します。
+  tiles:
+  - title: NetApp AIPodリファレンスアーキテクチャ
+    links:
+    - title: NVIDIA DGX システムを搭載したNetApp AIPod
+      url: "../infra/ai-aipod-nv-intro.html"
+    - title: NVIDIA OVX 対応の Lenovo 搭載NetApp AIPod
+      url: "../infra/ai-aipod-lenovo-nva1172.html"
+    - title: AIPodアーキテクチャ
+      url: "../infra/ai-aipod-nv-architecture.html"
+    - title: AIPodの展開の詳細
+      url: "../infra/ai-aipod-nv-deploy.html"
+    - title: AIPodの検証とサイズ設定のガイダンス
+      url: "../infra/ai-aipod-nv-validation.html"
+  - title: AIワークロード向けの高性能ストレージ
+    links:
+    - title: EFシリーズストレージを搭載したNVIDIA DGX SuperPOD
+      url: "../infra/ai-eseries-superpod.html"
+    - title: Eシリーズ搭載のBeeGFS並列ファイルシステム
+      url: "../infra/ai-eseries-beegfs.html"
+    - title: Eシリーズストレージを搭載したIBM Spectrum Scale
+      url: "../infra/ai-eseries-spectrumscale.html"
+    - title: NetApp ONTAPとLenovo ThinkSystem
+      url: "../infra/ai-lenovo-train-intro.html"

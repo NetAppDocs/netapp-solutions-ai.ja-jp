@@ -1,0 +1,70 @@
+---
+indexpage:
+  title: NetAppの人工知能ソリューション
+  summary: NetApp は、エンタープライズ グレードのデータ管理、検証済みのリファレンス アーキテクチャ、戦略的パートナーシップを組み合わせた包括的な
+    AI ソリューションを提供し、AI イニシアチブを加速し、重要なビジネス成果をサポートします。インフラストラクチャの導入から MLOps の自動化まで、当社のソリューションはエッジ、データセンター、ハイブリッド
+    クラウド環境にわたってシームレスに拡張できます。
+  lead: NetApp は、エンタープライズ グレードのデータ管理、検証済みのリファレンス アーキテクチャ、戦略的パートナーシップを組み合わせた包括的な AI
+    ソリューションを提供し、AI イニシアチブを加速し、重要なビジネス成果をサポートします。インフラストラクチャの導入から MLOps の自動化まで、当社のソリューションはエッジ、データセンター、ハイブリッド
+    クラウド環境にわたってシームレスに拡張できます。
+  tiles:
+  - title: 始めましょう
+    links:
+    - title: 新機能
+      url: "/whats-new.html"
+    - title: ブログ
+      url: "/blogs.html"
+    - title: ビデオとデモ
+      url: "/videos/ai-ml-videos.html"
+  - title: AIインフラストラクチャと統合システム
+    links:
+    - title: NVIDIA DGX システムを搭載したNetApp AIPod
+      url: "/infra/ai-aipod-nv-intro.html"
+    - title: NVIDIA DGX SuperPODと EF シリーズ
+      url: "/infra/ai-eseries-superpod.html"
+    - title: NVIDIA OVX 対応の Lenovo 搭載NetApp AIPod
+      url: "/infra/ai-aipod-lenovo-nva1172.html"
+    - title: Eシリーズ搭載のBeeGFS並列ファイルシステム
+      url: "/infra/ai-eseries-beegfs.html"
+  - title: AIのユースケースとアプリケーション
+    links:
+    - title: RAG推論のためのAIPod Mini
+      url: "/infra/ai-minipod.html"
+    - title: エッジでのAI推論
+      url: "/infra/ai-lenovo-edge-intro.html"
+    - title: ベクターデータベースソリューション
+      url: "/vector-db/ai-vdb-solution-with-netapp.html"
+    - title: 自動運転のワークロード
+      url: "/infra/ai-storagegrid-datalake-adas.html"
+    - title: Quantum StorNextとEシリーズ
+      url: "/infra/ai-eseries-nva1150-design.html"
+  - title: MLOpsとデータ管理
+    links:
+    - title: NetAppによるオープンソース MLOps
+      url: "/software/ai-osmlops-intro.html"
+    - title: Domino Data Lab によるハイブリッド マルチクラウド MLOps
+      url: "/software/ai-hybrid-ddlnexus-intro.html"
+    - title: MLOps 向け FSx ONTAP
+      url: "/cloud/ai-mlops-fsxn-intro.html"
+    - title: NetApp DataOps ツールキット
+      url: "/software/dataops-toolkit.html"
+  - title: ビッグデータとハイブリッドクラウドAIソリューション
+    links:
+    - title: ハイブリッドクラウドデータソリューション
+      url: "/data-analytics/hdcs-sh-solution-overview.html"
+    - title: Apache Sparkソリューション
+      url: "/data-analytics/apache-spark-solution-overview.html"
+    - title: NetApp ONTAPストレージと Confluent Kafka
+      url: "/data-analytics/kafka-ontap-overview.html"
+    - title: Splunk SmartStore を搭載したNetApp StorageGRID
+      url: "/data-analytics/stgr-splunkss-introduction.html"
+    - title: NetAppストレージを搭載したDremioレイクハウス
+      url: "/data-analytics/dremio-lakehouse-introduction.html"
+  - title: ソリューションのリクエストとフィードバック
+    links:
+    - title: リクエストの自動化
+      url: https://github.com/NetAppDocs/netapp-solutions/issues/new?body=[Request%20Automation]%0d%0a%0d%0aSolution%20Name:%20%0d%0aRequest%20Title:%20%0d%0aDescription:%0d%0aSuggestions:&title=Request%20Automation%20-%20%3Crequest_title%3E
+    - title: 新しい解決策を提案する
+      url: https://github.com/NetAppDocs/netapp-solutions/issues/new?body=[Request%20Solution]%0d%0a%0d%0aSolution%20Use%20Case:%20%0d%0aSolution%20Description:%20%0d%0aAdditional%20Comments:&title=Request%20Solution%20-%20%3Csolution%3E
+    - title: ソリューションのフィードバックを提供する
+      url: https://github.com/NetAppDocs/netapp-solutions/issues/new?body=[Solution%20Feedback]%0d%0a%0d%0aSolution%20Name:%20%0d%0aSolution%20Feedback:%20%0d%0aAdditional%20Comments:&title=Solution%20Feedback%20-%20%3Csolution%3E

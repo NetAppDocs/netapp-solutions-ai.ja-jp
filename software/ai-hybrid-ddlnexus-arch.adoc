@@ -1,0 +1,40 @@
+---
+sidebar: sidebar 
+permalink: software/ai-hybrid-ddlnexus-arch.html 
+keywords: NetApp AI, AI, Artificial Intelligence, ML, Machine Learning, NVIDIA, Hybrid, Hybrid Cloud, Hybrid Multicloud, Cloud, AWS, Amazon, Amazon Web Services, FSx ONTAP, FSx, NetApp ONTAP, FlexCache, SnapMirror, BlueXP 
+summary: Domino Data Lab とNetAppによるハイブリッド マルチクラウド MLOps - アーキテクチャ 
+---
+= アーキテクチャ
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media/
+
+
+[role="lead"]
+このソリューションは、Domino Nexus のハイブリッド マルチクラウド ワークロード スケジューリング機能とNetAppデータ サービスを組み合わせて、統合されたハイブリッド クラウド MLOps プラットフォームを作成します。詳細については、次の表を参照してください。
+
+|===
+| コンポーネント | Name | 環境 
+
+
+| MLOps コントロールプレーン | link:https://domino.ai/platform/nexus["Domino Nexus を搭載した Domino エンタープライズ AI プラットフォーム"] | AWS 
+
+
+| MLOps プラットフォーム コンピューティング環境 | link:https://docs.dominodatalab.com/en/latest/admin_guide/5781ea/data-planes/["Domino Nexus データプレーン"] | AWS、オンプレミスデータセンター 
+
+
+| オンプレミスコンピューティングプラットフォーム | link:https://kubernetes.io["Kubernetes"]とlink:https://docs.netapp.com/us-en/trident/index.html["NetAppTrident"] | オンプレミスデータセンター 
+
+
+| クラウドコンピューティングプラットフォーム | link:https://aws.amazon.com/eks/["Amazon Elastic Kubernetes サービス (EKS)"]とlink:https://docs.netapp.com/us-en/trident/index.html["NetAppTrident"] | AWS 
+
+
+| オンプレミスデータプラットフォーム | link:https://www.netapp.com/data-storage/["NetAppストレージアプライアンス"]搭載link:https://www.netapp.com/data-management/ontap-data-management-software/["NetApp ONTAP"] | オンプレミスデータセンター 
+
+
+| クラウドデータプラットフォーム | link:https://aws.amazon.com/fsx/netapp-ontap/["Amazon FSx ONTAP"] | AWS 
+|===
+image:ddlnexus-001.png["入出力ダイアログまたは書かれたコンテンツを示す図"]

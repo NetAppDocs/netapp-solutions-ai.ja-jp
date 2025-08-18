@@ -1,0 +1,23 @@
+---
+sidebar: sidebar 
+permalink: data-analytics/kafka-sc-best-practice.html 
+keywords: best practices, get size, s3 buckets, ethernet links, mtu 
+summary: このページでは、このソリューションのパフォーマンスを向上させるためのベスト プラクティスについて説明します。 
+---
+= パフォーマンスのベストプラクティスガイドライン
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media/
+
+
+[role="lead"]
+このページでは、このソリューションのパフォーマンスを向上させるためのベスト プラクティスについて説明します。
+
+* ONTAPの場合、可能な場合は 1 MB 以上の GET サイズを使用します。
+* 増加 `num.network.threads`そして `num.io.threads`で `server.properties`ブローカーノードでは、増加した階層化アクティビティを S3 層にプッシュできます。これらの結果は `num.network.threads`そして `num.io.threads`32 に設定します。
+* S3 バケットは、メンバー集約ごとに 8 つの構成要素をターゲットにする必要があります。
+* S3 トラフィックを駆動するイーサネット リンクでは、ストレージとクライアントの両方で可能な場合は 9k の MTU を使用する必要があります。
+

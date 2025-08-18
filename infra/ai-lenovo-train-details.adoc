@@ -1,0 +1,66 @@
+---
+sidebar: sidebar 
+permalink: infra/ai-lenovo-train-details.html 
+keywords: data, graphs, image recognition, training, resnet, data read speed, 
+summary: このセクションでは、詳細なテスト手順の結果について説明します。 
+---
+= テスト手順と詳細な結果
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media/
+
+
+[role="lead"]
+このセクションでは、詳細なテスト手順の結果について説明します。
+
+
+
+== ONTAPの ResNet を使用した画像認識トレーニング
+
+ResNet50 ベンチマークを 1 台と 2 台の SR670 V2 サーバーで実行しました。このテストでは、MXNet 22.04-py3 NGC コンテナを使用してトレーニングを実行しました。
+
+この検証では次のテスト手順を使用しました。
+
+. データがすでにキャッシュされていないことを確認するために、スクリプトを実行する前にホスト キャッシュをクリアしました。
++
+....
+sync ; sudo /sbin/sysctl vm.drop_caches=3
+....
+. ベンチマーク スクリプトは、サーバー ストレージ (ローカル SSD ストレージ) とNetApp AFFストレージ システム上の ImageNet データセットを使用して実行しました。
+. ネットワークとローカルストレージのパフォーマンスを検証するために、 `dd`指示。
+. 単一ノード実行では、次のコマンドを使用しました。
++
+....
+python train_imagenet.py --gpus 0,1,2,3,4,5,6,7 --batch-size 408 --kv-store horovod --lr 10.5 --mom 0.9 --lr-step-epochs pow2 --lars-eta 0.001 --label-smoothing 0.1 --wd 5.0e-05 --warmup-epochs 2 --eval-period 4 --eval-offset 2 --optimizer sgdwfastlars --network resnet-v1b-stats-fl --num-layers 50 --num-epochs 37 --accuracy-threshold 0.759 --seed 27081 --dtype float16 --disp-batches 20 --image-shape 4,224,224 --fuse-bn-relu 1 --fuse-bn-add-relu 1 --bn-group 1 --min-random-area 0.05 --max-random-area 1.0 --conv-algo 1 --force-tensor-core 1 --input-layout NHWC --conv-layout NHWC --batchnorm-layout NHWC --pooling-layout NHWC --batchnorm-mom 0.9 --batchnorm-eps 1e-5 --data-train /data/train.rec --data-train-idx /data/train.idx --data-val /data/val.rec --data-val-idx /data/val.idx --dali-dont-use-mmap 0 --dali-hw-decoder-load 0 --dali-prefetch-queue 5 --dali-nvjpeg-memory-padding 256 --input-batch-multiplier 1 --dali- threads 6 --dali-cache-size 0 --dali-roi-decode 1 --dali-preallocate-width 5980 --dali-preallocate-height 6430 --dali-tmp-buffer-hint 355568328 --dali-decoder-buffer-hint 1315942 --dali-crop-buffer-hint 165581 --dali-normalize-buffer-hint 441549 --profile 0 --e2e-cuda-graphs 0 --use-dali
+....
+. 分散実行では、パラメータ サーバーの並列化モデルを使用しました。ノードごとに 2 つのパラメータ サーバーを使用し、エポック数を単一ノード実行と同じに設定しました。これを行った理由は、プロセス間の同期が不完全なために、分散トレーニングではより多くのエポックが必要になることが多いためです。エポック数が異なると、単一ノードの場合と分散の場合の比較が歪む可能性があります。
+
+
+
+
+== データ読み取り速度: ローカルストレージとネットワークストレージ
+
+読み取り速度は、 `dd` ImageNet データセットのファイルの 1 つに対してコマンドを実行します。具体的には、ローカル データとネットワーク データの両方に対して次のコマンドを実行しました。
+
+....
+sync ; sudo /sbin/sysctl vm.drop_caches=3dd if=/a400-100g/netapp-ra/resnet/data/preprocessed_data/train.rec of=/dev/null bs=512k count=2048Results (average of 5 runs):
+Local storage: 1.7 GB/s Network storage: 1.5 GB/s.
+....
+両方の値は似ており、ネットワーク ストレージがローカル ストレージと同様の速度でデータを配信できることを示しています。
+
+
+
+== 共有ユースケース: 複数の独立した同時ジョブ
+
+このテストでは、このソリューションの予想されるユースケースである、マルチジョブ、マルチユーザーの AI トレーニングをシミュレートしました。各ノードは共有ネットワーク ストレージを使用しながら独自のトレーニングを実行しました。結果は次の図に表示されており、ソリューション ケースではすべてのジョブが個々のジョブと基本的に同じ速度で実行され、優れたパフォーマンスが実現されたことがわかります。合計スループットはノード数に応じて直線的に増加しました。
+
+image:a400-thinksystem-008.png["この数字は 1 秒あたりの合計画像数を示しています。"]
+
+image:a400-thinksystem-009.png["この図は実行時間を分単位で表示します。"]
+
+これらのグラフは、同時トレーニング モデルと単一トレーニング モデルの両方を組み合わせた、100 GbE クライアント ネットワーク上の各サーバーから 8 個の GPU を使用したコンピューティング ノードの実行時間 (分単位) と 1 秒あたりの合計イメージ数を示しています。トレーニング モデルの平均実行時間は 35 分 9 秒でした。それぞれの実行時間は、34 分 32 秒、36 分 21 秒、34 分 37 秒、35 分 25 秒、34 分 31 秒でした。トレーニング モデルの 1 秒あたりの平均画像は 22,573 枚で、1 秒あたりの個々の画像は 21,764、23,438、22,556、22,564、および 22,547 枚でした。
+
+当社の検証によると、 NetAppデータ ランタイムを使用した 1 つの独立したトレーニング モデルは、22,231 画像/秒で 34 分 54 秒でした。ローカル データ (DAS) を使用した 1 つの独立したトレーニング モデルの実行時間は 34 分 21 秒で、画像数 22,102 枚/秒でした。これらの実行中、nvidia-smi で観測された平均 GPU 使用率は 96% でした。この平均には、GPU が使用されず、mpstat で測定された CPU 使用率が 40% であったテスト フェーズも含まれていることに注意してください。これは、各ケースでデータ配信速度が十分であることを示しています。

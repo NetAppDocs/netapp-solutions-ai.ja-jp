@@ -1,0 +1,42 @@
+---
+sidebar: sidebar 
+permalink: data-analytics/kafka-best-practices.html 
+keywords: best practices, guidelines, nfs, san 
+summary: このセクションでは、この認定から得られた教訓を紹介します。 
+---
+= ベストプラクティスガイドライン
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media/
+
+
+[role="lead"]
+このセクションでは、この認定から得られた教訓を紹介します。
+
+* 当社の検証によると、Confluent がデータを保存するには S3 オブジェクト ストレージが最適です。
+* Confluent 階層型ストレージ構成では、ブローカー データ ディレクトリに保持されるデータのサイズは、データがオブジェクト ストレージに移動されるときのセグメント サイズと保持期間に基づいているため、高スループット SAN (具体的には FC) を使用してブローカーのホット データまたはローカル ディスクを保持できます。
+* オブジェクト ストアでは、segment.bytes が大きいほどパフォーマンスが向上します。512 MB でテストしました。
+* Kafkaでは、トピックに生成される各レコードのキーまたは値の長さ（バイト単位）は、 `length.key.value`パラメータ。 StorageGRIDの場合、S3 オブジェクトの取り込みおよび取得のパフォーマンスがより高い値に向上しました。たとえば、512 バイトでは 5.8 GBps の取得、1024 バイトでは 7.5 GBps の s3 取得、2048 バイトでは 10 GBps に近い取得が実現しました。
+
+
+次の図は、S3オブジェクトの取り込みと取得を次の表に基づいて示しています。 `length.key.value` 。
+
+image:confluent-kafka-011.png["入出力ダイアログまたは書かれたコンテンツを示す図"]
+
+* *Kafka のチューニング。*階層化ストレージのパフォーマンスを向上させるには、TierFetcherNumThreads と TierArchiverNumThreads を増やすことができます。一般的なガイドラインとして、TierFetcherNumThreads を物理 CPU コアの数に合わせて増やし、TierArchiverNumThreads を CPU コアの数の半分まで増やします。たとえば、サーバーのプロパティで、8 つの物理コアを持つマシンがある場合は、confluent.tier.fetcher.num.threads = 8 および confluent.tier.archiver.num.threads = 4 に設定します。
+* *トピック削除の時間間隔。*トピックが削除されても、オブジェクト ストレージ内のログ セグメント ファイルの削除はすぐには開始されません。むしろ、それらのファイルが削除されるまでの期間が、デフォルト値の 3 時間に設定されています。この間隔の値を変更するには、構成 confluent.tier.topic.delete.check.interval.ms を変更します。トピックまたはクラスターを削除する場合は、それぞれのバケット内のオブジェクトを手動で削除することもできます。
+* *階層化ストレージの内部トピックに関する ACL。*オンプレミス展開で推奨されるベスト プラクティスは、階層化ストレージに使用される内部トピックで ACL 承認者を有効にすることです。 ACL ルールを設定して、このデータへのアクセスをブローカー ユーザーのみに制限します。これにより、内部トピックが保護され、階層化ストレージ データとメタデータへの不正アクセスが防止されます。
+
+
+[listing]
+----
+kafka-acls --bootstrap-server localhost:9092 --command-config adminclient-configs.conf \
+--add --allow-principal User:<kafka> --operation All --topic "_confluent-tier-state"
+----
+
+NOTE: ユーザーを置き換える `<kafka>`デプロイメント内の実際のブローカー プリンシパルを使用します。
+
+例えば、コマンド `confluent-tier-state`階層化ストレージの内部トピックに ACL を設定します。現在、階層化ストレージに関連する内部トピックは 1 つだけです。この例では、内部トピックのすべての操作に対してプリンシパル Kafka 権限を提供する ACL を作成します。

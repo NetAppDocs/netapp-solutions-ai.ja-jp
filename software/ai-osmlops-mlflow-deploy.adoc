@@ -1,0 +1,102 @@
+---
+sidebar: sidebar 
+permalink: software/ai-osmlops-mlflow-deploy.html 
+keywords: AI, control plane, MLOps, MLflow 
+summary: NetAppによるオープンソース MLOps - MLflow の導入 
+---
+= MLflow デプロイメント
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media/
+
+
+[role="lead"]
+このセクションでは、Kubernetes クラスターに MLflow をデプロイするために完了する必要があるタスクについて説明します。
+
+
+NOTE: MLflow は Kubernetes 以外のプラットフォームにもデプロイできます。  Kubernetes 以外のプラットフォームに MLflow をデプロイすることは、このソリューションの範囲外です。
+
+
+
+== 前提条件
+
+このセクションで説明する展開演習を実行する前に、次のタスクが既に実行されていることを前提としています。
+
+. すでに動作中の Kubernetes クラスターがあります。
+. Kubernetes クラスターにNetApp Tridentがすでにインストールされ、構成されています。Tridentの詳細については、link:https://docs.netapp.com/us-en/trident/index.html["Tridentのドキュメント"^] 。
+
+
+
+
+== Helmをインストールする
+
+MLflow は、Kubernetes の一般的なパッケージ マネージャーである Helm を使用してデプロイされます。  MLflow をデプロイする前に、Kubernetes コントロール ノードに Helm をインストールする必要があります。  Helmをインストールするには、 https://helm.sh/docs/intro/install/["インストール手順"^]公式 Helm ドキュメントに記載されています。
+
+
+
+== デフォルトのKubernetesストレージクラスを設定する
+
+MLflow をデプロイする前に、Kubernetes クラスター内でデフォルトの StorageClass を指定する必要があります。クラスター内でデフォルトのストレージクラスを指定するには、link:ai-osmlops-kubeflow-deploy.html["Kubeflow デプロイメント"]セクション。クラスター内でデフォルトの StorageClass をすでに指定している場合は、この手順をスキップできます。
+
+
+
+== MLflowをデプロイする
+
+前提条件が満たされたら、Helm チャートを使用して MLflow のデプロイを開始できます。
+
+
+
+=== MLflow Helm Chart のデプロイメントを構成します。
+
+Helm チャートを使用して MLflow をデプロイする前に、*config.yaml* ファイルを使用して、 NetApp Tridentストレージ クラスを使用するようにデプロイを構成し、ニーズに合わせて他のパラメータを変更できます。  *config.yaml* ファイルの例は、次の場所にあります。 https://github.com/bitnami/charts/blob/main/bitnami/mlflow/values.yaml[]
+
+
+NOTE: config.yaml ファイルの *global.defaultStorageClass* パラメータでTrident storageClass を設定できます (例: storageClass: "ontap-flexvol")。
+
+
+
+=== Helm Chartのインストール
+
+Helm チャートは、次のコマンドを使用して、MLflow のカスタム *config.yaml* ファイルとともにインストールできます。
+
+[source, shell]
+----
+helm install oci://registry-1.docker.io/bitnamicharts/mlflow -f config.yaml --generate-name --namespace jupyterhub
+----
+
+NOTE: このコマンドは、提供された *config.yaml* ファイルを介してカスタム構成で Kubernetes クラスターに MLflow をデプロイします。  MLflow は指定された名前空間にデプロイされ、リリースに対して Kubernetes 経由でランダムなリリース名が与えられます。
+
+
+
+=== デプロイメントの確認
+
+Helm チャートのデプロイが完了したら、次のコマンドを使用してサービスにアクセスできるかどうかを確認できます。
+
+[source, shell]
+----
+kubectl get service -n jupyterhub
+----
+
+NOTE: *jupyterhub* を、デプロイ時に使用した名前空間に置き換えます。
+
+次のサービスが表示されます。
+
+[source, shell]
+----
+NAME                              TYPE        CLUSTER-IP      EXTERNAL-IP   PORT(S)           AGE
+mlflow-1719843029-minio           ClusterIP   10.233.22.4     <none>        80/TCP,9001/TCP   25d
+mlflow-1719843029-postgresql      ClusterIP   10.233.5.141    <none>        5432/TCP          25d
+mlflow-1719843029-postgresql-hl   ClusterIP   None            <none>        5432/TCP          25d
+mlflow-1719843029-tracking        NodePort    10.233.2.158    <none>        30002:30002/TCP   25d
+----
+
+NOTE: NodePort サービスを使用してポート 30002 の MLflow にアクセスするように config.yaml ファイルを編集しました。
+
+
+
+=== MLflow にアクセスする
+
+MLflowに関連するすべてのサービスが起動したら、指定されたNodePortまたはLoadBalancerのIPアドレス（例： `http://10.61.181.109:30002` ）

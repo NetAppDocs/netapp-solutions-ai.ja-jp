@@ -1,0 +1,63 @@
+---
+sidebar: sidebar 
+permalink: infra/ai-lenovo-edge-plan.html 
+keywords: test, plan, mlperf, inference, benchmarks 
+summary: このドキュメントは、MLPerf Inference v0.7 コード、MLPerf Inference v1.1 コードとルールに従います。このセクションに示す表で定義されているように、エッジでの推論用に設計されたベンチマークを実行しました。 
+---
+= テスト計画
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media/
+
+
+[role="lead"]
+このドキュメントはMLPerf Inference v0.7に準拠しています。 https://github.com/mlperf/inference_results_v0.7/tree/master/closed/Lenovo["コード"^] 、MLPerf 推論 v1.1 https://github.com/mlcommons/inference_results_v1.1/tree/main/closed/Lenovo["コード"^] 、 そして https://github.com/mlcommons/inference_policies/blob/master/inference_rules.adoc["ルール"^]。次の表で定義されているように、エッジでの推論用に設計された MLPerf ベンチマークを実行しました。
+
+|===
+| 領域 | Task | モデル | データセット | QSLサイズ | 品質 | マルチストリームのレイテンシ制約 
+
+
+| ビジョン | 画像分類 | Resnet50v1.5 | イメージネット（224x224） | 1024 | FP32の99% | 50ms 
+
+
+| ビジョン | 物体検出（大） | SSD-ResNet34 | COCO（1200x1200） | 64 | FP32の99% | 66ms 
+
+
+| ビジョン | 物体検出（小） | SSD-MobileNetsv1 | COCO（300x300） | 256 | FP32の99% | 50ms 
+
+
+| ビジョン | 医療画像のセグメンテーション | 3D UNET | ブラTS 2019 (224x224x160) | 16 | FP32の99%と99.9% | N/A 
+
+
+| スピーチ | 音声テキスト変換 | RNNT | Librispeech 開発クリーン | 2513 | FP32の99% | N/A 
+
+
+| 言語 | 言語処理 | バート | SQuAD v1.1 | 10833 | FP32の99% | N/A 
+|===
+次の表は、Edge ベンチマークのシナリオを示しています。
+
+|===
+| 領域 | Task | シナリオ 
+
+
+| ビジョン | 画像分類 | シングルストリーム、オフライン、マルチストリーム 
+
+
+| ビジョン | 物体検出（大） | シングルストリーム、オフライン、マルチストリーム 
+
+
+| ビジョン | 物体検出（小） | シングルストリーム、オフライン、マルチストリーム 
+
+
+| ビジョン | 医療画像のセグメンテーション | 単一ストリーム、オフライン 
+
+
+| スピーチ | 音声テキスト変換 | 単一ストリーム、オフライン 
+
+
+| 言語 | 言語処理 | 単一ストリーム、オフライン 
+|===
+私たちは、この検証で開発されたネットワーク ストレージ アーキテクチャを使用してこれらのベンチマークを実行し、結果を、以前 MLPerf に送信されたエッジ サーバーでのローカル実行の結果と比較しました。この比較は、共有ストレージが推論パフォーマンスにどの程度の影響を与えるかを判断するためのものです。

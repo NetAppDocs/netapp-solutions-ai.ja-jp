@@ -1,0 +1,44 @@
+---
+sidebar: sidebar 
+permalink: vector-db/ai-vdb-solution-with-netapp.html 
+keywords: vector database, milvus, usecases 
+summary: これは、Netapp を使用したベクトル データベース ソリューションの概要ページです。 
+---
+= NetAppによるベクトル データベース ソリューション
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media/
+
+
+NetApp 、Karthikeyan Nagalingam 氏と Rodrigo Nascimento 氏
+
+[role="lead"]
+このドキュメントでは、NetApp のストレージ ソリューションを使用して、Milvus などのベクター データベースやオープンソースの PostgreSQL 拡張機能である pgvecto の導入と管理について詳しく説明します。 NetApp ONTAPおよびStorageGRIDオブジェクトストレージを使用するためのインフラストラクチャガイドラインの詳細を説明し、AWS FSx ONTAPでの Milvus データベースの適用を検証します。このドキュメントでは、NetApp のファイルとオブジェクトの二重性と、ベクトル データベースおよびベクトル埋め込みをサポートするアプリケーションに対するその有用性について説明します。これは、ベクター データベースのバックアップと復元機能を提供し、データの整合性と可用性を確保する、NetApp のエンタープライズ管理製品であるSnapCenterの機能に重点を置いています。このドキュメントでは、NetApp のハイブリッド クラウド ソリューションについてさらに詳しく説明し、オンプレミスとクラウド環境にわたるデータのレプリケーションと保護におけるその役割について説明します。これには、 NetApp ONTAP上のベクトル データベースのパフォーマンス検証に関する洞察が含まれており、生成 AI に関する 2 つの実用的な使用例 (LLM を使用した RAG と NetApp の内部 ChatAI) で締めくくられています。このドキュメントは、NetApp のストレージ ソリューションを活用してベクター データベースを管理するための包括的なガイドとして役立ちます。
+
+リファレンス アーキテクチャは、次の点に重点を置いています。
+
+. link:ai-vdb-intro.html["はじめに"]
+. link:ai-vdb-overview.html["ソリューションの概要"]
+. link:ai-vdb-landscape.html["ベクターデータベース"]
+. link:ai-vdb-tech.html["技術要件"]
+. link:ai-vdb-deploy.html["展開手順"]
+. link:ai-vdb-verification.html["ソリューション検証の概要"]
++
+** link:ai-vdb-milvus-setup.html["オンプレミスでの Kubernetes を使用した Milvus クラスターのセットアップ"]
+** link:vector-database-milvus-with-Amazon-FSx ONTAP-for- NetApp- ONTAP.html[Milvus with Amazon FSx ONTAP for NetApp ONTAP – ファイルとオブジェクトの二重性]
+** link:ai-vdb-dp-snapcenter.html["NetApp SnapCenterを使用したベクトル データベース保護。"]
+** link:ai-vdb-dr-snapmirror.html["NetApp SnapMirrorを使用した災害復旧"]
+** link:ai-vdb-perf-validation.html["パフォーマンス検証"]
+
+
+. link:ai-vdb-instaclustr-pgvector.html["PostgreSQL を使用した Instaclustr によるベクターデータベース: pgvector"]
+. link:ai-vdb-usecases.html["ベクターデータベースのユースケース"]
+. link:ai-vdb-conclusion.html["まとめ"]
+. link:ai-vdb-values.html["付録A: values.yaml"]
+. link:ai-vdb-dataprep.html["付録 B: prepare_data_netapp_new.py"]
+. link:ai-vdb-verifydata.html["付録 C: verify_data_netapp.py"]
+. link:ai-vdb-docker-compose.html["付録D: docker-compose.yml"]
+

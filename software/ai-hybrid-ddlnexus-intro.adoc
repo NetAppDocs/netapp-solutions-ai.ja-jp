@@ -1,0 +1,25 @@
+---
+sidebar: sidebar 
+permalink: software/ai-hybrid-ddlnexus-intro.html 
+keywords: NetApp AI, AI, Artificial Intelligence, ML, Machine Learning, NVIDIA, Hybrid, Hybrid Cloud, Hybrid Multicloud, Cloud, AWS, Amazon, Amazon Web Services, FSx ONTAP, FSx, NetApp ONTAP, FlexCache, SnapMirror, BlueXP 
+summary: Domino Nexus は、あらゆるクラウド、リージョン、オンプレミスのあらゆるコンピューティング クラスター全体でデータ サイエンスと機械学習のワークロードを実行できる単一の管理画面です。 
+---
+= Domino Data Lab とNetAppによるハイブリッド マルチクラウド MLOps
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media/
+
+
+マイク・オグルスビー、NetApp
+
+[role="lead"]
+現在、世界中の組織がビジネスとプロセスの変革に AI を導入しています。このため、AI 対応のコンピューティング インフラストラクチャが不足することがよくあります。企業は、さまざまな地域、データセンター、クラウドにわたる利用可能なコンピューティング環境を活用し、コスト、可用性、パフォーマンスのバランスをとるために、ハイブリッド マルチクラウド MLOps アーキテクチャを採用しています。
+
+Domino Data Lab の Domino Nexus は、あらゆるクラウド、リージョン、オンプレミスのあらゆるコンピューティング クラスターでデータ サイエンスと機械学習のワークロードを実行できる統合 MLOps コントロール プレーンです。企業全体のデータ サイエンスのサイロを統合し、モデルの構築、展開、監視を 1 か所で実行できるようになります。同様に、NetApp のハイブリッド クラウド データ管理機能を使用すると、ジョブやワークスペースがどこで実行されているかに関係なく、データをジョブやワークスペースに持ち込むことができます。 Domino Nexus をNetAppと組み合わせると、データの可用性を気にすることなく、環境間でワークロードを柔軟にスケジュールできるようになります。つまり、ワークロードとデータを適切なコンピューティング環境に送信する機能があり、データのプライバシーと主権に関する規制を遵守しながら AI の導入を加速できます。
+
+このソリューションは、オンプレミスの Kubernetes クラスターと Amazon Web Services (AWS) で実行される Elastic Kubernetes Service (EKS) クラスターを組み込んだ統合 MLOps コントロール プレーンのデプロイメントを示します。
+
+image:ddlnexus-001.png["入出力ダイアログまたは書かれたコンテンツを示す図"]

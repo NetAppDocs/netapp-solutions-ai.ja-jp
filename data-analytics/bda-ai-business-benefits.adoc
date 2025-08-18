@@ -1,0 +1,26 @@
+---
+sidebar: sidebar 
+permalink: data-analytics/bda-ai-business-benefits.html 
+keywords: business, benefits 
+summary: このセクションでは、このソリューションのビジネス上の利点について説明します。 
+---
+= ビジネス上のメリット
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media/
+
+
+[role="lead"]
+ビッグデータ分析から AI にデータを移動すると、次のような利点があります。
+
+* 異なる Hadoop ファイルシステムと GPFS からデータを抽出し、統合された NFS ストレージシステムに統合する機能
+* Hadoopを統合した自動化されたデータ転送方法
+* Hadoopファイルシステムからデータを移動するためのライブラリ開発コストの削減
+* NIPAM を使用することで、単一のデータソースから複数のネットワーク インターフェースの集約されたスループットによってパフォーマンスが最大化されます。
+* スケジュールされた方法とオンデマンドの方法によるデータ転送
+* ONTAPデータ管理ソフトウェアを使用した統合NFSデータのストレージ効率とエンタープライズ管理機能
+* データ転送にHadoop方式を採用し、データ移動コストをゼロに
+

@@ -1,0 +1,87 @@
+---
+sidebar: sidebar 
+permalink: software/ai-osmlops-architecture.html 
+keywords: Hardware, Software, Requirements, Trident, DeepOps, ONTAP, Ubuntu 
+summary: NetAppによるオープンソース MLOps - アーキテクチャ 
+---
+= アーキテクチャ
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media/
+
+
+[role="lead"]
+このソリューションは特定のハードウェアに依存しません。このソリューションは、 NetApp TridentでサポートされているすべてのNetApp物理ストレージ アプライアンス、ソフトウェア定義インスタンス、またはクラウド サービスと互換性があります。例としては、 NetApp AFFストレージ システム、 Amazon FSx ONTAP、 Azure NetApp Files、 Google Cloud NetApp Volumes、 NetApp Cloud Volumes ONTAPインスタンスなどが挙げられます。さらに、使用されている Kubernetes バージョンがNetApp Tridentおよび実装されているその他のソリューション コンポーネントでサポートされている限り、このソリューションは任意の Kubernetes クラスターに実装できます。 Tridentでサポートされている Kubernetes バージョンの一覧については、 https://docs.netapp.com/us-en/trident/index.html["Tridentのドキュメント"^] 。このソリューションのさまざまなコンポーネントを検証するために使用された環境の詳細については、次の表を参照してください。
+
+
+
+== Apache Airflow 検証環境
+
+|===
+| ソフトウェアコンポーネント | version 
+
+
+| Apacheエアフロー | 2.0.1、導入link:https://artifacthub.io/packages/helm/airflow-helm/airflow["Apache Airflow Helm チャート"^]8.0.8 
+
+
+| Kubernetes | 1.18 
+
+
+| NetAppTrident | 21.01 
+|===
+
+
+== JupyterHub 検証環境
+
+|===
+| ソフトウェアコンポーネント | version 
+
+
+| ジュピターハブ | 4.1.5、デプロイ経由link:https://hub.jupyter.org/helm-chart/["JupyterHub Helm チャート"^]3.3.7 
+
+
+| Kubernetes | 1.29 
+
+
+| NetAppTrident | 24.02 
+|===
+
+
+== MLflow 検証環境
+
+|===
+| ソフトウェアコンポーネント | version 
+
+
+| MLフロー | 2.14.1、以下でデプロイlink:https://artifacthub.io/packages/helm/bitnami/mlflow["MLflow Helmチャート"^]1.4.12 
+
+
+| Kubernetes | 1.29 
+
+
+| NetAppTrident | 24.02 
+|===
+
+
+== Kubeflow 検証環境
+
+|===
+| ソフトウェアコンポーネント | version 
+
+
+| キューブフロー | 1.7、導入link:https://www.deploykf.org["デプロイKF"^]0.1.1 
+
+
+| Kubernetes | 1.26 
+
+
+| NetAppTrident | 23.07 
+|===
+
+
+== サポート
+
+NetApp は、Apache Airflow、JupyterHub、MLflow、Kubeflow、Kubernetes に対するエンタープライズ サポートを提供していません。完全にサポートされたMLOpsプラットフォームにご興味がございましたら、link:https://www.netapp.com/us/contact-us/index.aspx?for_cr=us["ネットアップに連絡"^] NetApp がパートナーと共同で提供する、完全にサポートされた MLOps ソリューションについて説明します。

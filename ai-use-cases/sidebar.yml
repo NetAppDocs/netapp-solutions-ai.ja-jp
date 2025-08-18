@@ -1,0 +1,50 @@
+---
+section: ai-use-cases
+title: AIのユースケース
+url: "/ai-use-cases/index.html"
+entries:
+- title: エンタープライズRAG向けNetApp AIPod Mini
+  pdf-filename: RAG推論のためのNetApp AIPod Mini
+  url: "/infra/ai-minipod.html"
+- title: プロトピア画像変換による責任あるAI
+  pdf-filename: 責任あるAIと機密推論 - NetApp AIとProtopia Image Transformation
+  entries:
+  - title: 概要
+    url: "/software/ai-conf-protopia-overview.html"
+  - title: ソリューション領域
+    url: "/software/ai-conf-protopia-usecases.html"
+  - title: 技術概要
+    url: "/software/ai-conf-protopia-tech.html"
+  - title: テストおよび検証計画
+    url: "/software/ai-conf-protopia-plan.html"
+  - title: テスト構成
+    url: "/software/ai-conf-protopia-config.html"
+  - title: テスト手順
+    url: "/software/ai-conf-protopia-procedure.html"
+  - title: 推論精度の比較
+    url: "/software/ai-conf-protopia-accuracy.html"
+  - title: 難読化速度
+    url: "/software/ai-conf-protopia-speed.html"
+  - title: まとめ
+    url: "/software/ai-conf-protopia-conclusion.html"
+  - title: 追加情報
+    url: "/software/ai-conf-protopia-addtl.html"
+- title: ビッグデータ分析からAIへの移行
+  pdf-filename: ビッグデータ環境からAI環境へのデータの移行
+  url: "/data-analytics/bda-ai-introduction.html"
+- title: NetAppとLenovoによるエッジAI推論
+  pdf-filename: エッジAI推論 - NetAppとLenovo ThinkSystem - ソリューション設計
+  entries:
+  - title: はじめに
+    url: "/infra/ai-lenovo-edge-intro.html"
+  - title: まとめ
+    url: "/infra/ai-lenovo-edge-conclusion.html"
+- title: ジェネレーティブAIとNetAppの価値
+  pdf-filename: ジェネレーティブAIとNetAppの価値
+  url: "/gen-ai/ai-wp-genai.html"
+- title: EシリーズシステムでQuantum StorNextを設計する
+  pdf-filename: Quantum StorNextとNetApp Eシリーズシステムの設計ガイド
+  url: "/infra/ai-eseries-nva1150-design.html"
+- title: EシリーズシステムでQuantum StorNextを導入
+  pdf-filename: Quantum StorNextとNetApp Eシリーズシステムの導入ガイド
+  url: "/infra/ai-eseries-nva1150-deploy.html"

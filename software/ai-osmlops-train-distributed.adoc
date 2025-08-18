@@ -1,0 +1,230 @@
+---
+sidebar: sidebar 
+permalink: software/ai-osmlops-train-distributed.html 
+keywords: NetApp Distributed AI Workload 
+summary: NetAppによるオープンソース MLOps - 同期分散 AI ワークロードの実行 
+---
+= 同期分散AIワークロードを実行する
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media/
+
+
+[role="lead"]
+Kubernetes クラスターで同期マルチノード AI および ML ジョブを実行するには、デプロイメント ジャンプ ホストで次のタスクを実行します。このプロセスにより、 NetAppボリュームに保存されているデータを活用し、単一のワーカー ノードが提供できるよりも多くの GPU を使用できるようになります。同期分散 AI ジョブの図については、次の図を参照してください。
+
+
+NOTE: 同期分散ジョブは、非同期分散ジョブと比較して、パフォーマンスとトレーニングの精度を向上させることができます。同期ジョブと非同期ジョブの長所と短所に関する説明は、このドキュメントの範囲外です。
+
+image:aicp-006.png["入出力ダイアログまたは書かれたコンテンツを示す図"]
+
+. 以下のコマンド例は、セクションの例で単一ノードで実行された同じTensorFlowベンチマークジョブの同期分散実行に参加する1つのワーカーの作成を示しています。link:ai-osmlops-train-singlenode.html["単一ノードのAIワークロードを実行する"] 。この特定の例では、ジョブが 2 つのワーカー ノード間で実行されるため、1 つのワーカーのみがデプロイされます。
++
+この例のワーカー デプロイメントでは 8 個の GPU が要求されるため、8 個以上の GPU を備えた単一の GPU ワーカー ノードで実行できます。  GPU ワーカー ノードに 8 個を超える GPU が搭載されている場合は、パフォーマンスを最大限に高めるために、この数をワーカー ノードに搭載されている GPU の数と同じになるように増やすことをおすすめします。  Kubernetesのデプロイメントの詳細については、 https://kubernetes.io/docs/concepts/workloads/controllers/deployment/["Kubernetesの公式ドキュメント"^] 。
+
++
+この例では、この特定のコンテナ化されたワーカーは単独では完了しないため、Kubernetes デプロイメントが作成されます。したがって、Kubernetes ジョブ構造を使用してデプロイするのは意味がありません。ワーカーが単独で完了するように設計または記述されている場合は、ジョブ コンストラクトを使用してワーカーをデプロイすると効果的です。
+
++
+この例のデプロイメント仕様で指定されているポッドには、 `hostNetwork`の価値 `true`。この値は、Kubernetes が通常各ポッドに対して作成する仮想ネットワーク スタックではなく、ホスト ワーカー ノードのネットワーク スタックをポッドが使用することを意味します。この場合、このアノテーションが使用されるのは、特定のワークロードが Open MPI、NCCL、および Horovod に依存して、ワークロードを同期分散方式で実行するためです。したがって、ホスト ネットワーク スタックへのアクセスが必要です。 Open MPI、NCCL、Horovod に関する説明は、このドキュメントの範囲外です。これが `hostNetwork: true`アノテーションが必要かどうかは、実行している特定のワークロードの要件によって異なります。詳細については、 `hostNetwork`フィールドについては、 https://kubernetes.io/docs/concepts/policy/pod-security-policy/["Kubernetesの公式ドキュメント"^] 。
+
++
+....
+$ cat << EOF > ./netapp-tensorflow-multi-imagenet-worker.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: netapp-tensorflow-multi-imagenet-worker
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: netapp-tensorflow-multi-imagenet-worker
+  template:
+    metadata:
+      labels:
+        app: netapp-tensorflow-multi-imagenet-worker
+    spec:
+      hostNetwork: true
+      volumes:
+      - name: dshm
+        emptyDir:
+          medium: Memory
+      - name: testdata-iface1
+        persistentVolumeClaim:
+          claimName: pb-fg-all-iface1
+      - name: testdata-iface2
+        persistentVolumeClaim:
+          claimName: pb-fg-all-iface2
+      - name: results
+        persistentVolumeClaim:
+          claimName: tensorflow-results
+      containers:
+      - name: netapp-tensorflow-py2
+        image: netapp/tensorflow-py2:19.03.0
+        command: ["bash", "/netapp/scripts/start-slave-multi.sh", "22122"]
+        resources:
+          limits:
+            nvidia.com/gpu: 8
+        volumeMounts:
+        - mountPath: /dev/shm
+          name: dshm
+        - mountPath: /mnt/mount_0
+          name: testdata-iface1
+        - mountPath: /mnt/mount_1
+          name: testdata-iface2
+        - mountPath: /tmp
+          name: results
+        securityContext:
+          privileged: true
+EOF
+$ kubectl create -f ./netapp-tensorflow-multi-imagenet-worker.yaml
+deployment.apps/netapp-tensorflow-multi-imagenet-worker created
+$ kubectl get deployments
+NAME                                      DESIRED   CURRENT   UP-TO-DATE   AVAILABLE   AGE
+netapp-tensorflow-multi-imagenet-worker   1         1         1            1           4s
+....
+. 手順 1 で作成したワーカー デプロイメントが正常に起動したことを確認します。次のコマンド例は、デプロイメント定義に示されているように、デプロイメントに対して単一のワーカー ポッドが作成され、このポッドが現在 GPU ワーカー ノードの 1 つで実行されていることを確認します。
++
+....
+$ kubectl get pods -o wide
+NAME                                                       READY   STATUS    RESTARTS   AGE
+IP              NODE            NOMINATED NODE
+netapp-tensorflow-multi-imagenet-worker-654fc7f486-v6725   1/1     Running   0          60s   10.61.218.154   10.61.218.154   <none>
+$ kubectl logs netapp-tensorflow-multi-imagenet-worker-654fc7f486-v6725
+22122
+....
+. 同期マルチノード ジョブの実行を開始、参加、追跡するマスター用の Kubernetes ジョブを作成します。以下のコマンド例は、セクションの例で単一ノードで実行された同じTensorFlowベンチマークジョブの同期分散実行を開始、参加、追跡するマスターを1つ作成します。link:ai-osmlops-train-singlenode.html["単一ノードのAIワークロードを実行する"] 。
++
+この例のマスタージョブは 8 つの GPU を要求するため、8 個以上の GPU を備えた単一の GPU ワーカーノードで実行できます。  GPU ワーカー ノードに 8 個を超える GPU が搭載されている場合は、パフォーマンスを最大限に高めるために、この数をワーカー ノードに搭載されている GPU の数と同じになるように増やすことをおすすめします。
+
++
+このジョブ定義例で指定されているマスターポッドには、 `hostNetwork`の価値 `true`労働者ポッドに与えられたのと同じように `hostNetwork`の価値 `true`ステップ1で。この値が必要な理由の詳細については、手順 1 を参照してください。
+
++
+....
+$ cat << EOF > ./netapp-tensorflow-multi-imagenet-master.yaml
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: netapp-tensorflow-multi-imagenet-master
+spec:
+  backoffLimit: 5
+  template:
+    spec:
+      hostNetwork: true
+      volumes:
+      - name: dshm
+        emptyDir:
+          medium: Memory
+      - name: testdata-iface1
+        persistentVolumeClaim:
+          claimName: pb-fg-all-iface1
+      - name: testdata-iface2
+        persistentVolumeClaim:
+          claimName: pb-fg-all-iface2
+      - name: results
+        persistentVolumeClaim:
+          claimName: tensorflow-results
+      containers:
+      - name: netapp-tensorflow-py2
+        image: netapp/tensorflow-py2:19.03.0
+        command: ["python", "/netapp/scripts/run.py", "--dataset_dir=/mnt/mount_0/dataset/imagenet", "--port=22122", "--num_devices=16", "--dgx_version=dgx1", "--nodes=10.61.218.152,10.61.218.154"]
+        resources:
+          limits:
+            nvidia.com/gpu: 8
+        volumeMounts:
+        - mountPath: /dev/shm
+          name: dshm
+        - mountPath: /mnt/mount_0
+          name: testdata-iface1
+        - mountPath: /mnt/mount_1
+          name: testdata-iface2
+        - mountPath: /tmp
+          name: results
+        securityContext:
+          privileged: true
+      restartPolicy: Never
+EOF
+$ kubectl create -f ./netapp-tensorflow-multi-imagenet-master.yaml
+job.batch/netapp-tensorflow-multi-imagenet-master created
+$ kubectl get jobs
+NAME                                      COMPLETIONS   DURATION   AGE
+netapp-tensorflow-multi-imagenet-master   0/1           25s        25s
+....
+. 手順 3 で作成したマスター ジョブが正しく実行されていることを確認します。次のコマンド例は、ジョブ定義に示されているように、ジョブに対して単一のマスター ポッドが作成され、このポッドが現在 GPU ワーカー ノードの 1 つで実行されていることを確認します。また、手順 1 で最初に確認したワーカー ポッドがまだ実行されており、マスター ポッドとワーカー ポッドが異なるノードで実行されていることも確認する必要があります。
++
+....
+$ kubectl get pods -o wide
+NAME                                                       READY   STATUS    RESTARTS   AGE
+IP              NODE            NOMINATED NODE
+netapp-tensorflow-multi-imagenet-master-ppwwj              1/1     Running   0          45s   10.61.218.152   10.61.218.152   <none>
+netapp-tensorflow-multi-imagenet-worker-654fc7f486-v6725   1/1     Running   0          26m   10.61.218.154   10.61.218.154   <none>
+....
+. 手順 3 で作成したマスター ジョブが正常に完了したことを確認します。次のコマンド例は、ジョブが正常に完了したことを確認します。
++
+....
+$ kubectl get jobs
+NAME                                      COMPLETIONS   DURATION   AGE
+netapp-tensorflow-multi-imagenet-master   1/1           5m50s      9m18s
+$ kubectl get pods
+NAME                                                       READY   STATUS      RESTARTS   AGE
+netapp-tensorflow-multi-imagenet-master-ppwwj              0/1     Completed   0          9m38s
+netapp-tensorflow-multi-imagenet-worker-654fc7f486-v6725   1/1     Running     0          35m
+$ kubectl logs netapp-tensorflow-multi-imagenet-master-ppwwj
+[10.61.218.152:00008] WARNING: local probe returned unhandled shell:unknown assuming bash
+rm: cannot remove '/lib': Is a directory
+[10.61.218.154:00033] PMIX ERROR: NO-PERMISSIONS in file gds_dstore.c at line 702
+[10.61.218.154:00033] PMIX ERROR: NO-PERMISSIONS in file gds_dstore.c at line 711
+[10.61.218.152:00008] PMIX ERROR: NO-PERMISSIONS in file gds_dstore.c at line 702
+[10.61.218.152:00008] PMIX ERROR: NO-PERMISSIONS in file gds_dstore.c at line 711
+Total images/sec = 12881.33875
+================ Clean Cache !!! ==================
+mpirun -allow-run-as-root -np 2 -H 10.61.218.152:1,10.61.218.154:1 -mca pml ob1 -mca btl ^openib -mca btl_tcp_if_include enp1s0f0 -mca plm_rsh_agent ssh -mca plm_rsh_args "-p 22122" bash -c 'sync; echo 1 > /proc/sys/vm/drop_caches'
+=========================================
+mpirun -allow-run-as-root -np 16 -H 10.61.218.152:8,10.61.218.154:8 -bind-to none -map-by slot -x NCCL_DEBUG=INFO -x LD_LIBRARY_PATH -x PATH -mca pml ob1 -mca btl ^openib -mca btl_tcp_if_include enp1s0f0 -x NCCL_IB_HCA=mlx5 -x NCCL_NET_GDR_READ=1 -x NCCL_IB_SL=3 -x NCCL_IB_GID_INDEX=3 -x NCCL_SOCKET_IFNAME=enp5s0.3091,enp12s0.3092,enp132s0.3093,enp139s0.3094 -x NCCL_IB_CUDA_SUPPORT=1 -mca orte_base_help_aggregate 0 -mca plm_rsh_agent ssh -mca plm_rsh_args "-p 22122" python /netapp/tensorflow/benchmarks_190205/scripts/tf_cnn_benchmarks/tf_cnn_benchmarks.py --model=resnet50 --batch_size=256 --device=gpu --force_gpu_compatible=True --num_intra_threads=1 --num_inter_threads=48 --variable_update=horovod --batch_group_size=20 --num_batches=500 --nodistortions --num_gpus=1 --data_format=NCHW --use_fp16=True --use_tf_layers=False --data_name=imagenet --use_datasets=True --data_dir=/mnt/mount_0/dataset/imagenet --datasets_parallel_interleave_cycle_length=10 --datasets_sloppy_parallel_interleave=False --num_mounts=2 --mount_prefix=/mnt/mount_%d --datasets_prefetch_buffer_size=2000 -- datasets_use_prefetch=True --datasets_num_private_threads=4 --horovod_device=gpu > /tmp/20190814_161609_tensorflow_horovod_rdma_resnet50_gpu_16_256_b500_imagenet_nodistort_fp16_r10_m2_nockpt.txt 2>&1
+....
+. 不要になったらワーカーデプロイメントを削除します。次のコマンド例は、手順 1 で作成されたワーカー デプロイメント オブジェクトの削除を示しています。
++
+ワーカー デプロイメント オブジェクトを削除すると、Kubernetes は関連付けられているワーカー ポッドを自動的に削除します。
+
++
+....
+$ kubectl get deployments
+NAME                                      DESIRED   CURRENT   UP-TO-DATE   AVAILABLE   AGE
+netapp-tensorflow-multi-imagenet-worker   1         1         1            1           43m
+$ kubectl get pods
+NAME                                                       READY   STATUS      RESTARTS   AGE
+netapp-tensorflow-multi-imagenet-master-ppwwj              0/1     Completed   0          17m
+netapp-tensorflow-multi-imagenet-worker-654fc7f486-v6725   1/1     Running     0          43m
+$ kubectl delete deployment netapp-tensorflow-multi-imagenet-worker
+deployment.extensions "netapp-tensorflow-multi-imagenet-worker" deleted
+$ kubectl get deployments
+No resources found.
+$ kubectl get pods
+NAME                                            READY   STATUS      RESTARTS   AGE
+netapp-tensorflow-multi-imagenet-master-ppwwj   0/1     Completed   0          18m
+....
+. *オプション:* マスタージョブアーティファクトをクリーンアップします。次のコマンド例は、手順 3 で作成されたマスター ジョブ オブジェクトの削除を示しています。
++
+マスタージョブオブジェクトを削除すると、Kubernetes は関連付けられているすべてのマスターポッドを自動的に削除します。
+
++
+....
+$ kubectl get jobs
+NAME                                      COMPLETIONS   DURATION   AGE
+netapp-tensorflow-multi-imagenet-master   1/1           5m50s      19m
+$ kubectl get pods
+NAME                                            READY   STATUS      RESTARTS   AGE
+netapp-tensorflow-multi-imagenet-master-ppwwj   0/1     Completed   0          19m
+$ kubectl delete job netapp-tensorflow-multi-imagenet-master
+job.batch "netapp-tensorflow-multi-imagenet-master" deleted
+$ kubectl get jobs
+No resources found.
+$ kubectl get pods
+No resources found.
+....
+

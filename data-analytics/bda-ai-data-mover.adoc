@@ -1,0 +1,37 @@
+---
+sidebar: sidebar 
+permalink: data-analytics/bda-ai-data-mover.html 
+keywords: data mover, ai, hadoop, nipam, nfs, azure, 
+summary: AI 向けデータ ムーバー ソリューションは、AI 操作からの Hadoop データを処理するという顧客のニーズに基づいています。 NetApp はNIPAM を使用して HDFS から NFS にデータを移動します。あるユースケースでは、顧客はオンプレミスの NFS にデータを移動する必要があり、別の顧客はクラウド内の GPU クラウド インスタンスからのデータを処理するために、Windows Azure Storage Blob からGoogle Cloud NetApp Volumesにデータを移動する必要がありました。 
+---
+= AI向けデータムーバーソリューション
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media/
+
+
+[role="lead"]
+AI 向けデータ ムーバー ソリューションは、AI 操作からの Hadoop データを処理するという顧客のニーズに基づいています。 NetApp はNIPAM を使用して HDFS から NFS にデータを移動します。あるユースケースでは、顧客はオンプレミスの NFS にデータを移動する必要があり、別の顧客はクラウド内の GPU クラウド インスタンスからのデータを処理するために、Windows Azure Storage Blob からGoogle Cloud NetApp Volumesにデータを移動する必要がありました。
+
+次の図は、データ ムーバー ソリューションの詳細を示しています。
+
+image:bda-ai-004.png["入出力ダイアログまたは書かれたコンテンツを示す図"]
+
+データ ムーバー ソリューションを構築するには、次の手順が必要です。
+
+. ONTAP SAN は HDFS を提供し、NAS は NIPAM を介して実稼働データ レイク クラスターに NFS ボリュームを提供します。
+. 顧客のデータは HDFS と NFS に保存されています。  NFS データは、ビッグ データ分析や AI 操作に使用される他のアプリケーションからの実稼働データである場合があります。
+. NetApp FlexCloneテクノロジーは、本番環境の NFS ボリュームのクローンを作成し、オンプレミスの AI クラスターにプロビジョニングします。
+. HDFS SAN LUNからのデータはNIPAMを使用してNFSボリュームにコピーされ、 `hadoop distcp`指示。 NIPAM は複数のネットワーク インターフェイスの帯域幅を使用してデータを転送します。このプロセスによりデータのコピー時間が短縮され、より多くのデータを転送できるようになります。
+. 両方の NFS ボリュームは、AI 操作用に AI クラスターにプロビジョニングされます。
+. オンプレミスの NFS データをクラウドの GPU で処理するために、NFS ボリュームはNetApp SnapMirrorテクノロジーを使用してNetApp Private Storage (NPS) にミラーリングされ、GPU のクラウド サービス プロバイダーにマウントされます。
+. 顧客は、クラウド サービス プロバイダーの GPU で EC2/EMR、HDInsight、または DataProc サービスのデータを処理したいと考えています。  HadoopデータムーバーはHadoopサービスからNIPAMを使用してGoogle Cloud NetApp Volumesにデータを移動し、 `hadoop distcp`指示。
+. Google Cloud NetApp Volumes のデータは、NFS プロトコルを通じて AI にプロビジョニングされます。AI を通じて処理されたデータは、NIPAM、 SnapMirror 、NPS を通じてNVIDIAクラスタだけでなく、オンプレミスの場所にビッグ データ分析のために送信することもできます。
+
+
+このシナリオでは、お客様は、オンプレミスのNetAppストレージ コントローラでの AI 処理に必要な、リモート ロケーションの NAS システムに大量のファイル数のデータを保持しています。このシナリオでは、XCP 移行ツールを使用して、より高速にデータを移行することをお勧めします。
+
+ハイブリッド ユース ケースのお客様は、 BlueXP Copy and Sync を使用してオンプレミスのデータを NFS、CIFS、S3 データからクラウドに移行したり、その逆を行ったりして、 NVIDIAクラスターなどの GPU を使用して AI 処理を行うことができます。  BlueXP Copy and Sync と XCP Migration Tool の両方が、 NetApp ONTAP NFS への NFS データ移行に使用されます。

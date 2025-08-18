@@ -1,0 +1,123 @@
+---
+sidebar: sidebar 
+permalink: infra/ai-aipod-nv-hw.html 
+keywords: NetApp AI, AI, Artificial Intelligence, ML, Machine Learning, NVIDIA, NVIDIA AI Enterprise, NVIDIA BasePOD, NVIDIA DGX 
+summary: NetApp AIPodとNVIDIA DGX システム - ハードウェア コンポーネント 
+---
+= NVA-1173 NetApp AIPod with NVIDIA DGX Systems - ハードウェアコンポーネント
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media/
+
+
+[role="lead"]
+このセクションでは、 NVIDIA DGX システムを搭載したNetApp AIPodのハードウェア コンポーネントに焦点を当てます。
+
+
+
+== NetApp AFFストレージシステム
+
+NetApp AFF の最先端ストレージ システムにより、IT 部門は業界をリードするパフォーマンス、優れた柔軟性、クラウド統合、クラス最高のデータ管理により、エンタープライズ ストレージの要件を満たすことができます。フラッシュ専用に設計されたAFFシステムは、ビジネスクリティカルなデータの高速化、管理、保護に役立ちます。
+
+
+
+=== AFF A90ストレージシステム
+
+NetApp ONTAPデータ管理ソフトウェアを搭載したNetApp AFF A90は、組み込みのデータ保護機能、オプションのランサムウェア対策機能、そして最も重要なビジネス ワークロードをサポートするために必要な高いパフォーマンスと復元力を提供します。ミッションクリティカルな業務の中断を排除し、パフォーマンス チューニングを最小限に抑え、ランサムウェア攻撃からデータを保護します。以下のメリットを提供します: • 業界をリードするパフォーマンス • 妥協のないデータセキュリティ • 簡素化された無停止アップグレード
+
+_NetApp AFF A90ストレージシステム_
+
+image:aipod-nv-a90.png["入出力ダイアログまたは書かれたコンテンツを示す図"]
+
+
+
+==== 業界をリードするパフォーマンス
+
+AFF A90 は、ディープラーニング、AI、高速分析などの次世代ワークロードだけでなく、Oracle、SAP HANA、Microsoft SQL Server、仮想化アプリケーションなどの従来のエンタープライズ データベースも簡単に管理します。  HA ペアあたり最大 2.4M IOPS と 100µs という低レイテンシで、ビジネスクリティカルなアプリケーションを最高速度で実行し続けるとともに、以前のNetAppモデルと比べてパフォーマンスが最大 50% 向上します。 NFS over RDMA、pNFS、セッション トランキングを使用すると、顧客は既存のデータ センター ネットワーク インフラストラクチャを使用して、次世代アプリケーションに必要な高レベルのネットワーク パフォーマンスを実現できます。また、SAN、NAS、オブジェクト ストレージの統合マルチプロトコル サポートにより拡張と成長が可能になり、オンプレミスまたはクラウドのデータに対して、統合された単一のONTAPデータ管理ソフトウェアで最大限の柔軟性を実現できます。さらに、 Active IQとCloud Insightsが提供する AI ベースの予測分析により、システムの健全性を最適化することもできます。
+
+
+
+==== 妥協のないデータセキュリティ
+
+AFF A90システムには、 NetAppの統合型およびアプリケーション整合性のあるデータ保護ソフトウェアの完全なスイートが含まれています。事前の対策と攻撃後の回復のために、組み込みのデータ保護と最先端のランサムウェア対策ソリューションを提供します。悪意のあるファイルがディスクに書き込まれるのをブロックし、ストレージの異常を簡単に監視して洞察を得ることができます。
+
+
+
+==== 簡素化された無停止アップグレード
+
+AFF A90 は、既存の A800 のお客様向けに、中断のないシャーシ内アップグレードとしてご利用いただけます。 NetApp は、高度な信頼性、可用性、保守性、管理性 (RASM) 機能を通じて、ミッションクリティカルな運用の更新と中断の排除を容易にします。さらに、 NetApp はONTAPソフトウェアがすべてのシステム コンポーネントのファームウェア更新を自動的に適用するため、運用効率をさらに向上させ、IT チームの日常業務を簡素化します。
+
+最大規模の導入の場合、 AFF A1Kシステムは最高のパフォーマンスと容量のオプションを提供しますが、 AFF A70やAFF C800などの他のNetAppストレージ システムは、より低コストで小規模な導入のオプションを提供します。
+
+
+
+== NVIDIA DGX BasePOD
+
+NVIDIA DGX BasePOD は、 NVIDIA のハードウェアおよびソフトウェア コンポーネント、MLOps ソリューション、サードパーティのストレージで構成される統合ソリューションです。 NVIDIA製品と検証済みのパートナー ソリューションによるスケールアウト システム設計のベスト プラクティスを活用することで、顧客は AI 開発のための効率的で管理しやすいプラットフォームを実装できます。図 1 は、 NVIDIA DGX BasePODのさまざまなコンポーネントを示しています。
+
+_NVIDIA DGX BasePOD ソリューション_
+
+image:aipod-nv-basepod-layers.png["入出力ダイアログまたは書かれたコンテンツを示す図"]
+
+
+
+=== NVIDIA DGX H100 システム
+
+NVIDIA DGX H100™ システムは、 NVIDIA H100 Tensor Core GPU の画期的なパフォーマンスによって加速される AI の原動力です。
+
+_NVIDIA DGX H100 システム_
+
+image:aipod-nv-h100-3d.png["入出力ダイアログまたは書かれたコンテンツを示す図"]
+
+DGX H100 システムの主な仕様は次のとおりです。 • 8 個のNVIDIA H100 GPU。  • GPU あたり 80 GB の GPU メモリ、合計 640 GB。  • NVIDIA NVSwitch チップ 4 個。  • PCIe 5.0 をサポートするデュアル 56 コア Intel Xeon Platinum 8480 プロセッサー。  • 2 TB の DDR5 システム メモリ。  • 8 つのシングルポートNVIDIA ConnectX-7 (InfiniBand/Ethernet) アダプタと 2 つのデュアルポートNVIDIA ConnectX-7 (InfiniBand/Ethernet) アダプタに対応する 4 つの OSFP ポート。  • DGX OS 用に 1.92 TB M.2 NVMe ドライブ 2 台、ストレージ/キャッシュ用に 3.84 TB U.2 NVMe ドライブ 8 台。  • 最大出力 10.2 kW。  DGX H100 CPU トレイの背面ポートを以下に示します。 4 つの OSFP ポートは、InfiniBand コンピューティング ファブリック用の 8 つの ConnectX-7 アダプタとして機能します。デュアル ポート ConnectX-7 アダプタの各ペアは、ストレージ ファブリックと管理ファブリックへの並列パスを提供します。アウトオブバンド ポートはBMCアクセスに使用されます。
+
+_NVIDIA DGX H100 背面パネル_
+
+image:aipod-nv-h100-rear.png["入出力ダイアログまたは書かれたコンテンツを示す図"]
+
+
+
+=== NVIDIAネットワーク
+
+
+
+==== NVIDIA Quantum-2 QM9700 スイッチ
+
+_NVIDIA Quantum-2 QM9700 InfiniBand スイッチ_
+
+image:aipod-nv-qm9700.png["入出力ダイアログまたは書かれたコンテンツを示す図"]
+
+400Gb/s InfiniBand 接続を備えたNVIDIA Quantum-2 QM9700 スイッチは、 NVIDIA Quantum-2 InfiniBand BasePOD 構成のコンピューティング ファブリックを強化します。 ConnectX-7 シングルポート アダプタは、InfiniBand コンピューティング ファブリックに使用されます。各NVIDIA DGX システムには各 QM9700 スイッチへのデュアル接続があり、システム間に複数の高帯域幅、低遅延パスを提供します。
+
+
+
+==== NVIDIA Spectrum-3 SN4600 スイッチ
+
+_NVIDIA Spectrum-3 SN4600 スイッチ_
+
+image:aipod-nv-sn4600-hires-smallest.png["入出力ダイアログまたは書かれたコンテンツを示す図"]
+
+NVIDIA Spectrum™-3 SN4600 スイッチは、合計 128 個のポート (スイッチあたり 64 個) を備え、DGX BasePOD のインバンド管理に冗長接続を提供します。 NVIDIA SN4600 スイッチは、1 GbE から 200 GbE までの速度を提供できます。イーサネット経由で接続されるストレージ アプライアンスでは、 NVIDIA SN4600 スイッチも使用されます。  NVIDIA DGX デュアルポート ConnectX-7 アダプタのポートは、インバンド管理とストレージ接続の両方に使用されます。
+
+
+
+==== NVIDIA Spectrum SN2201 スイッチ
+
+_NVIDIA Spectrum SN2201 スイッチ_
+
+image:aipod-nv-sn2201.png["入出力ダイアログまたは書かれたコンテンツを示す図"]
+
+NVIDIA Spectrum SN2201 スイッチは、アウトオブバンド管理用の接続を提供する 48 個のポートを備えています。アウトオブバンド管理は、DGX BasePOD 内のすべてのコンポーネントに対して統合された管理接続を提供します。
+
+
+
+==== NVIDIA ConnectX-7 アダプター
+
+_NVIDIA ConnectX-7 アダプター_
+
+image:aipod-nv-cx7.png["入出力ダイアログまたは書かれたコンテンツを示す図"]
+
+NVIDIA ConnectX-7 アダプターは、25/50/100/200/400G のスループットを提供できます。  NVIDIA DGX システムは、シングル ポートとデュアル ポートの両方の ConnectX-7 アダプタを使用して、400Gb/s InfiniBand と Ethernet による DGX BasePOD 展開の柔軟性を実現します。

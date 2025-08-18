@@ -1,0 +1,19 @@
+---
+sidebar: sidebar 
+permalink: infra/ai-eseries-beegfs.html 
+keywords:  
+summary:  
+---
+= Eシリーズストレージを搭載したNetApp上のBeeGFS
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media/
+
+
+[role="lead"]
+E シリーズ ストレージを搭載したNetApp上の BeeGFS は、最も過酷なワークロードにも対応できる、シンプルで信頼性が高く、拡張性に優れ、コスト効率に優れた HPC インフラストラクチャを備えた、実績のある統合ソリューションです。
+
+link:https://docs.netapp.com/us-en/beegfs/index.html["Eシリーズストレージを搭載したNetApp上のBeeGFS"^]

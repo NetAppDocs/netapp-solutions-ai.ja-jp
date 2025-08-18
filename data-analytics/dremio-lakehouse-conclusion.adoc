@@ -1,0 +1,43 @@
+---
+sidebar: sidebar 
+permalink: data-analytics/dremio-lakehouse-conclusion.html 
+keywords: conclusion 
+summary: このドキュメントでは、TPCDS 認定テスト、チューニング、顧客のユースケースの詳細など、 NetAppストレージで Dremio を使用するためのベスト プラクティス ガイドラインを示します。 
+---
+= まとめ
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media/
+
+
+[role="lead"]
+結論として、この技術レポートでは、 ONTAP S3、NAS、 StorageGRIDなどのNetAppストレージ コントローラーのさまざまなデータ ソースと組み合わせた、Dremio を使用した q Hybrid Iceberg Lakehouse の包括的な展開の詳細について説明しました。展開プロセスは正常に実行され、TPC-DS ベンチマーク ツールを使用して、さまざまなデータ ソースにわたって 99 個の SQL クエリが実行されました。このレポートでは、 NetApp内の顧客の使用事例も調査し、多様なビジネス要件を満たす Dremio の汎用性と有効性を実証しました。さらに、自動車部品販売の顧客を対象とする特定のユースケースが検討され、データ分析と洞察のために Dremio を活用する実際的なアプリケーションと利点が強調されました。
+
+全体として、このドキュメントは、 NetAppストレージ コントローラを使用した Dremio の導入と使用方法を理解するための貴重なリソースとして機能し、さまざまな業界でデータ主導の意思決定と最適化を推進する機能と可能性を示しています。
+
+
+
+== 詳細情報の入手方法
+
+このドキュメントに記載されている情報の詳細については、次のドキュメントや Web サイトを参照してください。
+
+* Zookeeperのインストール
++
+https://medium.com/@ahmetfurkandemir/distributed-hadoop-cluster-1-spark-with-all-dependincies-03c8ec616166[]
+
+* ドレミオ
++
+https://docs.dremio.com/current/get-started/cluster-deployments/deployment-models/standalone/standalone-tarball/[]
+
+* storageGRIDを使用したDremioの設定
++
+https://docs.netapp.com/us-en/storagegrid-enable/tools-apps-guides/configure-dremio-storagegrid.html#configure-dremio-data-source[]
+
+* NetAppのユースケース
++
+https://www.dremio.com/customers/netapp/[]
+
+

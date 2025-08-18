@@ -1,0 +1,32 @@
+---
+indexpage:
+  title: NetApp AIのユースケースとアプリケーション
+  summary: エンタープライズ RAG システムやエッジ推論から、責任ある AI プラクティスやデータ移行戦略まで、 NetAppソリューションによる実際の
+    AI 実装を探索します。これらのユースケースは、 NetApp がセキュリティ、パフォーマンス、スケーラビリティを維持しながら、さまざまな環境で AI アプリケーションを実現する方法を示しています。
+  lead: エンタープライズ RAG システムやエッジ推論から、責任ある AI プラクティスやデータ移行戦略まで、 NetAppソリューションによる実際の AI
+    実装を探索します。これらのユースケースは、 NetAppが組織がセキュリティ、パフォーマンス、スケーラビリティを維持しながら、さまざまな環境に AI アプリケーションを導入できるようにする方法を示しています。
+  tiles:
+  - title: エンタープライズAIアプリケーションとユースケース
+    links:
+    - title: エンタープライズRAG向けNetApp AIPod Mini
+      url: "../infra/ai-minipod.html"
+    - title: ジェネレーティブAIとNetAppの価値
+      url: "../gen-ai/ai-wp-genai.html"
+    - title: NetAppとLenovoによるエッジAI推論
+      url: "../infra/ai-lenovo-edge-intro.html"
+    - title: ビッグデータ分析からAIへの移行
+      url: "../data-analytics/bda-ai-introduction.html"
+  - title: 責任あるAI
+    links:
+    - title: プロトピア画像変換による責任あるAI
+      url: "../software/ai-conf-protopia-overview.html"
+    - title: ソリューション領域
+      url: "../software/ai-conf-protopia-usecases.html"
+    - title: 技術概要
+      url: "../software/ai-conf-protopia-tech.html"
+  - title: AIストレージおよびインフラストラクチャソリューション
+    links:
+    - title: EシリーズシステムでQuantum StorNextを設計する
+      url: "../infra/ai-eseries-nva1150-design.html"
+    - title: EシリーズシステムでQuantum StorNextを導入
+      url: "../infra/ai-eseries-nva1150-deploy.html"

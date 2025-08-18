@@ -1,0 +1,75 @@
+---
+sidebar: sidebar 
+permalink: data-analytics/hdcs-sh-conclusion.html 
+keywords: conclusion, summary, data protection, hadoop, more information, Acknowledgements 
+summary: このセクションでは、さまざまな Hadoop データ保護要件を満たすためにNetAppが提供するユースケースとソリューションの概要を示します。 
+---
+= まとめ
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media/
+
+
+[role="lead"]
+このセクションでは、さまざまな Hadoop データ保護要件を満たすためにNetAppが提供するユースケースとソリューションの概要を示します。  NetAppが提供するデータ ファブリックを使用すると、お客様は次のことが可能になります。
+
+* NetApp の豊富なデータ管理機能と Hadoop ネイティブ ワークフローとの統合を活用することで、適切なデータ保護ソリューションを柔軟に選択できます。
+* Hadoop クラスターのバックアップ ウィンドウ時間を約 70% 削減します。
+* Hadoop クラスターのバックアップによって生じるパフォーマンスへの影響を排除します。
+* マルチクラウド データ保護と、さまざまなクラウド プロバイダーから単一の分析データ ソースへのデータ アクセスを同時に提供します。
+* FlexCloneテクノロジーを使用して、高速かつスペース効率の高い Hadoop クラスターのコピーを作成します。
+
+
+
+
+== 詳細情報の入手方法
+
+このドキュメントに記載されている情報の詳細は、以下のドキュメントやウェブサイトをご参照ください。
+
+* NetAppビッグデータ分析ソリューション
++
+https://www.netapp.com/us/solutions/applications/big-data-analytics/index.aspx["https://www.netapp.com/us/solutions/applications/big-data-analytics/index.aspx"^]
+
+* NetAppストレージを使用した Apache Spark ワークロード
++
+https://www.netapp.com/pdf.html?item=/media/26877-nva-1157-deploy.pdf["https://www.netapp.com/pdf.html?item=/media/26877-nva-1157-deploy.pdf"^]
+
+* Apache Spark向けNetAppストレージソリューション
++
+https://www.netapp.com/media/16864-tr-4570.pdf["https://www.netapp.com/media/16864-tr-4570.pdf"^]
+
+* NetAppによって実現されるデータファブリック上の Apache Hadoop
++
+https://www.netapp.com/media/16877-tr-4529.pdf["https://www.netapp.com/media/16877-tr-4529.pdf"^]
+
+
+
+
+
+== 謝辞
+
+* ポール・バーランド、 NetApp 、ANZビクトリア地区営業担当
+* NetAppビジネス開発マネージャー、Hoseb Dermanilian
+* Lee Dorrier、 NetApp MPSG ディレクター
+* David Thiessen、システム エンジニア、ANZ Victoria District SE、 NetApp
+
+
+
+
+== バージョン履歴
+
+|===
+| version | 日付 | ドキュメントのバージョン履歴 
+
+
+| バージョン1.0 | 2018年1月 | 初版リリース 
+
+
+| バージョン2.0 | 2021年10月 | ユースケース#5を更新: 分析ワークロードの高速化 
+
+
+| バージョン3.0 | 2023年11月 | NIPAM の詳細を削除しました 
+|===

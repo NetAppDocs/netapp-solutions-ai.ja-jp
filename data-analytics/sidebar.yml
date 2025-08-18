@@ -1,0 +1,193 @@
+---
+section: data-analytics
+title: 最新のデータ分析
+url: "/data-analytics/index.html"
+entries:
+- title: NetApp のファイルオブジェクト二重性と AWS SageMaker を使用したクラウドデータ管理
+  pdf-filename: NetApp のファイルオブジェクト二重性と AWS SageMaker を使用したクラウドデータ管理
+  entries:
+  - title: ソリューションの概要
+    url: "/data-analytics/cdm-fod-solution-overview.html"
+  - title: ソリューション技術
+    url: "/data-analytics/cdm-fod-solution-technology.html"
+  - title: データサイエンティストやその他のアプリケーションのためのデータの二重性
+    url: "/data-analytics/cdm-fod-data-duality.html"
+  - title: まとめ
+    url: "/data-analytics/cdm-fod-conclusion.html"
+- title: NetApp NFSストレージを使用したApache Kafkaワークロード
+  pdf-filename: NetApp NFSストレージを使用したApache Kafkaワークロード
+  entries:
+  - title: はじめに
+    url: "/data-analytics/kafka-nfs-introduction.html"
+  - title: NFS から Kafka へのワークロードにおける愚かな名前変更問題に対するNetAppソリューション
+    url: "/data-analytics/kafka-nfs-silly-rename-solution.html"
+  - title: 機能検証 - ばかげた名前変更の修正
+    url: "/data-analytics/kafka-nfs-silly-rename-validate.html"
+  - title: Kafka ワークロードにNetApp NFS を使用する理由
+    url: "/data-analytics/kafka-nfs-why-netapp.html"
+  - title: AWS のパフォーマンス概要と検証 - Cloud Volume ONTAP
+    url: "/data-analytics/kafka-nfs-perf-aws.html"
+  - title: AWS でのパフォーマンスの概要と検証 - FSx for NetApp ONTAP
+    url: "/data-analytics/kafka-nfs-perf-aws-fsxn.html"
+  - title: AFFオンプレミスのパフォーマンス概要と検証
+    url: "/data-analytics/kafka-nfs-perf-aff.html"
+  - title: まとめ
+    url: "/data-analytics/kafka-nfs-conclusion.html"
+  - title: 詳細情報の入手方法
+    url: "/data-analytics/kafka-nfs-additional-info.html"
+- title: NetApp ONTAPストレージ コントローラを使用した Confluent Kafka
+  pdf-filename: NetApp ONTAPストレージ コントローラを使用した Confluent Kafka
+  entries:
+  - title: 概要
+    url: "/data-analytics/kafka-ontap-overview.html"
+  - title: 解決策
+    url: "/data-analytics/kafka-sc-solution.html"
+  - title: 技術概要
+    url: "/data-analytics/kafka-sc-technology-overview.html"
+  - title: Confluent のパフォーマンス検証
+    url: "/data-analytics/kafka-sc-confluent-perf.html"
+  - title: 生成・消費ワークロードジェネレータによるパフォーマンステスト
+    url: "/data-analytics/kafka-sc-performance.html"
+  - title: パフォーマンスのベストプラクティスガイドライン
+    url: "/data-analytics/kafka-sc-best-practice.html"
+  - title: まとめ
+    url: "/data-analytics/kafka-sc-conclusion.html"
+- title: Apache Spark向けNetAppストレージソリューション
+  pdf-filename: Apache Spark向けNetAppストレージソリューション
+  entries:
+  - title: ソリューションの概要
+    url: "/data-analytics/apache-spark-solution-overview.html"
+  - title: 対象
+    url: "/data-analytics/apache-spark-target-audience.html"
+  - title: ソリューション技術
+    url: "/data-analytics/apache-spark-solution-technology.html"
+  - title: NetApp Spark ソリューションの概要
+    url: "/data-analytics/spark-solutions-overview.html"
+  - title: ユースケースの概要
+    url: "/data-analytics/apache-spark-use-cases-summary.html"
+  - title: 主要なAI、ML、DLのユースケースとアーキテクチャ
+    url: "/data-analytics/spark-ai-use-cases.html"
+  - title: テスト結果
+    url: "/data-analytics/apache-spark-testing-results.html"
+  - title: ハイブリッドクラウドソリューション
+    url: "/data-analytics/spark-hybrid-cloud.html"
+  - title: 主要なユースケースごとの Python スクリプト
+    url: "/data-analytics/spark-python-scripts.html"
+  - title: まとめ
+    url: "/data-analytics/apache-spark-conclusion.html"
+  - title: 詳細情報の入手方法
+    url: "/data-analytics/spark-additional-info.html"
+- title: ビッグデータ分析データから人工知能へ
+  pdf-filename: ビッグデータ分析データから人工知能へ
+  entries:
+  - title: はじめに
+    url: "/data-analytics/bda-ai-introduction.html"
+  - title: 顧客の課題
+    url: "/data-analytics/bda-ai-customer-challenges.html"
+  - title: データムーバーソリューション
+    url: "/data-analytics/bda-ai-data-mover-solution.html"
+  - title: AI向けデータムーバーソリューション
+    url: "/data-analytics/bda-ai-data-mover.html"
+  - title: GPFS からNetApp ONTAP NFS へ
+    url: "/data-analytics/bda-ai-gpfs-to-netapp-ontap-nfs.html"
+  - title: HDFS と MapR-FS からONTAP NFS へ
+    url: "/data-analytics/bda-ai-hdfs-maprfs-to-nfs.html"
+  - title: ビジネス上のメリット
+    url: "/data-analytics/bda-ai-business-benefits.html"
+  - title: GPFSからNFSへ - 詳細な手順
+    url: "/data-analytics/bda-ai-gpfs-to-nfs.html"
+  - title: MapR-FSからONTAP NFSへ
+    url: "/data-analytics/bda-ai-mapr-fs-to-ontap-nfs.html"
+  - title: 追加情報
+    url: "/data-analytics/bda-ai-additional-info.html"
+- title: Confluent Kafka のベストプラクティス
+  pdf-filename: Confluent Kafka のベストプラクティス
+  entries:
+  - title: はじめに
+    url: "/data-analytics/confluent-kafka-introduction.html"
+  - title: ソリューションアーキテクチャの詳細
+    url: "/data-analytics/confluent-kafka-solution.html"
+  - title: 技術概要
+    url: "/data-analytics/kafka-tech-overview.html"
+  - title: 合流検証
+    url: "/data-analytics/kafka-certification.html"
+  - title: スケーラビリティを考慮したパフォーマンステスト
+    url: "/data-analytics/kafka-perf.html"
+  - title: Confluent S3コネクタ
+    url: "/data-analytics/kafka-s3-connector.html"
+  - title: 合流型自己再バランスクラスター
+    url: "/data-analytics/kafka-rebalance.html"
+  - title: ベストプラクティスガイドライン
+    url: "/data-analytics/kafka-best-practices.html"
+  - title: サイジング
+    url: "/data-analytics/confluent-kafka-sizing.html"
+  - title: まとめ
+    url: "/data-analytics/confluent-kafka-conclusion.html"
+- title: NetAppハイブリッド クラウド データ ソリューション - 顧客のユースケースに基づいた Spark と Hadoop
+  pdf-filename: NetAppハイブリッド クラウド データ ソリューション - 顧客のユースケースに基づいた Spark と Hadoop
+  entries:
+  - title: ソリューションの概要
+    url: "/data-analytics/hdcs-sh-solution-overview.html"
+  - title: ビッグデータ アーキテクチャ向けのNetApp搭載データ ファブリック
+    url: "/data-analytics/hdcs-sh-data-fabric.html"
+  - title: Hadoopデータ保護とNetApp
+    url: "/data-analytics/hdcs-sh-hadoop-data-protection.html"
+  - title: Hadoop データ保護のユースケースの概要
+    url: "/data-analytics/hdcs-sh-use-cases.html"
+  - title: ユースケース1 - Hadoopデータのバックアップ
+    url: "/data-analytics/hdcs-sh-use-case-backup.html"
+  - title: ユースケース 2 - クラウドからオンプレミスへのバックアップと災害復旧
+    url: "/data-analytics/hdcs-sh-use-case-backup-dr-cloud.html"
+  - title: ユースケース3 - 既存のHadoopデータでDevTestを有効にする
+    url: "/data-analytics/hdcs-sh-use-case-devtest.html"
+  - title: ユースケース4 - データ保護とマルチクラウド接続
+    url: "/data-analytics/hdcs-sh-use-case-dp-multicloud.html"
+  - title: ユースケース5 - 分析ワークロードの高速化
+    url: "/data-analytics/hdcs-sh-use-case-analytics.html"
+  - title: まとめ
+    url: "/data-analytics/hdcs-sh-conclusion.html"
+- title: NetAppとDremioの次世代ハイブリッド氷山レイクハウスソリューション
+  pdf-filename: NetAppとDremioの次世代ハイブリッドアイスバーグレイクハウスソリューション
+  entries:
+  - title: はじめに
+    url: "/data-analytics/dremio-lakehouse-introduction.html"
+  - title: ソリューションの概要
+    url: "/data-analytics/dremio-lakehouse-solution.html"
+  - title: 技術要件
+    url: "/data-analytics/dremio-lakehouse-tech-overview.html"
+  - title: 展開手順
+    url: "/data-analytics/dremio-lakehouse-deployment.html"
+  - title: ソリューション検証の概要
+    url: "/data-analytics/dremio-lakehouse-verification.html"
+  - title: 顧客の使用事例
+    url: "/data-analytics/dremio-lakehouse-use-cases.html"
+  - title: まとめ
+    url: "/data-analytics/dremio-lakehouse-conclusion.html"
+- title: さまざまな分析戦略に応じたさまざまなソリューション
+  pdf-filename: さまざまな分析戦略のためのさまざまなソリューション ソリューション概要
+  url: "/data-analytics/sb-4154.html"
+- title: Splunk SmartStore を搭載したNetApp StorageGRID
+  pdf-filename: Splunk SmartStore を搭載したNetApp StorageGRID
+  entries:
+  - title: はじめに
+    url: "/data-analytics/stgr-splunkss-introduction.html"
+  - title: ソリューションの概要
+    url: "/data-analytics/stgr-splunkss-solution-overview.html"
+  - title: このソリューションの利点
+    url: "/data-analytics/stgr-splunkss-solution-benefits.html"
+  - title: Splunkアーキテクチャ
+    url: "/data-analytics/stgr-splunkss-arch.html"
+  - title: Splunk SmartStore 向けStorageGRID機能
+    url: "/data-analytics/stgr-splunkss-storagegrid-feat.html"
+  - title: 階層化とコスト削減
+    url: "/data-analytics/stgr-splunkss-tiering-savings.html"
+  - title: 単一サイトのSmartStoreパフォーマンス
+    url: "/data-analytics/stgr-splunkss-single-site-perf.html"
+  - title: まとめ
+    url: "/data-analytics/stgr-splunkss-conclusion.html"
+- title: NetApp Eシリーズ E5700とSplunk Enterprise
+  pdf-filename: NetApp Eシリーズ E5700とSplunk Enterprise
+  url: "/data-analytics/tr-4623.html"
+- title: NetAppストレージを使用して Apache Spark ワークロードを展開する
+  pdf-filename: NetAppストレージ ソリューションを使用した Apache Spark ワークロード (導入ガイド)
+  url: "/data-analytics/nva-1157-deploy.html"

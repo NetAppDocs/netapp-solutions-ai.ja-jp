@@ -1,0 +1,25 @@
+---
+sidebar: sidebar 
+permalink: data-analytics/kafka-ontap-overview.html 
+keywords: tr4941, 4941, introduction 
+summary: このドキュメントでは、階層型ストレージ ベンチマーク キットを使用したNetApp ONTAP上の Confluent プラットフォームのパフォーマンス ベンチマークの概要を説明します。 
+---
+= TR-4941: NetApp ONTAPストレージコントローラとの連携
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media/
+
+
+Karthikeyan Nagalingam、Joe Scott、 NetApp Rankesh Kumar、Confluent
+
+[role="lead"]
+Confluent Platform のスケーラビリティと弾力性を高めるには、ワークロードを迅速に拡張してバランスをとることができる必要があります。階層型ストレージにより、運用上の負担が軽減され、Confluent に大量のデータを保存しやすくなります。
+
+基本的な考え方は、データ ストレージとデータ処理を分離することです。これにより、それぞれを個別にスケーリングすることがはるかに簡単になります。
+
+業界をリードする革新技術を搭載したNetApp ONTAPデータ管理ソフトウェアは、データがどこに保存されていても Confluent に多くの利点をもたらします。
+
+このドキュメントでは、階層型ストレージ ベンチマーク キットを使用したNetApp ONTAP上の Confluent プラットフォームのパフォーマンス ベンチマークの概要を説明します。

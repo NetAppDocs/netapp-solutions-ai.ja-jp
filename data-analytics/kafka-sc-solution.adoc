@@ -1,0 +1,60 @@
+---
+sidebar: sidebar 
+permalink: data-analytics/kafka-sc-solution.html 
+keywords: solution architecture, confluent platform, linux, Fujitsu primergy, intel xenon 
+summary: このセクションでは、階層化ストレージ用のNetApp ONTAPを使用した Confluent Platform 展開のパフォーマンス検証に使用されるハードウェアとソフトウェアについて説明します。次の表は、ソリューションのアーキテクチャと基本コンポーネントを示しています。 
+---
+= 解決策
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media/
+
+
+[role="lead"]
+Confluent およびONTAP搭載のNetApp AFF A900ストレージ コントローラは、データ ストリーム用に設計された分散システムです。どちらも水平スケーラブルでフォールト トレランスを備え、負荷がかかった状態でも優れたパフォーマンスを提供します。これらは、データフットプリントを最小限に抑えるデータ削減テクノロジーにより、ストレージコストを削減しながら、分散データストリーミングとストリーム処理において相互に補完します。 AFF A900ストレージ コントローラは、コンピューティング リソースとデータ ストレージ リソースを分離しながら優れたパフォーマンスを提供します。これによりシステム管理が簡素化され、リソースを個別に拡張できるようになります。
+
+image:kafka-sc-003.png["ソリューションの概要を示す画像。"]
+
+
+
+== ソリューションアーキテクチャの詳細
+
+このセクションでは、階層化ストレージ用のNetApp ONTAPを使用した Confluent Platform 展開のパフォーマンス検証に使用されるハードウェアとソフトウェアについて説明します。次の表は、ソリューションのアーキテクチャと基本コンポーネントを示しています。
+
+|===
+| プラットフォームコンポーネント | 環境設定 
+
+
+| Confluent Platform バージョン 6.2  a| 
+* 動物園飼育員3人
+* ブローカーサーバー x 8
+* 5台のツールサーバー
+* グラファナ x 1
+* コントロールセンター x 1
+
+
+
+
+| すべてのノード上のオペレーティング システム | Linux（Ubuntu 18.04） 
+
+
+| ウォームバケット用のNetApp ONTAP  a| 
+* 1 x AFF A900高可用性（HA）ペア
+* 4 x 24 x 800 SSD
+* S3プロトコル
+* 100GbE
+
+
+
+
+| 富士通 PRIMERGY RX2540 サーバ 15 台  a| 
+* 2つのCPU、合計16個の物理コア
+* インテル Xeon
+* 256GBの物理メモリ
+* 100GbEデュアルポート
+
+
+|===

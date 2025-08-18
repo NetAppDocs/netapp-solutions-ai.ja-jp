@@ -1,0 +1,62 @@
+---
+sidebar: sidebar 
+permalink: infra/ai-lenovo-edge-procedure.html 
+keywords: procedure, operating system, ubuntu, nvidia, docker, criteo, brats 
+summary: このセクションでは、このソリューションを検証するために使用されるテスト手順について説明します。 
+---
+= テスト手順
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media/
+
+
+[role="lead"]
+このセクションでは、このソリューションを検証するために使用されるテスト手順について説明します。
+
+
+
+== オペレーティングシステムとAI推論のセットアップ
+
+AFF C190では、 NVIDIAドライバーとNVIDIA GPUをサポートするDockerを搭載したUbuntu 18.04を使用し、MLPerfを使用しました。 https://github.com/mlperf/inference_results_v0.7/tree/master/closed/Lenovo["コード"^] MLPerf Inference v0.7 への Lenovo 提出の一部として利用可能です。
+
+EF280では、 NVIDIAドライバーとNVIDIA GPUとMLPerfをサポートするDockerを搭載したUbuntu 20.04を使用しました。 https://github.com/mlcommons/inference_results_v1.1/tree/main/closed/Lenovo["コード"^] MLPerf Inference v1.1 への Lenovo の提出物の一部として利用可能です。
+
+AI 推論を設定するには、次の手順に従います。
+
+. 登録が必要なデータセット、ImageNet 2012 検証セット、Criteo Terabyte データセット、BraTS 2019 トレーニング セットをダウンロードし、ファイルを解凍します。
+. 少なくとも1TBの作業ディレクトリを作成し、環境変数を定義します。 `MLPERF_SCRATCH_PATH`ディレクトリを参照します。
++
+ネットワーク ストレージを使用する場合は共有ストレージでこのディレクトリを共有し、ローカル データでテストする場合はローカル ディスクでこのディレクトリを共有する必要があります。
+
+. makeを実行する `prebuild`このコマンドは、必要な推論タスク用の Docker コンテナを構築して起動します。
++
+
+NOTE: 以下のコマンドはすべて、実行中の Docker コンテナ内から実行されます。
+
++
+** MLPerf 推論タスク用の事前トレーニング済み AI モデルをダウンロードします。 `make download_model`
+** 無料でダウンロードできる追加のデータセットをダウンロードしてください。 `make download_data`
+** データを前処理する: `preprocess_data`
+** 走る： `make build` 。
+** コンピューティング サーバーの GPU 向けに最適化された推論エンジンを構築します。 `make generate_engines`
+** 推論ワークロードを実行するには、次のコマンドを実行します (1 つのコマンド)。
+
+
+
+
+....
+make run_harness RUN_ARGS="--benchmarks=<BENCHMARKS> --scenarios=<SCENARIOS>"
+....
+
+
+== AI推論実行
+
+3 種類の実行が実行されました。
+
+* ローカルストレージを使用した単一サーバーAI推論
+* ネットワークストレージを使用した単一サーバーAI推論
+* ネットワークストレージを使用したマルチサーバーAI推論
+

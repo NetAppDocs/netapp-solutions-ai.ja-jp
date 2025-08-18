@@ -1,0 +1,64 @@
+---
+sidebar: sidebar 
+permalink: vector-db/ai-vdb-deploy.html 
+keywords: vector database, vector-database-deployment-procedure 
+summary: ベクターデータベースの導入手順 - NetApp 向けベクターデータベースソリューション 
+---
+= 展開手順
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media/
+
+
+[role="lead"]
+このセクションでは、 NetAppのベクトル データベース ソリューションの導入手順について説明します。
+
+
+
+== 展開手順
+
+このデプロイメント セクションでは、以下のようにラボのセットアップに Kubernetes を使用した milvus ベクター データベースを使用しました。
+
+image:deployment-architecture.png["入出力ダイアログまたは書かれたコンテンツを示す図"]
+
+NetApp ストレージは、顧客データと Milvus クラスター データを保存するためのクラスター用のストレージを提供します。
+
+
+
+=== NetAppストレージのセットアップ – ONTAP
+
+* ストレージシステムの初期化
+* ストレージ仮想マシン（SVM）の作成
+* 論理ネットワークインターフェースの割り当て
+* NFS、S3 の設定とライセンス
+
+
+NFS (ネットワーク ファイル システム) の場合は、次の手順に従ってください。
+
+. NFSv4 用のFlexGroupボリュームを作成します。この検証のセットアップでは、48 台の SSD を使用しました。1 台の SSD はコントローラのルート ボリューム専用で、47 台の SSD は NFSv4 用に分散されています。FlexGroup ボリュームの NFS エクスポート ポリシーに、Kubernetes (K8s) ノード ネットワークの読み取り/書き込み権限があることを確認FlexGroupます。これらの権限が設定されていない場合は、K8s ノード ネットワークに読み取り/書き込み (rw) 権限を付与します。
+. すべての K8s ノードでフォルダーを作成し、各 K8s ノードの論理インターフェイス (LIF) を介してこのフォルダーにFlexGroupボリュームをマウントします。
+
+
+NAS S3 (Network Attached Storage Simple Storage Service) の場合は、以下の手順に従ってください。
+
+. NFS 用のFlexGroupボリュームを作成します。
+. 「vserver object-store-server create」コマンドを使用して、HTTP が有効で管理ステータスが「up」に設定されたオブジェクト ストア サーバーをセットアップします。  HTTPS を有効にしてカスタム リスナー ポートを設定するオプションがあります。
+. 「vserver object-store-server user create -user <username>」コマンドを使用して、オブジェクト ストア サーバー ユーザーを作成します。
+. アクセス キーとシークレット キーを取得するには、次のコマンドを実行します: "set diag; vserver object-store-server user show -user <username>"。ただし、今後はこれらのキーはユーザー作成プロセス中に提供されるか、REST API 呼び出しを使用して取得できるようになります。
+. 手順 2 で作成したユーザーを使用して object-store-server グループを確立し、アクセスを許可します。この例では、「FullAccess」を指定しました。
+. タイプを「nas」に設定し、NFSv3 ボリュームへのパスを指定して NAS バケットを作成します。この目的のために S3 バケットを利用することもできます。
+
+
+
+
+=== NetAppストレージのセットアップ – StorageGRID
+
+. storageGRID ソフトウェアをインストールします。
+. テナントとバケットを作成します。
+. 必要な権限を持つユーザーを作成します。
+
+
+詳細については、 https://docs.netapp.com/us-en/storagegrid-116/primer/index.html[]

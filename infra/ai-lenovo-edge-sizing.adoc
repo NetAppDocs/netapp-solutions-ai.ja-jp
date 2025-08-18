@@ -1,0 +1,31 @@
+---
+sidebar: sidebar 
+permalink: infra/ai-lenovo-edge-sizing.html 
+keywords: architecture, sizing, computer server, shared storage 
+summary: 検証に使用する設定を他のユースケースに合わせて調整できます。 
+---
+= アーキテクチャのサイズ設定オプション
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media/
+
+
+[role="lead"]
+検証に使用する設定を他のユースケースに合わせて調整できます。
+
+
+
+== コンピューティングサーバー
+
+SE350 でサポートされている CPU の中で最も低レベルである、物理コア 4 個、TDP 60W の Intel Xeon D-2123IT CPU を使用しました。サーバーは CPU の交換をサポートしていませんが、より強力な CPU を注文することは可能です。サポートされる最上位の CPU は、16 コア、2.20GHz で動作する 100W の Intel Xeon D-2183IT です。これにより、CPU の計算能力が大幅に向上します。 CPU は推論ワークロード自体の実行のボトルネックではありませんでしたが、データ処理や推論に関連するその他のタスクに役立ちます。現時点では、エッジユースケースに使用できる GPU はNVIDIA T4 のみであるため、現時点では GPU をアップグレードまたはダウングレードする機能はありません。
+
+
+
+== 共有ストレージ
+
+このドキュメントでは、テストと検証のために、最大 50.5 TB のストレージ容量、シーケンシャル読み取りのスループット 4.4 GBps、小規模ランダム読み取りのスループット 230K IOPS を備えたNetApp AFF C190システムが使用され、エッジ推論ワークロードに適していることが実証されています。
+
+ただし、より多くのストレージ容量やより高速なネットワーク速度が必要な場合は、 NetApp AFF A220またはNetApp AFF A250ストレージ システムを使用する必要があります。さらに、このソリューションの検証には、最大容量 1.5PB、帯域幅 10GBps のNetApp EF280 システムも使用されました。より高い帯域幅でより多くのストレージ容量をご希望の場合は、 https://www.netapp.com/pdf.html?item=/media/19339-DS-4082.pdf&v=2021691654["NetApp EF300"^]使用できます。
