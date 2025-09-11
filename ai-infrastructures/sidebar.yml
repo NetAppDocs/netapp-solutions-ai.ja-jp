@@ -20,6 +20,10 @@ entries:
     url: "/infra/ai-aipod-nv-validation.html"
   - title: 結論と追加情報
     url: "/infra/ai-aipod-nv-conclusion.html"
+- title: NetApp AFF A90ストレージシステムとNVIDIA DGX SuperPOD - 設計
+  url: "/infra/ai-dgx-superpod-nva1175-design.html"
+- title: NetApp AFF A90ストレージシステムとNVIDIA DGX SuperPOD - 導入
+  url: "/infra/ai-dgx-superpod-nva1175-deploy.html"
 - title: NVIDIA OVX 対応の Lenovo 搭載NetApp AIPod
   pdf-filename: 'NVA-1172-DESIGN: NVIDIA OVX 対応のNetApp AIPodと Lenovo'
   url: "/infra/ai-aipod-lenovo-nva1172.html"

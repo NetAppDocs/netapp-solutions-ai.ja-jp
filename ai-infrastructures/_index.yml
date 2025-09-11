@@ -10,6 +10,10 @@ indexpage:
     links:
     - title: NVIDIA DGX システムを搭載したNetApp AIPod
       url: "../infra/ai-aipod-nv-intro.html"
+    - title: NetApp AFF A90ストレージシステムとNVIDIA DGX SuperPOD - 設計
+      url: "../infra/ai-dgx-superpod-nva1175-design.html"
+    - title: NetApp AFF A90ストレージシステムとNVIDIA DGX SuperPOD - 導入
+      url: "../infra/ai-dgx-superpod-nva1175-deploy.html"
     - title: NVIDIA OVX 対応の Lenovo 搭載NetApp AIPod
       url: "../infra/ai-aipod-lenovo-nva1172.html"
     - title: AIPodアーキテクチャ

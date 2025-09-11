@@ -5093,4 +5093,318 @@
   <block id="74916818f2584b32e727fdc509b2f992" category="cell">P4X-GNR6980P-SRPL2-UCC</block>
   <block id="abaa679b5e80256d8e1d4fd65296a270" category="cell">インテル Xeon 6980P 2P 128C 2G 504M 500W SGX512</block>
   <block id="22f22b60e3e496fa07e67cfbf53cb70e" category="cell">RPL-E 6369P IP 8C/16T 3.3G 24MB 95W 1700 BO</block>
+  <block id="fe1394c0024b947430d8383108eb2177" category="summary">NVIDIA DGX SuperPODとNetApp AFF A90</block>
+  <block id="bf8899c5267692573fb1304655fb765a" category="doc">NVIDIA DGX SuperPOD搭載NetApp AFF A90ストレージ システム</block>
+  <block id="7fa0ca2a0d7f53f3c8e59fc6c3e9ed2e" category="section-title">NVAの展開</block>
+  <block id="8be806d9daf2bc32156e83bc0d005ec1" category="paragraph">NVIDIA DGX SuperPODとNetApp AFF A90ストレージ システムを組み合わせることで、 NVIDIA DGX システムの世界クラスのコンピューティング パフォーマンスとNetAppクラウド接続ストレージ システムを組み合わせ、機械学習 (ML)、人工知能 (AI)、高性能技術コンピューティング (HPC) 向けのデータ駆動型ワークフローが可能になります。このドキュメントでは、AFF A90ストレージ システムを DGX SuperPOD アーキテクチャに統合するための構成と展開の詳細について説明します。</block>
+  <block id="9b418007fd18dc2176e46adcd30db45f" category="inline-image-macro">nvidiaロゴ</block>
+  <block id="c94ba3511d0db1d6babbf53090c19530" category="paragraph"><block ref="c94ba3511d0db1d6babbf53090c19530" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="6091ca16495cdce90805252a1c12f4e6" category="section-title">プログラム概要</block>
+  <block id="c6f9b4ccfaf7da44e6c0c60854f0949d" category="paragraph">NVIDIA DGX SuperPOD™ は、組織向けのターンキー AI データ センター ソリューションを提供し、世界クラスのコンピューティング、ソフトウェア ツール、専門知識、継続的なイノベーションをシームレスに提供します。 DGX SuperPOD は、最小限のセットアップ時間と最大限の生産性で AI/ML および HPC ワークロードを展開するために必要なすべてを提供します。図 1 は、DGX SuperPOD の高レベル コンポーネントを示しています。</block>
+  <block id="d144add61531a9bfe79e667824356b40" category="paragraph">図 1) NVIDIA DGX SuperPODとNetApp AFF A90ストレージ システム。</block>
+  <block id="bbd4822469057d9beafe8509a7ebee14" category="paragraph"><block ref="bbd4822469057d9beafe8509a7ebee14" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="283d31c0198ed7454a249b3e2b6eb174" category="paragraph">DGX SuperPOD には次のような利点があります。</block>
+  <block id="3ff8aa027f2fe1f296899270ebbb43fd" category="list-text">AI/MLおよびHPCワークロードで実証済みのパフォーマンス</block>
+  <block id="ca127ea10cbbac4cda1fefa3e946e9ba" category="list-text">インフラストラクチャの管理と監視から、事前に構築されたディープラーニング モデルとツールまで、統合されたハードウェアとソフトウェアのスタック。</block>
+  <block id="a4cb23a9ac5d711552fe29021242bf26" category="list-text">インストールとインフラストラクチャ管理からワークロードのスケーリング、運用 AI の合理化まで、専用のサービスを提供します。</block>
+  <block id="96cffe8fd08355ee862ba83cb15407d9" category="paragraph">組織が人工知能 (AI) と機械学習 (ML) の取り組みを採用するにつれて、堅牢でスケーラブルかつ効率的なインフラストラクチャ ソリューションに対する需要はかつてないほど高まっています。こうした取り組みの中心にあるのは、データのセキュリティ、アクセシビリティ、リソースの最適化を確保しながら、ますます複雑化する AI モデルを管理およびトレーニングするという課題です。 </block>
+  <block id="61b865c697c4f21886d14a618df70f6d" category="paragraph">このソリューションには、次の主な利点があります。</block>
+  <block id="aa88ccfa825dadd9cbb9acc84e508b2c" category="list-text">*スケーラビリティ*</block>
+  <block id="4738ea23a01f5635ce1c45dabb47da5c" category="list-text">*データ管理とアクセス*</block>
+  <block id="1e1fe2d30ed5bb9c5276dddb65f4ce65" category="list-text">*安全*</block>
+  <block id="3c858853158f1a99c39a781718ec762c" category="inline-link">NVA-1175 設計ガイド</block>
+  <block id="bc3456dcc61fc69ddf5057eb2521a503" category="inline-link">+++ NVIDIA DGX SuperPODリファレンス アーキテクチャ+++</block>
+  <block id="0db7341d4a6ac5f5ae439217ea22f2cf" category="paragraph">NVIDIA DGX SuperPOD には、要求の厳しい AI ワークロードに実証済みのパフォーマンスを提供するために必要なサーバー、ネットワーク、ストレージが含まれています。  NVIDIA DGX™ H200 および B200 システムは世界クラスのコンピューティング能力を提供し、 NVIDIA Quantum InfiniBand および Spectrum™ Ethernet ネットワーク スイッチは超低遅延と業界をリードするネットワーク パフォーマンスを提供します。 NetApp ONTAPストレージの業界をリードするデータ管理およびパフォーマンス機能が追加されたことで、顧客は AI/ML イニシアチブをより迅速に、そしてデータ移行と管理オーバーヘッドを削減して実現できるようになります。このソリューションの特定のコンポーネントの詳細については、<block ref="a5c1176c129a896b2b922e5580efc58f" category="inline-link-rx"></block>そして<block ref="1910ffa640b224c818fe3ba99c94129a" category="inline-link-rx"></block>ドキュメント。</block>
+  <block id="c18232c17d0f8ffeae2d726834c91f89" category="paragraph">NVIDIA DGX SuperPOD は、最も要求の厳しいワークロードのパフォーマンスとスケールの要件を満たすように設計されています。</block>
+  <block id="36ff5f6df178e197d3123e478db8410b" category="list-text">従来の分析ツールを使用した大規模な機械学習。</block>
+  <block id="2d12f254287ce40df1f66968734498ba" category="list-text">大規模言語モデル、コンピューター ビジョン/画像分類、不正検出、その他無数のユース ケース向けの人工知能モデル トレーニング。</block>
+  <block id="d8f31668d0cecb0b54a6d01e2f76c6cf" category="list-text">地震解析、数値流体力学、大規模可視化などの高性能コンピューティング。</block>
+  <block id="f0414b39a05dd4079562350e267bf1b3" category="inline-link">+++ NVIDIA DGX SuperPODリファレンス アーキテクチャ+++</block>
+  <block id="5f5d88c3d3b4a5616e3937b4fe349866" category="paragraph">DGX SuperPOD は、必要な接続性とパフォーマンスを提供し、インフラストラクチャのボトルネックを解消するために必要なすべてのコンポーネントを含むスケーラブル ユニット (SU) の概念に基づいています。お客様は 1 つまたは複数の SU から開始し、要件を満たすために必要に応じて SU を追加できます。詳細については、<block ref="b3bda9bcc3402290297547b224b66efa" category="inline-link-rx"></block> 。このドキュメントでは、単一の SU のストレージ コンポーネントと構成について説明します。</block>
+  <block id="353fc344c9bee691edbf50c13067653c" category="paragraph">表 1 に、1SU のストレージ コンポーネントを実装するために必要なハードウェア コンポーネントを示します。  1 ～ 4 個のスケーラブル ユニットの具体的な部品と数量については、付録 A を参照してください。</block>
+  <block id="6cef63cf1d59b401d88755cbea01a416" category="paragraph">表 1) ハードウェア要件。</block>
+  <block id="46f0306a597ab13c222e7d6551ce9f96" category="cell">NetApp AFF A90ストレージシステム</block>
+  <block id="c28cb49992003622546cc5f9509cfcff" category="cell">NetAppストレージ クラスタ相互接続スイッチ</block>
+  <block id="9097f0013a59ba655e2c83bd26ae1ce7" category="cell">NVIDIA 800GB -&gt; 4x 200Gb スプリッターケーブル</block>
+  <block id="aec453803363ab0e5ca6f6df8d465def" category="inline-link">+++DGX SuperPOD リリースノート+++</block>
+  <block id="b6ffed0f516d3b52a4910321a2a889ba" category="paragraph">表 2 に、AFF A90ストレージ システムを DGX SuperPOD と統合するために必要な最小限のソフトウェア コンポーネントとバージョンを示します。 DGX SuperPOD には、ここに記載されていない他のソフトウェア コンポーネントも含まれます。詳細は<block ref="2523a697ed64d9038adf903273ea5150" category="inline-link-rx"></block>詳細についてはこちらをご覧ください。</block>
+  <block id="c50cf4cacfaa91c82ab6a24e939cbaca" category="paragraph">表 2) ソフトウェア要件。</block>
+  <block id="518f98e82df6bde3bef11b7aa885a289" category="cell">9.16.1以上</block>
+  <block id="df6c5bc905afa2504396faf036b87927" category="cell">NVIDIAベースコマンド マネージャー</block>
+  <block id="6fe49606da6092b118e02ef2d0ef0d6c" category="cell">10.24.11以上</block>
+  <block id="a62649c559be1634e22dd7df0b58ad32" category="cell">NVIDIA DGX OS</block>
+  <block id="ba2b41c4ccfe23325bd590218a62fa8a" category="cell">6.3.1以上</block>
+  <block id="be49cc02b8372e6202cf52fbe8204ead" category="cell">NVIDIA OFED ドライバー</block>
+  <block id="cf439b0da4b623c11f90db3c956758b1" category="cell">MLNX_OFED_LINUX-23.10.3.2.0 LTS 以上</block>
+  <block id="c220bcc9beaaaf29d1905f9819577f0b" category="cell">NVIDIA Cumulus OS</block>
+  <block id="f7bfb037c565dcf0f80631851ee87307" category="cell">5.10以上</block>
+  <block id="ea1eee49815915fc6500c0bfc1fcef31" category="paragraph">NetApp ONTAPストレージを DGX SuperPOD と統合するには、次のタスクが必要です。</block>
+  <block id="dc8a828d28f4f811808cdb82b54453ec" category="list-text">RoCE 搭載NetApp AFF A90ストレージ システムのネットワーク構成</block>
+  <block id="37c6bfb67043d31447903c4665d6ed11" category="list-text">ストレージシステムのインストールと構成</block>
+  <block id="4cafd7b33984b4cb34f95fe4314e4a49" category="list-text">NVIDIA Base Command™ Manager を使用した DGX クライアント構成</block>
+  <block id="b8088d3f2b3972d6f986cf0a37543617" category="section-title">サイトの準備と基本的なインストール</block>
+  <block id="bf0615788eed920e4e9f1a96749cfb34" category="inline-link">+++ AFF A90ハードウェアインストールドキュメント+++</block>
+  <block id="e1006e935ca66a5f59a3fd40689fff46" category="paragraph">AFF A90ストレージ クラスターのサイト準備と基本インストールは、標準導入サービスの一部として、すべての DGX SuperPOD 導入に対してNetAppプロフェッショナル サービスによって実行されます。 NetApp PS は、設置場所の条件が設置に適していることを確認し、指定されたラックにハードウェアを設置します。また、顧客から提供されたネットワーク情報を使用して、OOB ネットワーク接続を接続し、基本的なクラスターのセットアップを完了します。付録 A – 部品表とラックの立面図には、参考用の標準的なラックの立面図が含まれています。  A90のインストールの詳細については、<block ref="7ddd605a062e7b77012eccf1c4bcffd7" category="inline-link-rx"></block> 。</block>
+  <block id="321c92980ad0e1d922d02a2f704ca782" category="paragraph">標準的な導入が完了すると、 NetApp PS は、クライアント接続とチューニングのための Base Command Manager との統合を含む、以下の手順を使用してストレージ ソリューションの高度な構成を完了します。</block>
+  <block id="00720789d4f50564af280240dfe0c1a0" category="section-title">ストレージシステムをDGX SuperPODストレージファブリックに接続する</block>
+  <block id="93f38c7fefe0798b27b29ac2727c9aff" category="paragraph">AFF A90ストレージ システムは、コントローラごとに 4 つの 200 Gb イーサネット ポートを使用してストレージ ファブリック リーフ スイッチに接続され、各スイッチに 2 つの接続があります。 NVIDIA Spectrum SN5600 スイッチの 800Gb スイッチ ポートは、付録 A に記載されている適切な DAC または光スプリッタ構成を使用して、4 つの 200Gb ポートに分割されます。各スイッチ ポートの個々のポートは、単一障害点を排除するためにストレージ コントローラ全体に分散されます。下の図 2 は、ストレージ ファブリック接続のケーブル配線を示しています。</block>
+  <block id="428c881d379aed620164886a529bf2ac" category="paragraph">図 2) ストレージ ネットワークのケーブル配線。</block>
+  <block id="e97080670de5db4003a6abdd37d81eb5" category="paragraph"><block ref="e97080670de5db4003a6abdd37d81eb5" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="fb83bbea93dbe46008125af94bc508be" category="section-title">ストレージシステムをDGX SuperPODインバンドネットワークに接続する</block>
+  <block id="3c4e3bd6ddc8a3cd692e2866674ec982" category="paragraph">NetApp ONTAPには業界をリードするマルチテナント機能が搭載されており、DGX SuperPOD アーキテクチャの高性能ストレージ システムとして動作するだけでなく、ホーム ディレクトリ、グループ ファイル共有、Base Command Manager クラスタ アーティファクトもサポートできます。インバンド ネットワークで使用するために、各AFF A90コントローラは、コントローラごとに 1 つの 200 Gb Ethernet 接続を使用してインバンド ネットワーク スイッチに接続され、ポートは LACP MLAG 構成で構成されます。下の図 3 は、ストレージ システムとインバンド ネットワークおよび OOB ネットワークとのケーブル接続を示しています。</block>
+  <block id="651c2d0bd757128b4d9ed91fc5026a3d" category="paragraph">図 3) インバンドおよび OOB ネットワーク ケーブル配線。</block>
+  <block id="92bf4c084f930281026def79beae3794" category="paragraph"><block ref="92bf4c084f930281026def79beae3794" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="76edc3dadc8deca645fd525182eaad33" category="section-title">DGX SuperPOD 用にONTAPを構成する</block>
+  <block id="41905234b7d34b88a1559733c741d5aa" category="inline-link">+++ ONTAPドキュメント+++</block>
+  <block id="d4b2d66f490475665ea833d8f89c2cfd" category="paragraph">このソリューションは、複数のストレージ仮想マシン (SVM) を活用して、高パフォーマンスのストレージ アクセスと、管理 SVM 上のユーザー ホーム ディレクトリおよびその他のクラスター アーティファクトの両方のボリュームをホストします。各 SVM は、ストレージまたはインバンド ネットワーク上のネットワーク インターフェイスと、データ ストレージ用のFlexGroupボリュームで構成されます。データ SVM のパフォーマンスを確保するために、ストレージ QoS ポリシーが実装されています。  FlexGroup、Storage Virtual Machines、 ONTAP QoS機能の詳細については、<block ref="619babf0e51393513dd3986ae0aee969" category="inline-link-rx"></block> 。</block>
+  <block id="fec48034cdf04f518f58b4f727f55543" category="section-title">ベースストレージを構成する</block>
+  <block id="7e4b30d10f60fcb3bdf4c3382d601615" category="section-title">各コントローラに単一のアグリゲートを構成する</block>
+  <block id="3c6858e020c27b4eb574d124f73c04d3" category="paragraph">クラスター内の各ノードに対して上記の手順を繰り返します。</block>
+  <block id="241ba9d616774bbadf9c9f28ee386505" category="section-title">インバンドネットワークの各コントローラでifgrpsを構成する</block>
+  <block id="610c7975125c56dc62b000999926f4d8" category="section-title">RoCE 用の物理ポートを構成する</block>
+  <block id="ff00a412cfca01b43041104775ac8460" category="paragraph">NFS over RDMA を有効にするには、ネットワーク トラフィックがクライアントとサーバーの両方で適切にタグ付けされ、RDMA over Converged Ethernet (RoCE) を使用してネットワークによって適切に処理されるように構成する必要があります。これには、優先フロー制御 (PFC) の構成と、使用する PFC CoS キューの構成が含まれます。  NetApp ONTAP は、以下のコマンドが実行されると、ネットワーク QoS 構成に合わせて DSCP コード 26 も自動的に構成します。</block>
+  <block id="e9dc479a2f60169b39fb74cc86d13a43" category="section-title">管理SVMの作成</block>
+  <block id="ce25292d4b04b878f74951ed7b5fb173" category="section-title">管理SVMの作成と構成</block>
+  <block id="c110d2ffde8993db523c41f0c524e68e" category="section-title">管理SVMでNFSサービスを構成する</block>
+  <block id="5441effcbbef51defcc1340e745e28ad" category="section-title">インバンドネットワークインターフェースのIPサブネットを作成する</block>
+  <block id="919d6feabfd1e5f5f04bedfd487f50c8" category="paragraph">*注:* 既存の顧客ネットワークに統合するために、展開時に顧客が提供する IP サブネット情報。</block>
+  <block id="2bc9e41900e064c3368d9eca2dba546c" category="section-title">各ノードにIn-Band SVM用のネットワークインターフェースを作成する</block>
+  <block id="44db41cf8b74978388680587aa8b7d55" category="section-title">管理SVM用のFlexGroupボリュームを作成する</block>
+  <block id="20d5f1ad8803160edb381217d776701e" category="section-title">管理SVMのエクスポートポリシーを作成する</block>
+  <block id="1624c693fdd8f06e52c87d0b2b576a19" category="section-title">データSVMの作成</block>
+  <block id="9ff068915b90e059d15444fe8dc13aaa" category="section-title">データSVMの作成と構成</block>
+  <block id="cb7d25e4139e72b33ef687ed8a0ae945" category="section-title">RDMA を有効にしたデータ SVM で NFS サービスを構成する</block>
+  <block id="ca1f913932acc2aad423357d56f86ea7" category="section-title">データ SVM ネットワーク インターフェースの IP サブネットを作成する</block>
+  <block id="3c2060cdeb230d3f42a725b2a9ca7e23" category="section-title">各ノードにデータSVM用のネットワークインターフェースを作成する</block>
+  <block id="ca648b8fb4bf1f54cbf7a626468eada3" category="section-title">RDMA用のデータSVMネットワークインターフェースを構成する</block>
+  <block id="afb51d28a404c42df2a054df2c6da14b" category="section-title">データSVMにエクスポートポリシーを作成する</block>
+  <block id="d9a6b253dd081b231d9d1a14cec7a227" category="section-title">データSVMに静的ルートを作成する</block>
+  <block id="4f3e59209435398e52c0df85d0034275" category="section-title">データSVM用のGDDを使用してFlexGroupボリュームを作成する</block>
+  <block id="08ec3810f1dcb452442911f8d8173b1a" category="paragraph">GDD (Granular Data Distribution) により、大規模なデータ ファイルを複数のFlexGroup構成ボリュームとコントローラに分散して、単一ファイルのワークロードのパフォーマンスを最大限に高めることができます。  NetApp、すべての DGX SuperPOD 展開のデータ ボリュームで GDD を有効にすることを推奨しています。</block>
+  <block id="7eb2bd842a06eb48d9bbfe4f644731d9" category="section-title">プライマリデータボリュームのストレージ効率を無効にする</block>
+  <block id="8a0cdebf4e36c1af6ac542485413a77b" category="paragraph">ボリューム効率オフ -vserver spod_data -volume spod_data</block>
+  <block id="46e5a2d41b69706b3dcd5e89c34e7c5e" category="section-title">データSVMのQoS最小ポリシーを作成する</block>
+  <block id="065d35d3d9a4319f54773a754b2c0e6c" category="section-title">データSVMにQoSポリシーを適用する</block>
+  <block id="2cc5056a61a5f1643bf387d49d197728" category="section-title">NVIDIA Base Command Manager を使用した DGX サーバーの構成</block>
+  <block id="e546e9d0da56999b5973de8a7ad71572" category="paragraph">DGX クライアントがAFF A90ストレージ システムを使用できるように準備するには、次のタスクを実行します。このプロセスでは、ストレージ ファブリックのネットワーク インターフェイスと静的ルートが DGX システム ノードですでに構成されていることを前提としています。次のタスクは、高度な構成プロセスの一環としてNetAppプロフェッショナル サービスによって完了されます。</block>
+  <block id="f9a9381a56f728d139ee191de307ef5f" category="section-title">必要なカーネルパラメータとその他の設定を使用して DGX サーバーイメージを構成する</block>
+  <block id="256b6f56d994f129832d2b7567bb951f" category="paragraph">NetApp ONTAP は業界標準の NFS プロトコルを使用するため、DGX システムに追加のソフトウェアをインストールする必要はありません。クライアント システムから最適なパフォーマンスを引き出すには、DGX システム イメージにいくつかの変更を加える必要があります。以下の手順は両方とも、以下のコマンドを使用して BCM イメージ chroot モードに入った後に実行されます。</block>
+  <block id="45fb2f19f77fc1d9d4dfdd092f805b42" category="section-title">/etc/sysctl.conf でシステム仮想メモリ設定を構成する</block>
+  <block id="13b4c0be439ee4875352c0ff2a039c13" category="paragraph">デフォルトの Linux システム構成では、必ずしも最適なパフォーマンスを実現しない仮想メモリ設定が提供されます。 2TB RAM を搭載した DGX B200 システムの場合、デフォルト設定では 40GB のバッファ スペースが使用可能ですが、これにより一貫性のない I/O パターンが生成され、バッファをフラッシュするときにクライアントがストレージ システムに過負荷をかける可能性があります。以下の設定は、クライアント バッファ領域を 5 GB に制限し、フラッシュをより頻繁に強制して、ストレージ システムに過負荷をかけない一貫した I/O ストリームを作成します。</block>
+  <block id="c35419f49457a55135a16f4a73d4fb6b" category="paragraph">イメージ chroot モードに入った後、/etc/sysctl.s/90-cm-sysctl.conf ファイルを編集し、次の行を追加します。</block>
+  <block id="4caebde52be0001b1e59098dd149b653" category="paragraph">/etc/sysctl.conf ファイルを保存して閉じます。</block>
+  <block id="d05565dbb5b9175c4df06e8d9d029a18" category="section-title">再起動後に実行されるスクリプトを使用して他のシステム設定を構成する</block>
+  <block id="4e1ff13d493c47a47dde7cb5a24aceeb" category="paragraph">一部の設定は、実行するために OS が完全にオンラインである必要があり、再起動後は保持されません。  Base Command Manager 環境でこれらの設定を実行するには、ファイル /root/ntap_dgx_config.sh を作成し、次の行を入力します。</block>
+  <block id="191be9d79602632b279bc3126e49847d" category="paragraph">*ファイルを保存して閉じます。ファイルの権限を変更して実行可能にします:*</block>
+  <block id="13036c88d00af2d37c1d8e1ae332f79e" category="paragraph">次の行を編集して、起動時に root によって実行される cron ジョブを作成します。</block>
+  <block id="a4d911dee959cadc8c53c92d6361fc05" category="paragraph">以下の crontab ファイルの例を参照してください。</block>
+  <block id="e813523727c040149e1ecad0358d60b8" category="paragraph">exit または Ctrl-D を入力して、BCM イメージの chroot モードを終了します。</block>
+  <block id="70f4c658a41ea1900dd94027c0ffa103" category="section-title">クライアントマウントポイントのBaseCommand Manager DGXカテゴリを構成する</block>
+  <block id="9df3dcf41d131b1d0097435f6b290ba4" category="paragraph">DGX クライアントがAFF A90ストレージ システムをマウントするように構成するには、DGX システムで使用される BCM クライアント カテゴリを変更して、関連する情報とオプションを含める必要があります。以下の手順では、NFS マウント ポイントを構成する方法について説明します。</block>
+  <block id="dcde3a7bf8f0a03f480df9078bfa9297" category="paragraph">NetApp * AFF A90ストレージ システム* を搭載したNVIDIA DGX SuperPOD は、 AI インフラストラクチャ ソリューションの大きな進歩を表しています。セキュリティ、データ管理、リソース利用、スケーラビリティに関する主要な課題に対処することで、組織は運用効率、データ保護、コラボレーションを維持しながら AI イニシアチブを加速できます。このソリューションの統合アプローチにより、AI 開発パイプラインの一般的なボトルネックが解消され、データ サイエンティストやエンジニアはインフラストラクチャ管理ではなくイノベーションに集中できるようになります。</block>
+  <block id="77b69988a6b247bd3829a8e03ff332a6" category="inline-link">NVA-1175 NVIDIA DGX SuperPODとNetApp AFF A90ストレージ システムの設計ガイド</block>
+  <block id="78200c657113173ee4bd06de792e86af" category="list-text"><block ref="78200c657113173ee4bd06de792e86af" category="inline-link-rx"></block></block>
+  <block id="4b70410b9d727a1fc1d60d4483d86325" category="inline-link">NVIDIA DGX B200 SuperPOD リファレンス アーキテクチャ</block>
+  <block id="54dbc563049b479cfef99d1d872020e4" category="list-text"><block ref="54dbc563049b479cfef99d1d872020e4" category="inline-link-rx"></block></block>
+  <block id="d5023dae85155f754c6bfd520cbdc150" category="inline-link">+++ NVIDIA DGX H200 SuperPOD リファレンス アーキテクチャ+++</block>
+  <block id="5d4678ba7793147c6b3109fcdbe3294f" category="list-text"><block ref="5d4678ba7793147c6b3109fcdbe3294f" category="inline-link-rx"></block></block>
+  <block id="0018465bd63e2711758aea9e68126f6d" category="inline-link">+++ NVIDIA BaseCommand ソフトウェア+++</block>
+  <block id="dd2a70a6cd8d74ddbed24590bf9efd37" category="list-text"><block ref="dd2a70a6cd8d74ddbed24590bf9efd37" category="inline-link-rx"></block></block>
+  <block id="a2433670a2f11bda41782875f82e4c0e" category="inline-link">+++ NVIDIA Spectrum SN5600 イーサネットスイッチ+++</block>
+  <block id="197d7b18bb595fa0c4339f599bb57c70" category="list-text"><block ref="197d7b18bb595fa0c4339f599bb57c70" category="inline-link-rx"></block></block>
+  <block id="61345f1959bf0e90ce956f7fe87b97e6" category="inline-link">+++ NVIDIA DGX SuperPODリリースノート+++</block>
+  <block id="a42d326cc55152a32997b9b244e9e4ea" category="list-text"><block ref="a42d326cc55152a32997b9b244e9e4ea" category="inline-link-rx"></block></block>
+  <block id="18b5a5e73e5f66fb20d8f46f70d0c0ba" category="inline-link">+++ NetApp AFF A90 のインストール+++</block>
+  <block id="cc99b2a6b638db71f55772efa9ae5a44" category="list-text"><block ref="cc99b2a6b638db71f55772efa9ae5a44" category="inline-link-rx"></block></block>
+  <block id="326b3ec244c0b719f75faee5d63eda19" category="inline-link">+++ NetApp AIソリューションのドキュメント+++</block>
+  <block id="2a6b527a76b4dd02f63188fa855840f7" category="list-text"><block ref="2a6b527a76b4dd02f63188fa855840f7" category="inline-link-rx"></block></block>
+  <block id="7d3cb5a08ca45610a4bc66221efd1e06" category="inline-link">+++ NetApp ONTAPソフトウェア+++</block>
+  <block id="7de45c9a3f46892f98b68ddb83483727" category="list-text"><block ref="7de45c9a3f46892f98b68ddb83483727" category="inline-link-rx"></block></block>
+  <block id="b20609bf792bc04f91d5af3f95c34249" category="inline-link">+++ NetApp AFFストレージシステムのインストールと保守+++</block>
+  <block id="f4f8a0ca5a3908b7ff3dc9977384172c" category="list-text"><block ref="f4f8a0ca5a3908b7ff3dc9977384172c" category="inline-link-rx"></block></block>
+  <block id="784cd7f14efdcfe6b12e47d3ac14c2ea" category="list-text"><block ref="784cd7f14efdcfe6b12e47d3ac14c2ea" category="inline-link-rx"></block></block>
+  <block id="2af6b6d1a0f9284afbd220786019c104" category="inline-link">+++pNFSとは+++</block>
+  <block id="40b22abaae26a9e924653fdf64192dd5" category="list-text"><block ref="0b4edeca10dea88e1e3ff87f6aece04a" category="inline-link-rx"></block>(pNFS に関する優れた情報が記載された古いドキュメント)</block>
+  <block id="8b609f2b56884902c05d97d442f1d533" category="section-title">付録A: 部品表とラックの立面図</block>
+  <block id="97ac09ecf630c90bdc4eae789d1cb26e" category="paragraph">表 3 には、1 台、2 台、3 台、および 4 台のスケーラブル ユニットのストレージを展開するために必要なNetAppコンポーネントの部品番号と数量を示します。</block>
+  <block id="a399f4735d9b76eb2c734ce8b23a4051" category="paragraph">表 3) 1、2、3、および 4 SU のNetApp BOM。</block>
+  <block id="12671d03ae10ac5096ddbf709e44e260" category="cell">パーツ番号</block>
+  <block id="7d74f3b92b19da5e606d737d339a9679" category="cell">項目</block>
+  <block id="4b35db9f95e91ac3ce4b119c8d590dc3" category="cell">1SUあたりの数量</block>
+  <block id="10ae8487d40b09fd13a32fd5b761dff2" category="cell">2SUの数量</block>
+  <block id="4f4a383868a5c8f1aff4d21e301cf77d" category="cell">3SUの数量</block>
+  <block id="7e3f2097d4da066bf518435f0d22d629" category="cell">4SUの数量</block>
+  <block id="a9eadd771f7974cbfb4a0f82da15155e" category="cell">AFF-A90A-100-C</block>
+  <block id="a5b8692ce33078554d4df65b88479996" category="cell">AFF A90ストレージシステム</block>
+  <block id="c9f0f895fb98ab9159f51fd0297e236d" category="cell">8</block>
+  <block id="109799441719d48125200028617a078c" category="cell">X4025A-2-AC</block>
+  <block id="ae1ffcee034fa197d7e6a3d49392ad1b" category="cell">2x7.6TBドライブパック</block>
+  <block id="0a09c8844ba8f0936c20bd791130d6b6" category="cell">144</block>
+  <block id="58a2fc6ed39fd083f55d4182bf88826d" category="cell">192</block>
+  <block id="01fc28c75297fac48aca3e18491846a8" category="cell">X50131A-C</block>
+  <block id="ef52c5c3e61828c1957bb235e48b9aaf" category="cell">IOモジュール、2PT、100/200/400GbE</block>
+  <block id="76dc611d6ebaafc66cc0879c71b5db5c" category="cell">128</block>
+  <block id="da07ac8264b7cdb99a4eb96ab4d91111" category="cell">X50130A-C</block>
+  <block id="02104e3c4b3f8d428381d1c68b10320d" category="cell">IO モジュール、2PT、100GbE</block>
+  <block id="90d67d58a9628ba253eee43c6dbc9559" category="cell">X-02659-00</block>
+  <block id="eaba4c24f91259319d86e2dc6a375c2c" category="cell">キット、4ポスト、角穴または丸穴、24インチ～32インチレール</block>
+  <block id="a08f2932fed05b33c4945eca514134dc" category="cell">X1558A-R6</block>
+  <block id="3229af69927999e5df543d1f9fb22eb5" category="cell">電源コード、キャビネット内、48インチ、+ C13-C14、10A/250V</block>
+  <block id="98f13708210194c475687be6106a3b84" category="cell">20</block>
+  <block id="d645920e395fedad7bbbed0eca3fe2e0" category="cell">40</block>
+  <block id="f033ab37c30201f73f142449d037028d" category="cell">80</block>
+  <block id="e6aa165cded1f8e32159470ff027af2f" category="cell">X190200-CS</block>
+  <block id="7e011d9eef19544d7078d2a70563144a" category="cell">クラスタスイッチ、N9336C 36Pt PTSX10/25/40/100G</block>
+  <block id="76dedba1bf45af402ab07ddd57ff749e" category="cell">X66211A-2</block>
+  <block id="2a1aeb324c9e886af32f12ad5049c6f7" category="cell">ケーブル、100GbE、QSFP28-QSFP28、Cu、2m</block>
+  <block id="e2fd227baa44b6632aa7c2fef9002b8a" category="cell">X66211A-05</block>
+  <block id="0dff9249f8d94512b43527f1f5b044c9" category="cell">ケーブル、100GbE、QSFP28-QSFP28、Cu、0.5m</block>
+  <block id="6e421f2c1b8bf174d208a91d7f5dc0ae" category="cell">X6561-R6</block>
+  <block id="95c7e45248e11b15430ec3c5d1d3dcc1" category="cell">ケーブル、イーサネット、CAT6、RJ45、5m</block>
+  <block id="e369853df766fa44e1ed0ff613f563bd" category="cell">34</block>
+  <block id="3295c76acbf4caaed33c36b1b5fc2cb1" category="cell">66</block>
+  <block id="2a108c75662ccb5a38e6db46a016aa40" category="paragraph">表 4 は、AFF A90ストレージ システムを高性能ストレージおよびインバンド ネットワーク内の SN5600 スイッチに接続するために必要なNVIDIAケーブルの部品番号と数量を示しています。</block>
+  <block id="c71399ea2a367ce779897d49ca77b4a0" category="paragraph">表 4) AFF A90ストレージ システムを高性能ストレージおよびインバンド ネットワーク内の SN5600 スイッチに接続するために必要なNVIDIAケーブル。</block>
+  <block id="5557f1218ab08d91639048aab26f1de0" category="cell">MCP7Y40-N003</block>
+  <block id="2b11e18cd1f4ae786c28a6a1bce455ed" category="cell">DAC 3m 26ga 2x400G ～ 4x200G OSFP ～ 4xQSFP112</block>
+  <block id="19ca14e7ea6328a42e0eb13d585e4c22" category="cell">36</block>
+  <block id="1d00e7dce692e8dc3f6877f035e3a616" category="cell">または</block>
+  <block id="84686a1d557f4fefd53eaff2d691796d" category="cell">MMS4X00-NS</block>
+  <block id="e67c53a2100e086542158b7496d248a7" category="cell">ツインポート OSFP 2x400G 2xSR4 マルチモードトランシーバ デュアル MPO-12/APC</block>
+  <block id="bbf6b7b52739d4479aae0bd6508ac746" category="cell">MFP7E20-N0XX</block>
+  <block id="718b622b69fc995a4d3738ecaf2953b0" category="cell">マルチモードファイバースプリッター 400G-&gt; 2x200G XX = 03、05、07、10、15、20、30、40、50)メートル</block>
+  <block id="7b55b9077a4e94ce71aba3fbb4b1ebcd" category="cell">MMA1Z00-NS400</block>
+  <block id="1d1c4e0c3b72af208b18fbbfbf63c17b" category="cell">シングルポート 400G SR4 マルチモード QSFP112 トランシーバー シングル MPO-12/APC</block>
+  <block id="098103233c14421a2092214651f99ac3" category="section-title">ラックの高さ</block>
+  <block id="64441b5a3bcfb8a874107dfe4766feb6" category="paragraph">図 4 ～ 6 は、1 ～ 4 SU のラックの立面図の例を示しています。</block>
+  <block id="c22e6da1b1ce3c83fb3004d53e804737" category="paragraph">図 4) 1 SU および 2 SU のラックの立面図。</block>
+  <block id="7ef24ed03ec40ae9ef02f5c904953418" category="paragraph"><block ref="7ef24ed03ec40ae9ef02f5c904953418" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="64769808ba101c666bcd29615cc1e9d3" category="paragraph">図 5) 3 SU のラックの立面図。</block>
+  <block id="02a5df2de00e7145cadd3753d42d3dc1" category="paragraph"><block ref="02a5df2de00e7145cadd3753d42d3dc1" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="d8d7011e8983f361d68e382e119c1819" category="paragraph">図 6) 4 SU のラックの立面図。</block>
+  <block id="381008e8bad1425034ca5fa30cd57133" category="paragraph"><block ref="381008e8bad1425034ca5fa30cd57133" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="9376ca935750f1ee987d9b2ce256bfbf" category="paragraph">NVIDIA DGX SuperPOD™ とNetApp AFF® A90 ストレージ システムを組み合わせることで、 NVIDIA DGX システムの世界クラスのコンピューティング パフォーマンスとNetAppクラウド接続ストレージ システムを組み合わせ、機械学習 (ML)、人工知能 (AI)、高性能技術コンピューティング (HPC) 向けのデータ駆動型ワークフローが可能になります。このドキュメントでは、イーサネット ストレージ ファブリックを備えたNetApp AFF A90ストレージ システムを使用した DGX SuperPOD ソリューションの高レベル アーキテクチャについて説明します。</block>
+  <block id="180ea794b48cd487087e5b1dd21023f0" category="paragraph">NVIDIA DGX SuperPODの実証済みのコンピューティング パフォーマンスと、NetApp の業界をリードするデータ セキュリティ、データ ガバナンス、マルチテナント機能を組み合わせることで、お客様は次世代のワークロード向けに最も効率的で俊敏なインフラストラクチャを導入できます。このドキュメントでは、顧客が AI/ML イニシアチブの市場投入までの時間を短縮し、投資収益率を向上させるのに役立つ高レベルのアーキテクチャと主要な機能について説明します。</block>
+  <block id="98e7b017fa4951d28f1516c0bee63969" category="section-title">プログラム概要</block>
+  <block id="0e7a454160d4f81e5b82fe865851c0b5" category="paragraph">NVIDIA DGX SuperPOD は、組織向けのターンキー AI データ センター ソリューションを提供し、世界クラスのコンピューティング、ソフトウェア ツール、専門知識、継続的なイノベーションをシームレスに提供します。 DGX SuperPOD は、最小限のセットアップ時間と最大限の生産性で AI/ML および HPC ワークロードを展開するために必要なすべてを提供します。図 1 は、DGX SuperPOD の高レベル コンポーネントを示しています。</block>
+  <block id="0df8fda8ee1a402c3eb7dc7582d3a710" category="paragraph"><block ref="0df8fda8ee1a402c3eb7dc7582d3a710" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="d91208793b9a449dbecfd553707c79d6" category="list-text">インフラストラクチャの管理と監視から、事前に構築されたディープラーニング モデルとツールまで、統合されたハードウェアとソフトウェアのスタック。</block>
+  <block id="84245e1cf723377c5a2991885cd57409" category="list-text">インストールとインフラストラクチャ管理からワークロードのスケーリングとプロダクションAIの合理化まで、専用サービス</block>
+  <block id="5d8430a9387a385c7ee9a8b83ff28b12" category="paragraph">組織が人工知能 (AI) と機械学習 (ML) の取り組みを採用するにつれて、堅牢でスケーラブルかつ効率的なインフラストラクチャ ソリューションに対する需要はかつてないほど高まっています。こうした取り組みの中心にあるのは、データのセキュリティ、アクセシビリティ、リソースの最適化を確保しながら、ますます複雑化する AI モデルを管理およびトレーニングするという課題です。エージェント AI の進化と高度なモデル トレーニング要件により、コンピューティングおよびストレージ インフラストラクチャに対する前例のない需要が生じています。組織は現在、膨大なデータセットを処理し、複数の同時トレーニング ワークロードをサポートし、データ保護と規制コンプライアンスを確保しながら高性能コンピューティング環境を維持する必要があります。従来のインフラストラクチャ ソリューションでは、こうした要求を満たすのに苦労することが多く、運用の非効率性や AI プロジェクトの価値実現までの時間の遅延につながります。このソリューションには、次の主な利点があります。</block>
+  <block id="1844a1480427b3b276783fd66fc58226" category="list-text">*スケーラビリティ* NetApp AFF A90ストレージ システムを搭載したNVIDIA DGX SuperPOD は、モジュラー アーキテクチャと柔軟な拡張機能により、比類のないスケーラビリティを実現します。組織は、既存のワークロードを中断したり複雑な再構成を必要とせずに、DGX コンピューティング ノードとAFF A90ストレージ システムを追加することで、AI インフラストラクチャをシームレスに拡張できます。</block>
+  <block id="02a63d3f709e7b79dac689e7724d8821" category="list-text">*データ管理とアクセス*  NetApp AFF A90ストレージ システムを搭載したNVIDIA DGX SuperPOD は、包括的なエンタープライズ グレードの機能スイートを通じて優れたデータ管理を実現するNetApp ONTAPをベースとしています。  ONTAP のスナップショット機能とFlexClone機能を使用すると、チームはデータセットとベクター データベースのスペース効率の高いコピーを即座に作成し、並行して開発とテストを行うことができます。  FlexCacheおよび Snapmirror レプリケーション テクノロジーにより、企業全体のデータ ソースからの合理化された、スペース効率の高い自動化されたデータ パイプラインが可能になります。また、NAS およびオブジェクト プロトコルを使用したデータへのマルチプロトコル アクセスにより、取り込みおよびデータ エンジニアリング タスクに最適化された新しいワークフローが可能になります。</block>
+  <block id="3b5ce4caaf6acea212e6608eb826a52c" category="list-text">*安全。* NetApp AFF A90ストレージ システムは、多層保護を通じてエンタープライズ グレードのセキュリティを提供します。インフラストラクチャ レベルでは、このソリューションは、ロールベースのアクセス制御 (RBAC)、多要素認証、詳細な監査ログ機能などの強力なアクセス制御メカニズムを実装します。プラットフォームの包括的な暗号化フレームワークは、業界標準のプロトコルとアルゴリズムを使用して、保存中と転送中の両方のデータを保護し、知的財産を保護し、規制要件への準拠を維持します。統合されたセキュリティ監視ツールは、潜在的なセキュリティの脅威をリアルタイムで可視化し、自動化された対応メカニズムは、リスクが業務に影響を与える前に軽減するのに役立ちます。</block>
+  <block id="d2374eb265fd2592ef7b4b817140ba67" category="paragraph">このソリューションは、広範なデータ資産と従来の IT インフラストラクチャ ツールおよびプロセスとのより緊密な統合を必要とする HPC および AI/ML ワークロードを持つ組織を対象としています。</block>
+  <block id="549c608b9fe93192110cc2552d28da22" category="paragraph">このソリューションの対象読者には、次のグループが含まれます。</block>
+  <block id="f79b8cf1009178e9a2fd45c1f4ae4ef7" category="list-text">IT 部門と事業部門の意思決定者は、最も効率的なインフラストラクチャを計画し、最短の市場投入時間と ROI で AI/ML イニシアチブを実現します。</block>
+  <block id="c328ed7f0a74043c4e73f7ea491b4eb7" category="list-text">AI/ML ワークフローの重要なデータ中心部分の効率を最大化することに関心のあるデータ サイエンティストおよびデータ エンジニア。</block>
+  <block id="fa7b81174ad3677e1ed9da1ea8185c4d" category="list-text">自動化されたデータ ワークフローと既存のデータおよびプロセス ガバナンス標準への準拠を可能にする、信頼性が高く安全なインフラストラクチャを提供する必要がある IT アーキテクトおよびエンジニア。</block>
+  <block id="dad37ea926873ef3d5ee869827ddc40c" category="paragraph">NVIDIA DGX SuperPOD には、要求の厳しい AI ワークロードに実証済みのパフォーマンスを提供するために必要なサーバー、ネットワーク、ストレージが含まれています。  NVIDIA DGX™ H200 およびNVIDIA DGX B200 システムは世界クラスのコンピューティング能力を提供し、 NVIDIA Quantum および Spectrum™ InfiniBand ネットワーク スイッチは超低遅延と業界をリードするネットワーク パフォーマンスを提供します。 NetApp ONTAPストレージの業界をリードするデータ管理およびパフォーマンス機能が追加されたことで、顧客は AI/ML イニシアチブをより迅速に、そしてデータ移行と管理オーバーヘッドを削減して実現できるようになります。次のセクションでは、AFF A90ストレージ システムを備えた DGX SuperPOD のストレージ コンポーネントについて説明します。</block>
+  <block id="4caba5452d50c27473615492a421d0b7" category="section-title">NetApp ONTAPを搭載したNetApp AFF A90ストレージシステム</block>
+  <block id="5b01f10375ddf0fa7a318292fb1ab544" category="paragraph">NetApp ONTAPデータ管理ソフトウェアを搭載したNetApp AFF A90は、組み込みのデータ保護機能、ランサムウェア対策機能、そして最も重要なビジネス ワークロードをサポートするために必要な高いパフォーマンス、拡張性、および回復力を提供します。ミッションクリティカルな業務の中断を排除し、パフォーマンス チューニングを最小限に抑え、ランサムウェア攻撃からデータを保護します。  NetApp AFF A90システムは、</block>
+  <block id="5f443413f7f04549bcfdd089e04a0c3a" category="list-text">*パフォーマンス。*AFF A90 は、ディープラーニング、AI、高速分析などの次世代ワークロードだけでなく、Oracle、SAP HANA、Microsoft SQL Server、仮想化アプリケーションなどの従来のエンタープライズ データベースも簡単に管理します。NFS over RDMA、pNFS、セッション トランキングを使用すると、顧客は独自のソフトウェアを使用せずに、既存のデータ センター ネットワーク インフラストラクチャと業界標準のプロトコルを使用して、次世代アプリケーションに必要な高レベルのネットワーク パフォーマンスを実現できます。粒度データ分散により、個々のファイルをストレージ クラスター内のすべてのノードに分散することができ、pNFS と組み合わせることで、単一の大きなファイルに含まれるデータセットへの高パフォーマンスの並列アクセスが可能になります。</block>
+  <block id="ae299319707718bf9587df62a89ca873" category="list-text">*知能。*データ駆動型インテリジェンス、将来を見据えたインフラストラクチャ、 NVIDIAおよび MLOps エコシステムとの緊密な統合に基づいて構築された AI 対応エコシステムにより、デジタル トランスフォーメーションを加速します。  ONTAP のスナップショット機能とFlexClone機能を使用すると、チームは並列開発とテストのためにスペース効率の高いデータセットのコピーを即座に作成できます。 FlexCacheおよび Snapmirror レプリケーション テクノロジーにより、企業全体のデータ ソースからの合理化された、スペース効率の高い自動化されたデータ パイプラインが可能になります。また、NAS およびオブジェクト プロトコルを使用したデータへのマルチプロトコル アクセスにより、取り込みおよびデータ エンジニアリング タスクに最適化された新しいワークフローが可能になります。データとトレーニングのチェックポイントを低コストのストレージに階層化して、プライマリ ストレージがいっぱいになるのを防ぐことができます。お客様は、単一のストレージ OS と業界で最も豊富なデータ サービス スイートを使用して、ハイブリッド クラウド全体でデータを最小限のコストでシームレスに管理、保護、およびモバイル化できます。</block>
+  <block id="3a6d4fa926afe309c404561a18033103" category="list-text">*安全。* NetApp ONTAPストレージを搭載したNVIDIA DGX SuperPOD は、多層保護を通じてエンタープライズ グレードのセキュリティを実現します。インフラストラクチャ レベルでは、このソリューションは、ロールベースのアクセス制御 (RBAC)、多要素認証、詳細な監査ログ機能などの強力なアクセス制御メカニズムを実装します。プラットフォームの包括的な暗号化フレームワークは、業界標準のプロトコルとアルゴリズムを使用して、保存中と転送中の両方のデータを保護し、知的財産を保護し、規制要件への準拠を維持します。統合されたセキュリティ監視ツールは、潜在的なセキュリティの脅威をリアルタイムで可視化し、自動化された対応メカニズムは、リスクが業務に影響を与える前に軽減するのに役立ちます。  NetApp ONTAP は、極秘データの保存が検証されている唯一の強化されたエンタープライズ ストレージです。</block>
+  <block id="5a79514564c762f34f82d2f86ba269f6" category="list-text">*マルチテナント*。 NetApp ONTAP は、ストレージ リソースの安全なマルチテナント使用を可能にする最も幅広い機能を提供します。ストレージ仮想マシンは、RBAC コントロールによるテナントベースの管理委任を提供します。包括的な QoS コントロールにより、重要なワークロードのパフォーマンスが保証されるとともに、最大限の使用率が可能になります。また、ボリューム レベルの暗号化のためのテナント管理キーなどのセキュリティ機能により、共有ストレージ メディア上のデータ セキュリティが保証されます。</block>
+  <block id="234fe3186330a0015f240eaa46026f52" category="inline-link">+++ ONTAP RASS ホワイトペーパー+++</block>
+  <block id="aa2c50d70660a4e07e28a4a1e62cbbeb" category="list-text">*信頼性。* NetApp は、高度な信頼性、可用性、保守性、管理性 (RASM) 機能を通じてミッションクリティカルな運用の中断を排除し、最高の稼働時間を実現します。詳細については、<block ref="06c9743ea9b1147ff9ba8b6afddf02b3" category="inline-link-rx"></block> 。さらに、 Active IQとData Infrastructure Insightsによって提供される AI ベースの予測分析により、システムの健全性を最適化することもできます。</block>
+  <block id="dbefda683c705de53408671cbbab4e34" category="section-title">NVIDIA DGX B200 システム</block>
+  <block id="c2e6165182afeb3c2d3013f3389087b6" category="inline-link">+++NVIDIA+++</block>
+  <block id="2ed6f2103f37f8b4eec016533f493515" category="inline-link">+++NVリンク(™)+++</block>
+  <block id="1697b07c98d5b223a74b615c776f0b65" category="inline-link">+++ NVIDIAブラックウェル+++</block>
+  <block id="5e923560ec7f11fe71232bd344d8d81a" category="inline-link">+++建築+++</block>
+  <block id="f7be9a2901218b858c97cd4113fbc2aa" category="paragraph">NVIDIA DGX™ B200 は、AI 導入のあらゆる段階にあるあらゆる規模の企業向けに、開発から展開までのパイプラインを実現する統合 AI プラットフォームです。第5世代のNVIDIA Blackwell GPUを8基搭載<block ref="8d33a92989a52a298d52379f9acef95c" category="inline-link-rx"></block><block ref="66ff52a072f2c292b9f50112a8543358" category="inline-link-rx"></block>DGX B200 は最先端のパフォーマンスを提供し、前世代の 3 倍のトレーニング パフォーマンスと 15 倍の推論パフォーマンスを実現します。活用<block ref="113af14b044c5bd4dc15be4b6100b100" category="inline-link-rx"></block><block ref="adaec91c8092748fe326913de2b3a1f0" category="inline-link-rx"></block>DGX B200 は、大規模な言語モデル、レコメンデーション システム、チャットボットなどの多様なワークロードを処理できるため、AI 変革を加速したい企業に最適です。</block>
+  <block id="f94ad1ea1a52dd514a5e42a7eec71e94" category="section-title">NVIDIA Spectrum SN5600 イーサネットスイッチ</block>
+  <block id="a1bd19971bc35fdd30c6a0b2eee21865" category="paragraph">SN5600 スマート リーフ、スパイン、スーパー スパイン スイッチは、高密度 2U フォーム ファクターで 64 ポートの 800GbE を提供します。  SN5600 は、トップオブラック (ToR) スイッチを使用した標準のリーフ/スパイン設計と、エンドオブロウ (EoR) トポロジの両方を可能にします。  SN5600 は、1 ～ 800GbE の組み合わせによる多様な接続を提供し、業界をリードする 51.2Tb/s の総スループットを誇ります。</block>
+  <block id="ffe61852985d936bb555e1c150a3feca" category="section-title">NVIDIAベースコマンドソフトウェア</block>
+  <block id="040380b5657454a9d0ce1064c83dd667" category="paragraph">NVIDIA Base Command™ はNVIDIA DGX プラットフォームを強化し、組織がNVIDIA AI イノベーションを最大限に活用できるようにします。これにより、あらゆる組織は、AI ワークフロー管理、エンタープライズ グレードのクラスター管理、コンピューティング、ストレージ、ネットワーク インフラストラクチャを高速化するライブラリ、AI ワークロードの実行に最適化されたシステム ソフトウェアを含む実績のあるプラットフォームを使用して、DGX インフラストラクチャの可能性を最大限に活用できるようになります。図 2 は、 NVIDIA Base Command ソフトウェア スタックを示しています。</block>
+  <block id="9620c8c92a535942ede6a202c5bf5b0d" category="paragraph">図 2) NVIDIAベース コマンド ソフトウェア。</block>
+  <block id="2e15a851530c5d474531243cfd838752" category="paragraph"><block ref="2e15a851530c5d474531243cfd838752" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="651beb53a2e8224545ff56fc0d0efd02" category="paragraph">NVIDIA Base Command Manager は、エッジ、データ センター、マルチ クラウドおよびハイブリッド クラウド環境における異種 AI およびハイパフォーマンス コンピューティング (HPC) クラスターの迅速な導入とエンドツーエンドの管理を実現します。数ノードから数十万ノードまでの規模のクラスターのプロビジョニングと管理を自動化し、 NVIDIA GPU アクセラレーションなどのシステムをサポートし、Kubernetes とのオーケストレーションを可能にします。  NetApp AFF A90ストレージ システムを DGX SuperPOD と統合するには、最適なパフォーマンスを得るためにシステム チューニングとマウント パラメータを設定するために Base Command Manager を最小限に構成する必要がありますが、DGX システムとAFF A90ストレージ システム間の高可用性マルチパス アクセスを実現するために追加のソフトウェアは必要ありません。</block>
+  <block id="24f67e93854c90d735466339a375c002" category="paragraph">NVIDIA DGX SuperPOD は、最大規模で最も要求の厳しいワークロードのパフォーマンス要件を満たすように設計されています。</block>
+  <block id="cfc814162b41538ad397b897a24c4937" category="list-text">大規模言語モデル、コンピューター ビジョン/画像分類、不正検出、その他無数のユース ケース向けの人工知能モデル トレーニング。</block>
+  <block id="607aa89216cc994d4e20cfce8695d306" category="list-text">地震解析、数値流体力学、大規模可視化などの高性能コンピューティング。</block>
+  <block id="9f6302143996033ebb94d536b860acc3" category="section-title">ソリューション アーキテクチャ</block>
+  <block id="d0eadc16af6d6df8893f37be51ed2bc6" category="paragraph">DGX SuperPOD は、32 台の DGX B200 システムと、必要な接続を提供し、インフラストラクチャのパフォーマンスのボトルネックを解消するために必要なその他のすべてのコンポーネントを含むスケーラブル ユニット (SU) の概念に基づいています。お客様は 1 つまたは複数の SU から開始し、要件を満たすために必要に応じて SU を追加できます。このドキュメントでは、単一の SU のストレージ構成について説明し、表 1 に大規模な構成に必要なコンポーネントを示します。</block>
+  <block id="2a4a6621abe5b6f39b1534ead593f20a" category="inline-link">+++ NVIDIA DGX SuperPODリファレンス アーキテクチャ+++</block>
+  <block id="60696b15e8be9fd24231177ac611836f" category="paragraph">DGX SuperPOD リファレンス アーキテクチャには複数のネットワークが含まれており、 AFF A90ストレージ システムはそれらのネットワークのいくつかに接続されています。  DGX SuperPODネットワークの詳細については、<block ref="562b92094dd1a3e9b7e68b6a6fb7de81" category="inline-link-rx"></block> 。</block>
+  <block id="fdd68d018aab06584c6bc4e8351fa72b" category="paragraph">このソリューションでは、高性能ストレージ ファブリックは、スパイン/リーフ構成の 64 個の 800Gb ポートを備えたNVIDIA Spectrum SN5600 スイッチに基づくイーサネット ネットワークです。インバンド ネットワークは、ホーム ディレクトリや一般的なファイル共有などの他の機能へのユーザー アクセスを提供し、SN5600 スイッチに基づいています。また、アウト オブ バンド (OOB) ネットワークは、SN2201 スイッチを使用したデバイス レベルのシステム管理者アクセス用です。</block>
+  <block id="3a812cac2db0a2d9638c3b252cc24b8e" category="paragraph">ストレージ ファブリックはリーフ スパイン アーキテクチャであり、DGX システムが 1 組のリーフ スイッチに接続し、ストレージ システムが別の 1 組のリーフ スイッチに接続します。複数の 800Gb ポートを使用して各リーフ スイッチをスパイン スイッチのペアに接続し、ネットワーク全体に複数の高帯域幅パスを作成して総合的なパフォーマンスと冗長性を実現します。  AFF A90ストレージ システムへの接続では、適切な銅線または光ブレークアウト ケーブルを使用して、各 800 Gb ポートが 4 つの 200 Gb ポートに分割されます。 NFS over RDMA を使用してストレージ システムをマウントするクライアントをサポートするために、ストレージ ファブリックは RDMA over Converged Ethernet (RoCE) 用に構成され、ネットワーク内でロスレス パケット配信を保証します。図 3 は、このソリューションのストレージ ネットワーク トポロジを示しています。</block>
+  <block id="6a53d316acbe58b01a749e96481412aa" category="paragraph">図 3) ストレージ ファブリック トポロジ。</block>
+  <block id="00031e516cb8c09c104ebdb164264d7f" category="paragraph"><block ref="00031e516cb8c09c104ebdb164264d7f" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="316d243b972562ec3f8d06fcd980b1d6" category="paragraph">NetApp AFF A90ストレージ システムは、互いに高可用性パートナー (HA ペア) として動作する 2 つのコントローラと、最大 48 個の 2.5 インチ フォーム ファクタのソリッド ステート ディスク (SSD) を搭載した 4RU シャーシです。各コントローラは、4 つの 200Gb イーサネット接続を使用して両方の SN5600 ストレージ リーフ スイッチに接続され、各物理ポートには 2 つの論理 IP インターフェイスがあります。ストレージ クラスターは、クライアントがクラスター内のすべてのコントローラーに直接接続を確立できるようにする Parallel NFS (pNFS) を備えた NFS v4.1 をサポートしています。さらに、セッション トランキングにより、複数の物理インターフェイスのパフォーマンスが 1 つのセッションに結合され、シングル スレッドのワークロードでも、従来のイーサネット ボンディングよりも広いネットワーク帯域幅にアクセスできるようになります。これらすべての機能を RDMA と組み合わせることで、 AFF A90ストレージ システムは、 NVIDIA GPUDirect Storage™ を活用したワークロードに対して、低レイテンシと高スループットを直線的に拡張できるようになります。</block>
+  <block id="2ecf799238706280879a7218f5c9384f" category="paragraph">インバンド ネットワークへの接続のために、 AFF A90コントローラには、LACP インターフェイス グループに構成された追加の 200 Gb イーサネット インターフェイスがあり、一般的な NFS v3 および v4 サービスと、必要に応じて共有ファイルシステムへの S3 アクセスを提供します。すべてのコントローラとストレージ クラスタ スイッチは、リモート管理アクセスのために OOB ネットワークに接続されています。</block>
+  <block id="242354762ac710a9d168daccad8ea40d" category="paragraph">高いパフォーマンスとスケーラビリティを実現するために、ストレージ コントローラはストレージ クラスタを形成します。これにより、クラスタ ノードの全体的なパフォーマンスと容量がFlexGroupと呼ばれる単一の名前空間に統合され、データはクラスタ内のすべてのノードのディスクに分散されます。 ONTAP 9.16.1 でリリースされた新しい Granular Data Distribution 機能により、個々のファイルが分離され、 FlexGroup全体に分散されるため、単一ファイルのワークロードで最高レベルのパフォーマンスが実現します。下の図 4 は、pNFS と NFS セッション トランキングが FlexGroups および GDD と連携して、ストレージ システム内のすべてのネットワーク インターフェイスとディスクを活用して大容量ファイルへの並列アクセスを可能にする様子を示しています。</block>
+  <block id="c3c4a8bbb2b351b3bf984cb2d6864b94" category="paragraph">図 4) pNFS、セッション トランキング、FlexGroups、GDD。</block>
+  <block id="4f30b88a042ae485248ebaa1099b4a91" category="paragraph"><block ref="4f30b88a042ae485248ebaa1099b4a91" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="7ac50512926081a099344a18f27b3818" category="paragraph">このソリューションは、複数のストレージ仮想マシン (SVM) を活用して、高パフォーマンスのストレージ アクセスと、管理 SVM 上のユーザー ホーム ディレクトリおよびその他のクラスター アーティファクトの両方のボリュームをホストします。各 SVM はネットワーク インターフェイスとFlexGroupボリュームで構成され、データ SVM のパフォーマンスを確保するために QoS ポリシーが実装されています。  FlexGroup、Storage Virtual Machines、 ONTAP QoS機能の詳細については、<block ref="619babf0e51393513dd3986ae0aee969" category="inline-link-rx"></block> 。</block>
+  <block id="2a57ec7828afba5c513d03e967cb3884" category="section-title">ソリューションのハードウェア要件</block>
+  <block id="b761a63ce0a1bd27710c7207a50b8577" category="paragraph">表 1 には、1 つ、2 つ、4 つ、または 8 つのスケーラブル ユニットを実装するために必要なストレージ ハードウェア コンポーネントがリストされています。サーバーとネットワークの詳細なハードウェア要件については、<block ref="b8ab7d3cc54802757d9a49bb252840ab" category="inline-link-rx"></block> 。</block>
+  <block id="a7504f8a3068ecf26f816d83dfcae5a8" category="cell">SUサイズ</block>
+  <block id="eb94f28ae18769ccde6259223dde0683" category="cell">AFF A90 システム</block>
+  <block id="258b220fa2ed31020ab102479476e757" category="cell">ストレージクラスタ相互接続スイッチ</block>
+  <block id="9254819941449b706e4282e2f2e6a7b9" category="cell">使用可能容量（3.8TB SSDの場合の標準）</block>
+  <block id="eb17bb52c3b173b3911725d1c9a194f0" category="cell">最大使用可能容量（15.3TB NVMe SSD搭載時）</block>
+  <block id="c9d196f41b3911fefebc23e6efbc32f4" category="cell">RU（標準）</block>
+  <block id="1fec42eb0945f00ee2125c78858d7366" category="cell">電力（標準）</block>
+  <block id="f04a7a4ef42eb207cec5a3d7fcc9d3fa" category="cell">555 TB</block>
+  <block id="104bf07415681a49e985f5dd5895d4d6" category="cell">13.75PB</block>
+  <block id="4f10ff6d954a760dbf5b59fb54597722" category="cell">7,300ワット</block>
+  <block id="830daef3058bf009b39d03050f58f3f4" category="cell">27.5PB</block>
+  <block id="62aa76bddc36c76968deb0ae09c8063f" category="cell">14,600ワット</block>
+  <block id="76a4dd9b098f9a8877b8b79d0c80c5d3" category="cell">2PB</block>
+  <block id="3b07c527868f20c47db7e08e0e02ced5" category="cell">55PB</block>
+  <block id="f4680500c767e37e35c38315af80e9f9" category="cell">29,200ワット</block>
+  <block id="e79a79f20fe06b0beb657745cf11949a" category="cell">4PB</block>
+  <block id="1609fc8f39b0baac216cbb19fb420ef2" category="cell">110PB</block>
+  <block id="ec8956637a99787bd197eacd77acce5e" category="cell">102</block>
+  <block id="bc6012118a1ec87da87af67c6b3a0f74" category="cell">58,400ワット</block>
+  <block id="0f37a7e60b292d864a5ac969ec04cc27" category="paragraph">*注意:* NetApp、パフォーマンスを最大限に高めるために、 AFF A90 HA ペアごとに少なくとも 24 台のドライブを推奨しています。追加の内部ドライブ、大容量ドライブ、外部拡張ドライブ シェルフにより、システム パフォーマンスに影響を与えることなく、総容量を大幅に高めることができます。</block>
+  <block id="d3469c07f7acce56e0d039ec0b164141" category="paragraph">表 2 に、 AFF A90ストレージ システムを DGX SuperPOD と統合するために必要なソフトウェア コンポーネントとバージョンを示します。 DGX SuperPOD には、ここに記載されていない他のソフトウェア コンポーネントも含まれます。詳細は<block ref="2523a697ed64d9038adf903273ea5150" category="inline-link-rx"></block>詳細についてはこちらをご覧ください。</block>
+  <block id="0bd0e673df4c14cae45a11fac30c530b" category="cell">9.16.1</block>
+  <block id="dbc8a3aaafc47a649eed1dcc0bc5155e" category="cell">10.24.11</block>
+  <block id="c6d4f54ff5f7e221a70cdd46daa396b3" category="cell">6.3.1</block>
+  <block id="09e619b353cb3d3ca08701e294bb9047" category="cell">MLNX_OFED_LINUX-23.10.3.2.0 LTS</block>
+  <block id="51eed8fde1839744a1b920b0dacb0a0a" category="cell">5.10</block>
+  <block id="f11a60eea5a7abfd75bb28890eaef1ec" category="paragraph">このストレージ ソリューションは、パフォーマンスとスケーラビリティがNVIDIA DGX SuperPODの要件を満たしていることを確認するために、 NetAppとNVIDIAによって複数の段階で検証されました。構成は、合成ワークロードと実際の ML/DL ワークロードの組み合わせを使用して検証され、最大のパフォーマンスとアプリケーションの相互運用性の両方が検証されました。以下の表 3 は、DGX SuperPOD の展開でよく見られる典型的なワークロードとそのデータ要件の例を示しています。</block>
+  <block id="e203df30cd7f31417aee170026e44f70" category="paragraph">表 3) SuperPOD ワークロードの例。</block>
+  <block id="a0db49ba470c1c9ae2128c3470339153" category="cell">レベル</block>
+  <block id="0ba48588b95eb9052082d27db3380801" category="cell">作品の説明</block>
+  <block id="c8ceada943dc5d58578660bf60d0762a" category="cell">データセットのサイズ</block>
+  <block id="eb6d8ae6f20283755b339c0dc273988b" category="cell">Standard</block>
+  <block id="c7f0dd1953999823199f993b956164f6" category="cell">複数の同時 LLM または微調整トレーニング ジョブと定期的なチェックポイント。コンピューティング要件がデータ I/O 要件を大幅に上回ります。</block>
+  <block id="f2db8117278a7bff3e0e0bff0571726d" category="cell">ほとんどのデータセットは、トレーニング中にローカル コンピューティング システムのメモリ キャッシュ内に収まります。データセットは単一のモダリティであり、モデルには数百万のパラメータがあります。</block>
+  <block id="53123044b4b65d0ad1b7ed0cfa4c3480" category="cell">強化された</block>
+  <block id="c9e72abf53e870d36e47df81d7f139bf" category="cell">複数の同時マルチモーダル トレーニング ジョブと定期的なチェックポイント。データ I/O パフォーマンスは、エンドツーエンドのトレーニング時間にとって重要な要素です。</block>
+  <block id="981d20fc47284a9be8695e715a3d1d47" category="cell">データセットが大きすぎるため、ローカル コンピューティング システムのメモリ キャッシュに収まらないため、トレーニング中に多くの I/O が必要となり、頻繁な I/O の必要性を排除するには不十分です。データセットには複数のモダリティがあり、モデルには数十億（またはそれ以上）のパラメータがあります。</block>
+  <block id="255eebee8e38299d9f7282ffa8b76db3" category="paragraph">表 4 は、上記のサンプル ワークロードのパフォーマンス ガイドラインを示しています。これらの値は、理想的な条件下でこれらのワークロードによって生成できるストレージ スループットを表します。</block>
+  <block id="fe54d8f94c652ba49e4aba03f3107a9c" category="paragraph">表 4) DGX SuperPOD のパフォーマンス ガイドライン。</block>
+  <block id="f5bab93f6f25cd702dcbcb4aad615260" category="cell">パフォーマンス特性</block>
+  <block id="94f3edd272dbb778616c50e083536c63" category="cell">標準（GBps）</block>
+  <block id="abaf1dc2e3d5bf424c74cd4566b0f1a3" category="cell">拡張（GBps）</block>
+  <block id="c5b9e837f1006565fbb01cd3b64d3df7" category="cell">単一SU集計システム読み取り</block>
+  <block id="3def184ad8f4755ff269862ea77393dd" category="cell">125</block>
+  <block id="8eb042782ea4dd597d037482af02c144" category="cell">単一SU集約システム書き込み</block>
+  <block id="44f683a84163b3523afe57c2e008bc8c" category="cell">62</block>
+  <block id="f53ce0357707bf3db713c9d71337529d" category="cell">4 SU集計システム読み取り</block>
+  <block id="b73ce398c39f506af761d2277d853a92" category="cell">160</block>
+  <block id="cee631121c2ec9232f3a2f028ad5c89b" category="cell">500</block>
+  <block id="bc96df788d872dc23329bae80cc02619" category="cell">4 SU 集約システム書き込み</block>
+  <block id="6c9882bbac1c7093bd25041881277658" category="cell">250</block>
+  <block id="ef6f2913d5f1e19a1aa781a5d72d6caa" category="inline-link">NVA-1175 NVIDIA DGX SuperPODとNetApp AFF A90ストレージシステムの導入ガイド</block>
+  <block id="6f8af77cdc63a21a3e7b99a2511ed006" category="list-text"><block ref="6f8af77cdc63a21a3e7b99a2511ed006" category="inline-link-rx"></block></block>
+  <block id="4498f6091821057a5b12bbe00bad6fb7" category="inline-link">NVIDIA DGX B200 SuperPOD リファレンス アーキテクチャ</block>
+  <block id="e0ef89706b7f0268557664ed42040243" category="list-text"><block ref="e0ef89706b7f0268557664ed42040243" category="inline-link-rx"></block></block>
+  <block id="076218ee0774bfaae3fcf92a3241a9fe" category="inline-link">NVIDIA DGX H200 SuperPOD リファレンス アーキテクチャ</block>
+  <block id="b02d06e7da163e15a51f5a0277a72641" category="list-text"><block ref="b02d06e7da163e15a51f5a0277a72641" category="inline-link-rx"></block></block>
+  <block id="e9cc843bc2157ef28fd2c0657e05a6f0" category="inline-link">NVIDIA BaseCommand ソフトウェア</block>
+  <block id="5b147f17197401088429ad2165ca94db" category="list-text"><block ref="5b147f17197401088429ad2165ca94db" category="inline-link-rx"></block></block>
+  <block id="f6f89e67f0d14eefc85ee96a3de66d60" category="list-text"><block ref="f6f89e67f0d14eefc85ee96a3de66d60" category="inline-link-rx"></block></block>
+  <block id="8365b73ca224de7f689b1708ed448af9" category="inline-link">+++ NetApp AIソリューションのドキュメント+++</block>
+  <block id="aed2dde7ddb9cf045a1de05c19aa6fe6" category="list-text"><block ref="aed2dde7ddb9cf045a1de05c19aa6fe6" category="inline-link-rx"></block></block>
+  <block id="4245faba305e62f6fdc30b1ce8bf8ac3" category="inline-link">+++ NetApp AFFストレージシステムのインストールと保守+++</block>
+  <block id="bf45808f34c6dcc540de81441ed8372a" category="list-text"><block ref="bf45808f34c6dcc540de81441ed8372a" category="inline-link-rx"></block></block>
+  <block id="51af5c28c5aeade3eeee8efe1cf0c265" category="list-text"><block ref="0b4edeca10dea88e1e3ff87f6aece04a" category="inline-link-rx"></block>(pNFS に関する優れた情報が記載された古いドキュメント)</block>
+  <block id="e84f1067b5e0c62707fee9cec31ec6e6" category="sidebar">NetApp AFF A90ストレージシステムとNVIDIA DGX SuperPOD - 設計</block>
+  <block id="ebe830dbdb267fd10b3f4000455f19f2" category="sidebar">NetApp AFF A90ストレージシステムとNVIDIA DGX SuperPOD - 導入</block>
 </blocks>
