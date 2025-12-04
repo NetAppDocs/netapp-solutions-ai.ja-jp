@@ -1,0 +1,397 @@
+---
+sidebar: sidebar 
+permalink: software/ai-hybrid-union.html 
+keywords: NetApp AI, AI, Artificial Intelligence, ML, Machine Learning, Union.ai, Hybrid AI training 
+summary: NetApp FlexCacheを使用した Union.ai オーケストレーションを使用してハイブリッド AI トレーニング環境を導入し、クラウドベースの GPU トレーニング ワークロードがオンプレミス データに効率的かつ安全にアクセスできるようにします。 
+---
+= Union.aiとNetApp FlexCacheを使用したハイブリッドAIトレーニングの導入
+:allow-uri-read: 
+
+
+[role="lead"]
+NetApp FlexCacheとTrident for Kubernetes ストレージ プロビジョニングを使用した Union.ai オーケストレーションを使用して、ハイブリッド AI トレーニング環境を展開する方法を学びます。
+
+David Espejo 氏、Union.ai Sathish Thyagarajan 氏、 NetApp
+
+
+
+== 概要
+
+Union.ai のハイブリッド オーケストレーション プラットフォームは、 NetApp ONTAPおよびFlexCache とシームレスに統合され、AI/ML トレーニング ワークフローを加速します。このソリューションにより、AI トレーニング ワークロードにクラウドベースの GPU コンピューティングを活用しながら、データをオンプレミスで安全に維持できます。  NetApp FlexCache は、必要なデータのみがクラウドにキャッシュされるようにし、効率的で安全かつスケーラブルなハイブリッド AI/ML パイプラインを実現します。
+
+
+
+== 顧客ユースケース: ハイブリッドクラウド AI トレーニング
+
+* オンプレミス データ: コンプライアンスとセキュリティのためにNetApp ONTAPに保存されます。
+* クラウド コンピューティング: EKS/GKE/AKS でのスケーラブルな GPU トレーニング。
+* AI/ML オーケストレーション: Union.ai は、環境全体のデータ処理とトレーニングを調整します。
+* ストレージ プロビジョニング: NetApp Trident はPVC/PV プロビジョニングを自動化します。
+
+
+
+
+== お客様のメリット
+
+* NetApp ONTAP のスケールアウト機能を使用して、大規模なデータセットで AI ワークロードを実行します。
+* NetApp のハイブリッド クラウド機能を使用して、オンプレミスとクラウド間でデータを移動および同期します。
+* FlexCacheを使用してオンプレミスのデータをクラウドに素早くキャッ​​シュします。
+* Union.ai は、バージョン管理、系統追跡、成果物管理により、環境間のオーケストレーションを簡素化します。
+* 機密データをオンプレミスに保持しながら、クラウドでトレーニングを実行します。
+
+
+
+
+== プラグインの有効化 – 前提条件
+
+[cols="32%,68%"]
+|===
+
+
+| *要件* | *詳細* 
+
+
+| ONTAPバージョン | ONTAP 9.7+（FlexCacheライセンスは不要） 
+
+
+| FlexCacheライセンス | ONTAP 9.6以前で必須 
+
+
+| Kubernetes | オンプレミスおよびクラウド クラスター (EKS/GKE/AKS) 
+
+
+| Trident | オンプレミスとクラウド クラスタの両方にインストール可能 
+
+
+| ユニオン.ai | コントロール プレーンがデプロイされている (Union Cloud またはセルフホスト) 
+
+
+| ネットワーク | クラスタ間接続（ ONTAPクラスタが分離されている場合） 
+
+
+| 権限  a| 
+ONTAPおよび Kubernetes クラスターへの管理者アクセス。
+
+✅正しいONTAP認証情報（例：vsadmin）を使用する
+
+
+
+| Union.ai は初めてですか? | このドキュメントの最後にあるガイドを参照してください 
+|===
+
+
+== リファレンスアーキテクチャ
+
+次の図は、ハイブリッド AI トレーニング用にNetAppストレージと統合された Union.ai コントロール プレーンを示しています。
+
+image::ai-hybrid-union-001.png[Union.ai とNetAppによるハイブリッド AI トレーニング アーキテクチャ]
+
+* Union.ai コントロール プレーン: ワークフローをオーケストレーションし、データの移動を管理し、 NetApp API と統合します。
+* NetApp ONTAP + FlexCache: オンプレミスからクラウドへの効率的なデータ キャッシュを提供します。
+* ハイブリッド トレーニング クラスター: トレーニング ジョブは、オンプレミスからキャッシュされたデータを使用して、クラウド K8s クラスター (EKS など) で実行されます。
+
+
+
+
+=== _ステップ1: FlexCacheボリュームを作成する_
+
+ONTAPシステムマネージャの使用
+
+. [ストレージ] > [ボリューム] に移動します。
+. [Add]をクリックします。
+. [その他のオプション]を選択します。
+. リモート ボリュームのキャッシュとして追加を有効にします。
+. ソース (オンプレミス) ボリュームと宛先 (クラウド) ボリュームを選択します。
+. QoS またはパフォーマンス レベルを定義します (オプション)。
+. [Create]をクリックします。
+
+
+💡権限またはアグリゲートの問題によりNetApp DataOps Toolkit が機能しない場合は、 ONTAP System Manager または CLI を使用してFlexCacheボリュームを直接作成します。
+
+
+
+=== _ステップ2: Trident を構成する_
+
+両方のクラスターにTridentをインストールします。
+
+🔗 https://docs.netapp.com/us-en/trident/trident-get-started/kubernetes-deploy.html["+++Tridentインストール ガイド+++"]
+
+Tridentバックエンドを作成する
+
+[source, cli]
+----
+apiVersion: trident.netapp.io/v1
+kind: TridentBackendConfig
+metadata:
+name: ontap-flexcache
+spec:
+version: 1
+storageDriverName: ontap-nas
+managementLIF: <ONTAP-MGMT-IP>
+dataLIF: <ONTAP-DATA-IP>
+svm: <SVM-NAME>
+username: vsadmin
+password: <password>
+
+Apply: kubectl apply -f backend-flexcache.yaml
+----
+401 Unauthorized エラーが発生した場合は、 ONTAPユーザーに十分な API 権限があり、正しいユーザー名 (vsadmin) とパスワードが使用されていることを確認してください。
+
+ストレージクラスの定義
+
+[source, cli]
+----
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+name: flexcache-sc
+provisioner: csi.trident.netapp.io
+parameters:
+backendType: "ontap-nas"
+Apply:
+kubectl apply -f storageclass-flexcache.yaml
+----
+
+
+=== _ステップ3：Union.aiワークフローをデプロイする_
+
+Union は PVC を使用してFlexCacheボリュームをトレーニング ジョブにマウントします。
+
+PodTemplateの例
+
+[source, cli]
+----
+apiVersion: v1
+kind: PodTemplate
+metadata:
+name: netapp-podtemplate
+namespace: flytesnacks-development
+template:
+metadata:
+labels:
+default-storage: netapp
+spec:
+containers:
+- name: primary
+volumeMounts:
+- name: flexcache-storage
+mountPath: /data/flexcache
+volumes:
+- name: flexcache-storage
+persistentVolumeClaim:
+claimName: flexcache-pvc
+----
+ワークフローの例
+
+ユニオンインポートタスク、ワークフローから
+
+[source, cli]
+----
+@task(pod_template="netapp-podtemplate")
+
+def train_model(pvc_path: str):
+----
+
+
+= PVCからのデータをロードしてトレーニングする
+
+[source, cli]
+----
+@workflow
+
+def training_pipeline():
+
+train_model(pvc_path="/data/flexcache")
+----
+ユニオンオペレーターは次のことを行います。
+
+* PVCを作成する
+* FlexCacheボリュームをマウントする
+* クラウドK8sクラスターでジョブをスケジュールする
+
+
+
+
+=== ステップ4: 統合の検証_
+
+[cols="21%,79%"]
+|===
+| *タスク* | *検証* 
+
+
+| PVCマウント | トレーニングポッドは /data/flexcache を正常にマウントする必要があります 
+
+
+| データ アクセス | トレーニングジョブはFlexCacheから読み書きできる 
+
+
+| キャッシュの動作 | ONTAPのキャッシュ ヒット/ミスを監視します。アグリゲートがFlexCacheをサポートしていることを確認する 
+
+
+| パフォーマンス | トレーニングワークロードのレイテンシとスループットを検証する 
+|===
+パフォーマンスを監視するには、 NetApp BlueXPまたはONTAP CLI を使用します。
+
+
+
+== セキュリティに関する考慮事項
+
+* FSx for NetApp ONTAPに VPC エンドポイントを使用する
+* 転送中および保存中の暗号化を有効にする
+* ONTAPアクセスに RBAC/IAM を適用する
+* Union.aiは顧客データにアクセスしたり保存したりしません
+
+
+
+
+== 監視と最適化
+
+[cols="31%,69%"]
+|===
+
+
+| *道具* | *目的* 
+
+
+| NetAppBlueXP | FlexCacheの使用状況とパフォーマンスを監視する 
+
+
+| Union.ai UI | パイプラインのステータスとメトリクスを追跡する 
+
+
+| Tridentログ | PVC またはバックエンドの問題をデバッグする 
+|===
+*オプションの機能強化*
+
+* BlueXP APIを使用してFlexCacheの作成を自動化する
+* トレーニング前にUnion SDKを使用してキャッシュをウォームアップする
+* トレーニング後にバッチ推論またはモデルサービングパイプラインを追加する
+* DataOps Toolkit が失敗した場合は、System Manager 経由で手動でFlexCacheを作成します。
+
+
+*トラブルシューティング*
+
+[cols="41%,59%"]
+|===
+| _問題_ | _解決_ 
+
+
+| PVCが保留中 | Tridentのログとバックエンドの設定を確認する 
+
+
+| 401 ONTAP APIからの不正アクセス | vsadminを使用して権限を確認する 
+
+
+| ジョブ失敗: 適切なストレージがありません | ONTAPアグリゲートがFlexCache/ FabricPoolをサポートしていることを確認する 
+
+
+| トレーニングパフォーマンスの低下 | キャッシュヒット率とネットワーク遅延を確認する 
+
+
+| データが同期されない | ONTAPでFlexCache関係の健全性を検証する 
+|===
+*次のステップ*
+
+. テストデータでFlexCacheを検証する
+. Union.ai トレーニング パイプラインをデプロイする
+. パフォーマンスを監視および最適化する
+. 顧客固有の設定を文書化する
+
+
+
+
+== 関連リンク
+
+* https://docs.union.ai["+++Union.ai ドキュメント+++"]
+* https://docs.netapp.com/us-en/ontap/flexcache/index.html["+++ NetApp FlexCache の概要+++"]
+* https://docs.netapp.com/us-en/trident/index.html["+++TridentCSI ドライバー +++"]
+* https://docs.aws.amazon.com/fsx/latest/ONTAPGuide/what-is-fsx-ontap.html["+++ NetApp ONTAP 用 FSx+++"]
+
+
+
+
+== まとめ
+
+これで、Union.ai とNetApp FlexCacheを使用した検証済みのハイブリッド AI トレーニング環境が完成しました。トレーニング ジョブは、データセット全体を複製したりガバナンスを損なうことなく、オンプレミス データに安全かつ効率的にアクセスしながらクラウドで実行できます。
+
+
+
+=== *Union.ai - コンパニオンガイド*
+
+
+
+==== *ステップ1: 導入モデルの選択*
+
+*オプションA：ユニオンクラウド*
+
+* 訪問： https://console.union.ai["+++コンソール.ユニオン.ai+++"]
+* 組織を作成 → プロジェクトを作成
+
+
+*オプションB: セルフホスト*
+
+* フォローする：https://docs.union.ai/platform/latest/deployment/self-hosted/["+++セルフホストガイド+++"]
+* Helm 経由でデプロイ:
+
+
+helmリポジトリにunionaiを追加 https://unionai.github.io/helm-charts/[]
+
+helm インストール union unionai/union -n union-system -f values.yaml
+
+
+
+==== *ステップ2: Union Operatorをインストールする*
+
+****kubectl を適用 -fhttps://raw.githubusercontent.com/unionai/operator/main/deploy/operator.yaml[]
+
+kubectl get pods -n ユニオンシステム
+
+
+
+
+
+==== *ステップ3: Union CLIをインストールする*
+
+****pip インストール unionai
+
+組合ログイン
+
+
+
+
+
+==== *ステップ4: ワークフローを登録する*
+
+****ユニオンプロジェクトがハイブリッドAIを作成
+
+ユニオンレジスタ training_pipeline.py --project hybrid-ai
+
+
+
+
+
+==== *ステップ5: 実行と監視*
+
+****union run training_pipeline --project hybrid-ai
+
+ユニオンウォッチトレーニングパイプライン
+
+ログを表示する https://console.union.ai["+++ユニオンUI+++"]
+
+
+
+==== *ステップ6: コンピューティングクラスターの登録 (オプション)*
+
+**** ユニオンクラスターレジスタ --name cloud-k8s --kubeconfig ~/.kube/config
+
+
+
+==== *ステップ7: アーティファクトと系統を追跡する*
+
+Union は自動的に次のものを追跡します:
+
+* 入力/出力パラメータ
+* データバージョン
+* ログとメトリクス
+* 実行系統
+

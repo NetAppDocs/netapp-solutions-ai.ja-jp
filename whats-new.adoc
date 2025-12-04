@@ -27,3 +27,11 @@ NetAppソリューションサイトは、link:https://docs.netapp.com/us-en/net
 * link:https://docs.netapp.com/us-en/netapp-solutions-sap/index.html["SAP向けNetAppソリューション"^]
 * link:https://docs.netapp.com/us-en/netapp-solutions-virtualization/index.html["NetApp仮想化ソリューション"^]
 
+
+
+
+== 2025年12月3日
+
+新しい解決策:link:software/ai-hybrid-union.html["Union.aiとNetApp FlexCacheを使用したハイブリッドAIトレーニングの導入"]
+
+Union.ai オーケストレーションとNetApp FlexCacheを組み合わせて使用​​することで、機密データをオンプレミスに保持しながら、クラウド GPU 上で AI トレーニング ワークロードを実行します。  FlexCache は、効率的で安全なハイブリッド トレーニングのために必要なデータのみをクラウドにキャッシュします。
