@@ -31,6 +31,8 @@ Apache Kafka は、1 日に数兆件のイベントを処理できるコミュ�
 
 Confluent は、特にビッグ データ、分析、ストリーミング ワークロードなど、多くのアプリケーションのデフォルトのリアルタイム ストリーミング プラットフォームになっています。階層型ストレージを使用すると、ユーザーは Confluent プラットフォームでコンピューティングとストレージを分離できます。これにより、データの保存にかかるコスト効率が向上し、事実上無制限の量のデータを保存して、オンデマンドでワークロードをスケールアップ (またはスケールダウン) できるようになり、データやテナントの再調整などの管理タスクが容易になります。  S3 互換ストレージ システムは、これらすべての機能を活用して、すべてのイベントを 1 か所に集めてデータを民主化し、複雑なデータ エンジニアリングの必要性を排除できます。  Kafkaに階層型ストレージを使用する理由の詳細については、以下を参照してください。link:https://docs.confluent.io/platform/current/kafka/tiered-storage.html#netapp-object-storage["Confluentによるこの記事"^] 。
 
+NetApp instaclustr は、3.8.1 から階層型ストレージを備えた Kafka もサポートしています。詳細はこちらをご覧ください link:https://www.instaclustr.com/support/documentation/kafka-add-ons/using-kafka-tiered-storage/["Kafka 階層型ストレージを使用した Instaclust"]
+
 
 
 == 階層型ストレージにNetApp StorageGRID を選ぶ理由
