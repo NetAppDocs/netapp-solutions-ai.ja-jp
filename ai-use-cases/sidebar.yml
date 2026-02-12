@@ -6,6 +6,12 @@ entries:
 - title: エンタープライズRAG向けNetApp AIPod Mini
   pdf-filename: RAG推論のためのNetApp AIPod Mini
   url: "/infra/ai-minipod.html"
+- title: NetApp AIPod Mini for ERAG - インフラ準備チェックリスト
+  pdf-filename: NetApp AIPod Mini for ERAG - インフラ準備チェックリスト
+  url: "/infra/ai-aipod-mini-infra-readiness.html"
+- title: NetApp AIPod Mini for ERAG - 導入手順
+  pdf-filename: NetApp AIPod Mini for ERAG - 導入手順
+  url: "/infra/ai-aipod-mini-deployment-steps.html"
 - title: プロトピア画像変換による責任あるAI
   pdf-filename: 責任あるAIと機密推論 - NetApp AIとProtopia Image Transformation
   entries:

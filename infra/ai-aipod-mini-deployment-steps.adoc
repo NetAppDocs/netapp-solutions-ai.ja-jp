@@ -1,0 +1,429 @@
+---
+sidebar: sidebar 
+permalink: infra/ai-aipod-mini-deployment-steps.html 
+keywords: netapp, aipod, RAG, ai solution, design, deployment, installation 
+summary: このホワイトペーパーでは、NetApp AIPod Mini for Enterprise RAG（ERAG）2.0を導入するための包括的なステップバイステップガイドを提供します。Kubernetesプラットフォーム、ストレージオーケストレーション用のNetApp Trident、およびansibleプレイブックを使用したERAG 2.0スタックを含む、すべてのコアコンポーネントのエンドツーエンドのインストールと構成について説明します。このドキュメントには、導入ワークフローに加えて、インストール中に発生する一般的な問題、その根本原因、およびスムーズで信頼性の高い導入エクスペリエンスをサポートするための推奨される解決策をまとめた専用のトラブルシューティングガイドも含まれています。 
+---
+= NetApp AIPod Mini for ERAG - 導入手順
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media/
+
+
+[role="lead"]
+本ドキュメントでは、Enterprise RAG（ERAG）2.0向けNetApp AIPod Miniの導入に関する包括的なステップバイステップガイドを提供します。Kubernetesプラットフォーム、ストレージオーケストレーション用NetApp Trident、およびansibleプレイブックを使用したERAG 2.0スタックを含む、すべてのコアコンポーネントのエンドツーエンドのインストールと構成について説明します。導入ワークフローに加えて、本ドキュメントには、インストール中に発生する一般的な問題、その根本原因、およびスムーズで信頼性の高い導入エクスペリエンスをサポートするための推奨される解決策をまとめた専用のトラブルシューティングガイドも含まれています。
+
+image:aipod-mini-001.png["インテルロゴ"]
+
+Sathish Thyagarajan、Michael Oglesby、Arpita Mahajan NetApp
+
+
+
+== 前提条件：
+
+* デプロイメントユーザーには、ネームスペースを作成し、Helmチャートをインストールするための十分な権限があります。
+* Xeon サーバーは Ubuntu 22.04 を実行します。
+* すべての Xeon サーバーで同じユーザー名が設定されます。
+* DNS 管理アクセスが利用可能です。
+* ONTAP 9.16 は、 S3 アクセス用に構成された SVM を使用してデプロイされました。
+* S3 バケットが作成および設定されます。
+
+
+
+
+== 前提条件
+
+Git、Python3.11、Python3.11用のpipをインストールする
+
+Ubuntu 22.04の場合：
+
+[source, cli]
+----
+add-apt-repository ppa:deadsnakes/ppa
+apt update
+apt upgrade
+apt install python3.11
+python3.11 --version
+apt install python3.11-pip
+python3.11 -m pip --version
+----
+
+
+== ERAG 2.0/2.0.1 の導入手順
+
+
+
+=== 1.GitHubからEnterprise RAG 2.0リリースをプルします
+
+[source, cli]
+----
+git clone https://github.com/opea-project/Enterprise-RAG.git
+cd Enterprise-RAG/
+git checkout tags/release-2.0.0
+----
+ERAG 2.0.1の場合は、以下のコマンドを使用します
+
+[source, cli]
+----
+git checkout tags/release-2.0.1
+----
+
+
+=== 2.前提条件をインストールする
+
+[source, cli]
+----
+cd deployment/
+sudo apt-get install python3.11-venv
+python3 -m venv erag-venv
+source erag-venv/bin/activate
+pip install --upgrade pip
+pip install -r requirements.txt
+ansible-galaxy collection install -r requirements.yaml --upgrade
+----
+
+
+=== 3.インベントリファイルを作成する
+
+[source, cli]
+----
+cp -a inventory/sample inventory/<cluster-name>
+vi inventory/<cluster-name>/inventory.ini
+# Control plane nodes
+kube-3 ansible_host=<control_node_ip_address>
+
+# Worker nodes
+kube-1 ansible_host=<worker_node1_ip_address>
+kube-2 ansible_host=<worker_node2_ip_address>
+
+# Define node groups
+[kube_control_plane]
+kube-1
+kube-2
+kube-3
+
+[kube_node]
+kube-1
+kube-2
+
+[etcd:children]
+kube_control_plane
+
+[k8s_cluster:children]
+kube_control_plane
+kube_node
+
+# Vars
+[k8s_cluster:vars]
+ansible_become=true
+ansible_user=<ssh_username>
+ansible_connection=ssh
+----
+
+
+=== 4.各ノードにパスワードなしのSSHを設定する
+
+[source, cli]
+----
+ssh-copy-id REMOTE_USER@MACHINE_IP
+----
+注：ERAG をデプロイするためにデプロイノードを使用する場合は、デプロイノードでもパスワードなしの SSH が設定されていることを確認してください。
+
+
+
+=== 5.接続を確認する
+
+[source, cli]
+----
+ansible all -i inventory/<cluster-name>/inventory.ini -m ping
+----
+注意：ノードにパスワードなしの sudo が設定されていない場合は、このコマンドに --ask-become-pass を追加する必要があります。--ask-become-pass を使用する場合、ssh ユーザーが各ノードで同じパスワードを持つことが重要です。
+
+
+
+=== 6. `config.yaml`ファイルを編集します
+
+ `inventory/<cluster-name>/config.yaml`を編集して、環境の詳細を反映した展開を準備します。
+
+[source, cli]
+----
+vi inventory/<cluster-name>/config.yaml
+----
+
+
+==== サンプルスニペット：
+
+[source, cli]
+----
+…
+deploy_k8s: true
+…
+install_csi: "netapp-trident"
+…
+local_registry: false
+…
+trident_operator_version: "2510.0"    # Trident operator version (becomes 100.2506.0 in Helm chart)
+trident_namespace: "trident"          # Kubernetes namespace for Trident
+trident_storage_class: "netapp-trident" # StorageClass name for Trident
+trident_backend_name: "ontap-nas"     # Backend configuration name
+…
+ontap_management_lif: "<ontap_mgmt_lif>"              # ONTAP management LIF IP address
+ontap_data_lif: "<ontap_nfs_data_lif>"                    # ONTAP data LIF IP address
+ontap_svm: "<ontap_svm>"                         # Storage Virtual Machine (SVM) name
+ontap_username: "<ontap_username>"                    # ONTAP username with admin privileges
+ontap_password: "<redacted>"                    # ONTAP password
+ontap_aggregate: "<ontap_aggr>"                   # ONTAP aggregate name for volume creation
+…
+kubeconfig: "<repository path>/deployment/inventory/<cluster-name>/artifacts/admin.conf"
+…
+----
+
+
+=== 7.K8sクラスタをデプロイする（Tridentを使用）
+
+クラスタと Trident CSI をデプロイするために、configure タグと install タグを指定した ansible-playbook playbooks/infrastructure.yaml を実行します。
+
+[source, cli]
+----
+ansible-playbook playbooks/infrastructure.yaml --tags configure,install -i inventory/<cluster-name>/inventory.ini -e @inventory/<cluster-name>/config.yaml
+----
+注：ノードにパスワードなしのsudoが設定されていない場合は、このコマンドに `--ask-become-pass`を追加する必要があります。 `--ask-become-pass`を使用する場合、各ノードでsshユーザーが同じパスワードを持つことが重要です。詳細については、 https://github.com/opea-project/Enterprise-RAG/blob/main/deployment/roles/infrastructure/netapp_trident_csi_setup/netapp_trident_integration.md["NetApp Trident CSI統合（エンタープライズRAG向け）"^]を参照してください。詳細については、 https://docs.netapp.com/us-en/trident/trident-get-started/kubernetes-deploy.html["Tridentインストール ドキュメント"^]を参照してください。
+
+
+
+=== 8.iwatchオープン記述子の数を変更する
+
+詳細については、 https://github.com/opea-project/Enterprise-RAG/blob/release-2.0.0/docs/application_deployment_guide.md#change-number-of-iwatch-open-descriptors["iwatchオープンディスクリプタ"^]を参照してください。
+
+
+
+=== 9.kubectlをインストールする
+
+ https://kubernetes.io/docs/tasks/tools/install-kubectl-linux/["Kubectlをインストールする"]がまだインストールされていない場合は、参照してください。 `<repository path>/deployment/inventory/<cluster-name>/artifacts/admin.conf`からkubeconfigファイルを取得します。
+
+
+
+=== 10.KubernetesクラスタにMetalLBをインストールする
+
+Kubernetes クラスタで helm を使用して MetalLB をインストールします。
+
+[source, cli]
+----
+helm repo add metallb https://metallb.github.io/metallb
+helm -n metallb-system install metallb metallb/metallb --create-namespace
+----
+詳細については、 https://metallb.io/installation/["MetalLBのインストール"]を参照してください。
+
+
+
+=== 11.MetalLB を設定する
+
+MetalLB はレイヤー 2 モードで構成され、必要な IPAddressPool および L2Advertisement リソースは、文書化された構成ガイドラインに従って作成されました。
+
+[source, cli]
+----
+vi metallb-ipaddrpool-l2adv.yaml
+kubectl apply -f metallb-ipaddrpool-l2adv.yaml
+----
+
+
+==== サンプルスニペット：
+
+[source, cli]
+----
+vi metallb-ipaddrpool-l2adv.yaml
+---
+apiVersion: metallb.io/v1beta1
+kind: IPAddressPool
+metadata:
+  name: erag
+  namespace: metallb-system
+spec:
+  addresses:
+  - <IPAddressPool>
+---
+apiVersion: metallb.io/v1beta1
+kind: L2Advertisement
+metadata:
+  name: metallb-l2adv
+  namespace: metallb-system
+----
+注：- MetalLB IPAddressPool および L2Advertisement の名前空間として `metallb-system`を使用します。- IP アドレスプールには、Kubernetes ノードと同じサブネット内の未使用の IP を含めることができます。ERAG に必要な IP アドレスは 1 つだけです。- 詳細については、 https://metallb.io/configuration/#layer-2-configuration["MetalLB Layer2構成"]を参照してください。
+
+
+
+=== 12.FQDN、ボリュームアクセスモード、イングレス、S3の詳細を使用してconfig.yamlを更新します。
+
+ `inventory/<cluster-name>/config.yaml`にあるconfig.yamlファイルを変更して、導入FQDNを定義し、ボリュームアクセスモードを設定し、Ingressの公開を設定し、ONTAP S3を統合します。
+
+編集 `config.yaml`して、次の構成変更を適用します：
+
+* FQDN：デプロイメントへのアクセスに使用する完全修飾ドメイン名を指定します。
+* ボリュームアクセスモード：gmc.pvcセクションで `accessMode: ReadWriteMany`を設定して、複数のポッドにわたるモデルボリュームへの同時アクセスをサポートします。
+* イングレス設定：イングレスのservice_typeをLoadBalancerとして設定し、アプリケーションへの外部アクセスを有効にします。
+* S3ストレージの詳細：storageTypeをs3compatibleに設定し、リージョン、アクセス資格情報、内部エンドポイントと外部エンドポイントを含むONTAP S3パラメータを設定します。
+* SSL証明書検証：edpInternalCertVerifyおよびedpExternalCertVerifyをfalseに設定するのは、ONTAP S3が自己署名証明書で構成されている場合のみです。証明書が公的に信頼されたCAによって発行されている場合は、これらのパラメータを有効のままにしておく必要があります。
+
+
+
+
+==== サンプルスニペット：
+
+[source, cli]
+----
+vi inventory/<cluster-name>/config.yaml
+…
+FQDN: "<FQDN>" # Provide the FQDN for the deployment
+…
+gmc:
+  enabled: true
+  pvc:
+    accessMode: ReadWriteMany # AccessMode
+    models:
+      modelLlm:
+        name: model-volume-llm
+        storage: 100Gi
+      modelEmbedding:
+        name: model-volume-embedding
+        storage: 20Gi
+      modelReranker:
+        name: model-volume-reranker
+        storage: 10Gi
+…
+ingress:
+  …
+  service_type: LoadBalancer
+  …
+edp:
+  …
+  storageType: s3compatible
+  …
+  s3compatible:
+    region: "us-east-1"
+    accessKeyId: "<your_access_key>"
+    secretAccessKey: "<your_secret_key>"
+    internalUrl: "https://<IP-address>"
+    externalUrl: "https://<IP-address>"
+    bucketNameRegexFilter: ".*"
+    edpExternalCertVerify: false
+    edpInternalCertVerify: false
+  …
+----
+注：デフォルトでは、Intel® AI for Enterprise RAG アプリケーションは、SVM 内の既存のすべてのバケットからデータを取り込みます。SVM に複数のバケットがある場合は、 `bucketNameRegexFilter`フィールドを変更して、特定のバケットからのみデータが取り込まれるようにすることができます。詳細については、 https://github.com/opea-project/Enterprise-RAG/blob/release-2.0.0/deployment/README.md["エンタープライズ向け Intel® AI RAG の導入"^]のドキュメントを参照してください。
+
+
+
+=== 13.スケジュールされた同期設定を設定する
+
+Intel® AI for Enterprise RAGアプリケーション用のOPEAをインストールする場合は、 `scheduledSync`を有効にして、アプリケーションがS3バケットから新しいファイルや更新されたファイルを自動的に取り込むようにします。
+
+いつ `scheduledSync`有効になっている場合、アプリケーションはソース S3 バケットで新しいファイルや更新されたファイルを自動的にチェックします。この同期プロセスの一環として見つかった新しいファイルまたは更新されたファイルは自動的に取り込まれ、RAG ナレッジ ベースに追加されます。アプリケーションは、事前に設定された時間間隔に基づいてソース バケットをチェックします。デフォルトの時間間隔は 60 秒です。つまり、アプリケーションは 60 秒ごとに変更をチェックします。特定のニーズに合わせてこの間隔を変更する必要があるかもしれません。
+
+ `scheduledSync`を有効にして同期間隔を設定するには、 `deployment/components/edp/values.yaml`で次の値を設定します：
+
+[source, cli]
+----
+vi components/edp/values.yaml
+…
+presignedUrlCredentialsSystemFallback: "true"
+…
+celery:
+  …
+  config:
+    …
+    scheduledSync:
+      enabled: true
+      syncPeriodSeconds: "60"
+…
+----
+
+
+=== 14.Enterprise RAG 2.0/2.0.1 を導入する
+
+インストール前に、link:https://github.com/opea-project/Enterprise-RAG/blob/main/docs/application_deployment_guide.md["Intel® AI for Enterprise RAG アプリケーション導入ガイド"]に記載されている手順に従って、インフラストラクチャの準備状況を検証してください。この手順により、基盤となるインフラストラクチャが正しく構成され、Enterprise RAG Applicationを正常にインストールするために必要なすべての前提条件が満たされていることが保証されます。
+
+次を使用してインストールを実行します：
+
+[source, cli]
+----
+ansible-playbook -u $USER playbooks/application.yaml --tags configure,install -e @inventory/<cluster-name>/config.yaml
+----
+注：デプロイノード（ansible-playbookコマンドを実行しているラップトップまたはジャンプホスト）にパスワードなしのsudoが設定されていない場合は、 `--ask-become-pass`をこのコマンドに追加する必要があります。 `--ask-become-pass`を使用する場合、各ノードでsshユーザーが同じパスワードを持つことが重要です。
+
+
+
+=== 15.DNSエントリを作成する
+
+DNS サーバーに Enterprise RAG Web ダッシュボードの DNS エントリを作成します。続行するには、Enterprise RAG のイングレスLoadBalancerに割り当てられた外部 IP アドレスを取得します：
+
+[source, cli]
+----
+kubectl -n ingress-nginx get svc ingress-nginx-controller
+----
+手順 12 で使用した FQDN のこの IP アドレスを指す DNS エントリを作成します。
+
+注意：- DNS エントリに使用される FQDN は、構成ファイルの FQDN と一致する必要があります。
+
+
+
+=== 16.Enterprise RAG UIにアクセスする
+
+ブラウザでその FQDN に移動して、Enterprise RAG UI にアクセスします。注：デフォルトの UI 認証情報は、cat ansible-logs/default_credentials.txt から取得できます。
+
+
+
+== トラブルシューティングガイド
+
+
+
+=== 1.問題：Keycloak Helm インストールの競合
+
+シナリオ：ERAG のデプロイ中に、Keycloak のインストールが次のエラーで失敗する場合があります：
+
+[source, cli]
+----
+FAILED - RETRYING: [localhost]: Install Keycloak Helm chart (5 retries left).
+Failure when executing Helm command. Exited 1.
+    stdout:
+    stderr: Error: UPGRADE FAILED: another operation (install/upgrade/rollback) is in progress
+----
+アクション：再試行しても障害が続く場合は、ERAG 展開をアンインストールし、以下のコマンドを使用して既存の認証名前空間を削除し、展開を再実行します。
+
+[source, cli]
+----
+ansible-playbook playbooks/application.yaml --tags uninstall -e @inventory/<cluster-name>/config.yaml
+
+helm -n auth uninstall keycloak
+kubectl -n auth get pvc # confirm all PVCs are gone; if any are left, delete them
+kubectl delete ns auth
+----
+注意：古い Helm リリース状態により、後続のインストールまたはアップグレード操作がブロックされる可能性があります。
+
+
+
+=== 2.問題：Trident Operator Helm Chart のバージョンが見つかりません
+
+シナリオ：ERAG展開中に、Helmチャートバージョンの不一致により、Tridentオペレーターのインストールが失敗する可能性があります。次のエラーが発生する可能性があります：
+
+[source, cli]
+----
+TASK [netapp_trident_csi_setup : Install Trident operator via Helm]
+fatal: [localhost]: FAILED! => changed=false
+  command: /usr/local/bin/helm --version=100.2510.0 show chart 'netapp-trident/trident-operator'
+  msg: |-
+    Failure when executing Helm command. Exited 1.
+    stdout:
+    stderr: Error: chart "trident-operator" matching 100.2510.0 not found in netapp-trident index.
+            (try 'helm repo update'): no chart version found for trident-operator-100.2510.0
+----
+アクション：このエラーが発生した場合は、Helmリポジトリインデックスを更新し、デプロイメントプレイブックを再実行します。
+
+[source, cli]
+----
+helm repo update
+ansible-playbook playbooks/application.yaml -e @inventory/<cluster-name>/config.yaml
+----
+注：これはERAGバージョン2.0の既知の問題です。修正が提出されており、今後のリリースに含まれる予定です。

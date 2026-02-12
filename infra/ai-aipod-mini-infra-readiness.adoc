@@ -1,0 +1,83 @@
+---
+sidebar: sidebar 
+permalink: infra/ai-aipod-mini-infra-readiness.html 
+keywords: netapp, aipod, RAG, ai solution, design, infrastructure, FAQs 
+summary: このドキュメントでは、NetApp AIPod Mini for Enterprise RAG の包括的なインフラ準備チェックリストの概要を示します。これは導入前のリファレンスとして機能します。 
+---
+= NetApp AIPod Mini for ERAG - インフラ準備チェックリスト
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media/
+
+
+[role="lead"]
+このドキュメントでは、NetApp AIPod Mini for Enterprise RAG の包括的なインフラ準備チェックリストの概要を示します。これは導入前のリファレンスとして機能します。
+
+
+
+== ビジネスおよびユースケースの準備
+
+* ソリューションは、業務部門の成果（生産性、顧客サービス、法務、医療、製造、公共部門など）に適合していますか？
+* LLM ワークロードの Time to First Token（TTFT）とレイテンシのニーズを見積もっていますか？
+* 予想される同時実行性/ユーザー負荷（例：RAG の 2 ワーカーノードあたり 32 人の同時ユーザー）を知っていますか？
+* 主要な AI/GenAI ワークロード（RAG、推論、微調整、部門別 LLM、ベクトル DB 統合）を特定しましたか？
+* コストとパフォーマンスのバランスを考慮して、CPUベースのAIオプション（OPEA、Intel Xeon）とGPUの代替品を評価していますか？
+
+
+
+
+== 技術およびインフラ要件
+
+* データパイプライン（データ準備、ETL、ベクターDBへの安全な取り込み）は準備ができていますか？
+* 高可用性、冗長性、またはDR機能が必要ですか？
+* Ubuntu Linux / Kubernetes / Red Hat OpenShift AI スタックのサポートを活用していますか？
+* ネットワークパフォーマンス（ワークロードに応じて25～100GbE）を検証しましたか？
+* ストレージはNetApp ONTAP + Trident CSI ドライバーを使用してKubernetes永続化用にプロビジョニングされていますか？
+* 少なくとも3つのコンピューティングノード（ワーカー2つ、コントロールプレーン1つ）のサイズは適切ですか？
+
+
+
+
+== ソフトウェアとエコシステムの連携
+
+* コンテナ化されたアプリは、提供されている Kubernetes および Helm チャートと互換性がありますか？
+* どのベクターデータベース（Milvus、pgvector など）を展開する予定ですか？
+* 検索拡張生成（RAG）には OPEA（Open Platform for Enterprise AI）の事前統合が必要ですか？
+* ハイブリッドクラウドオプションを活用していますか（Cloud Volumes ONTAP、FSxN、Anthos、Azure Arc）？
+* パートナー ISV 統合（ESRI、ヘルスケア PACS、金融/法務 ISV）が必要ですか？
+
+
+
+
+== データガバナンスとセキュリティ
+
+* Kubernetes でロールベースアクセス制御（RBAC）を有効にしましたか。
+* データ保護とバックアッププランはありますか（SnapMirror、SnapCenter、ランサムウェア保護）？
+* データコンプライアンスのニーズ（HIPAA、GDPR、FedRAMP、CJIS）をマッピングしましたか？
+* プライベートAI展開（エアギャップ、オンプレミス、セキュアエンクレーブ）が必要ですか？
+
+
+
+
+== 運用とサポートに関する考慮事項
+
+* 管理者は Kubernetes、Trident CSI、および OPEA スタック導入についてトレーニングを受けているか、または有効化されていますか。
+* マルチテナンシー（部門、SLED 機関、ビジネス ユニット）のサポートが必要ですか？
+* 監視と観測可能性に関する計画はありますか（ONTAP System Manager、Cloud Insights、Prometheus/Grafana）？
+* Day 2 の運用を誰が担当しますか（顧客の IT 部門、パートナー、マネージド サービス プロバイダー）？
+
+
+
+
+== 商業およびGTMの連携
+
+* 段階的なロードマップ（部門→企業全体の AI 拡張）はありますか？
+* 複数年にわたるプロフォーマ予測（TCO、ARR、マージン向上）はありますか？
+* ライセンスの引き上げシナリオは明確ですか（ベクター DB、ISV ソフトウェア、AI 運用ツール）？
+* パートナーインセンティブ（ディストリビューターマージン、OEM/Intel 共同出資）を検討しましたか？
+* 購入は予算サイクルに沿っていますか（CapEx 対 OpEx、消費モデル）？
+* サイジングと導入のためのサービス パートナー（Arrow、WWT、Presidio など）はありますか？
+
