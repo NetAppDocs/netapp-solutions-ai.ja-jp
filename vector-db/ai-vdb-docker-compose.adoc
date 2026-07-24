@@ -18,6 +18,7 @@ summary: docker-compose.xml - NetApp 用ベクター データベース ソリ�
 
 
 
+[[appendix-d-docker-compose-yml]]
 == 付録D: docker-compose.yml
 
 [source, yml]

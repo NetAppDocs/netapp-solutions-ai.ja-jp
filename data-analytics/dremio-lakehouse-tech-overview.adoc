@@ -18,6 +18,7 @@ summary: このセクションでは、このソリューションで使用さ�
 
 
 
+[[hardware-requirements]]
 === ハードウェア要件
 
 |===
@@ -52,6 +53,7 @@ summary: このセクションでは、このソリューションで使用さ�
 |===
 
 
+[[software-requirements]]
 === ソフトウェア要件
 
 |===

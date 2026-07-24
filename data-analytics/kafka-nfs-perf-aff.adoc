@@ -22,12 +22,14 @@ image:kafka-nfs-032.png["入出力ダイアログまたは書かれたコンテ�
 
 
 
+[[storage-configuration]]
 == ストレージ構成
 
 NetApp FlexGroups インスタンスを使用して、ログ ディレクトリに単一の名前空間を提供し、リカバリと構成を簡素化しました。ログ セグメント データへの直接パス アクセスを提供するために、NFSv4.1 と pNFS を使用しました。
 
 
 
+[[client-tuning]]
 == クライアントのチューニング
 
 各クライアントは、次のコマンドを使用してFlexGroupインスタンスをマウントしました。
@@ -39,6 +41,7 @@ mount -t nfs -o vers=4.1,nconnect=16 172.30.0.121:/kafka_vol01 /data/kafka_vol01
 
 
 
+[[kafka-broker-tuning]]
 == Kafkaブローカーのチューニング
 
 テスト対象システムのスループットを最大化するために、特定の主要なスレッド プールのデフォルト パラメータを大幅に増加しました。ほとんどの構成では、Confluent Kafka のベスト プラクティスに従うことをお勧めします。このチューニングは、ストレージへの未処理の I/O の同時実行性を最大化するために使用されました。これらのパラメータは、ブローカーのコンピューティング リソースとストレージ属性に合わせて調整できます。
@@ -53,6 +56,7 @@ queued.max.requests=2000
 ....
 
 
+[[workload-generator-testing-methodology]]
 == ワークロードジェネレータのテスト方法論
 
 スループット ドライバーとトピック構成には、クラウド テストと同じ OMB 構成を使用しました。
@@ -115,6 +119,7 @@ sudo bin/benchmark --drivers driver-kafka/kafka-throughput.yaml workloads/1-topi
 
 
 
+[[steady-state-performance]]
 === 定常状態のパフォーマンス
 
 AWS のCloud Volumes ONTAPと AWS の DAS と同様の比較を行うために、OpenMessaging ベンチマークを使用してAFF A900 を評価しました。すべてのパフォーマンス値は、プロデューサー レベルとコンシューマー レベルでの Kafka クラスターのスループットを表します。
@@ -129,6 +134,7 @@ image:kafka-nfs-034.png["このグラフはブローカー ネットワーク �
 
 
 
+[[extreme-performance-and-exploring-storage-limits]]
 == 究極のパフォーマンスとストレージの限界の探求
 
 AFFについては、バックログ機能を使用して OMB でもテストしました。バックログ機能は、Kafka クラスターにイベントのバックログが蓄積されている間、コンシューマーのサブスクリプションを一時停止します。このフェーズでは、プロデューサー トラフィックのみが発生し、ログにコミットされるイベントが生成されます。これはバッチ処理またはオフライン分析ワークフローを最もよくエミュレートします。これらのワークフローでは、コンシューマー サブスクリプションが開始され、ブローカー キャッシュからすでに削除されている履歴データを読み取る必要があります。
@@ -155,6 +161,7 @@ OMB がイベントバックログの入力を完了すると、コンシュー�
 
 
 
+[[sizing-guidance]]
 == サイズガイド
 
 Amazon Web Servicesは https://aws.amazon.com/blogs/big-data/best-practices-for-right-sizing-your-apache-kafka-clusters-to-optimize-performance-and-cost/["サイズガイド"^]Kafka クラスターのサイズ設定とスケーリング用。

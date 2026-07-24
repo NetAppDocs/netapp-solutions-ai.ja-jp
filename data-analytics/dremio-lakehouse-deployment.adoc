@@ -18,6 +18,7 @@ summary: NetAppオブジェクト ストレージのレイクハウス検証を�
 
 
 
+[[netapp-setup]]
 === NetAppのセットアップ
 
 * ストレージシステムの初期化
@@ -42,12 +43,14 @@ S3 (Simple Storage Service) の場合は以下の手順に従ってください�
 
 
 
+[[zookeeper-setup]]
 === 飼育員のセットアップ
 
 Dremio が提供する Zookeeper 構成を使用できます。この検証では、別のZookeeperを使用しました。このWebリンクに記載されている手順に従いました。 https://medium.com/@ahmetfurkandemir/distributed-hadoop-cluster-1-spark-with-all-dependincies-03c8ec616166[]
 
 
 
+[[dremio-setup]]
 === Dremioのセットアップ
 
 この Web リンクに従って、tar ボール経由で Dremio をインストールしました。
@@ -237,6 +240,7 @@ NOTE: NetApp は、Datalake および Lakehouse 環境の主要なオブジェ�
 
 
 
+[[multiple-sources-setup]]
 === 複数のソースの設定
 
 . Dremio でONTAP S3 と storageGRID を s3 ソースとして設定します。

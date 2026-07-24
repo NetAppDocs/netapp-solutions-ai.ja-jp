@@ -18,6 +18,7 @@ summary: milvusとAmazon FSx ONTAP for NetApp ONTAP - NetApp向けベクター�
 
 
 
+[[milvus-with-amazon-fsx-ontap-for-netapp-ontap-file-and-object-duality]]
 == Milvus とAmazon FSx ONTAP for NetApp ONTAP – ファイルとオブジェクトの二重性
 
 このセクションでは、クラウドにベクター データベースをデプロイする必要がある理由と、Docker コンテナ内のAmazon FSx ONTAP for NetApp ONTAPにベクター データベース (milvus スタンドアロン) をデプロイする手順について説明します。

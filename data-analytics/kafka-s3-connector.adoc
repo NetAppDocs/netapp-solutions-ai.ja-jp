@@ -308,6 +308,7 @@ root@stlrx2540m1-108:~#
 
 
 
+[[instaclustr-kafka-connect-connectors]]
 == Instaclustr Kafka Connect コネクタ
 
 Instaclustr は Kafka Connect コネクタとその詳細をサポートします - link:https://github.com/instaclustr/kafka-connect-connectors["詳細"]。Instaclustrは追加のコネクタを提供します link:https://www.instaclustr.com/support/documentation/kafka-connect/bundled-kafka-connect-plugins/["詳細"]

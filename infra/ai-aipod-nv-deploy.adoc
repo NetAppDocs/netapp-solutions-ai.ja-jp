@@ -85,6 +85,7 @@ image:aipod-nv-a90-netdetail.png["入出力ダイアログまたは書かれた�
 |===
 
 
+[[storage-network-configuration]]
 == ストレージネットワーク構成
 
 このセクションでは、イーサネット ストレージ ネットワークの構成に関する重要な詳細について説明します。 InfiniBandコンピューティングネットワークの設定については、link:https://nvdam.widen.net/s/nfnjflmzlj/nvidia-dgx-basepod-reference-architecture["NVIDIA BasePOD ドキュメント"] 。スイッチの設定の詳細については、link:https://docs.nvidia.com/networking-ethernet-software/cumulus-linux-59/["NVIDIA Cumulus Linux ドキュメント"] 。
@@ -183,6 +184,7 @@ SN4600 スイッチを構成するために使用される基本的な手順を�
 
 
 
+[[storage-system-configuration]]
 == ストレージシステムの構成
 
 このセクションでは、このソリューションの A90 ストレージ システムの構成に関する重要な詳細について説明します。 ONTAPシステムの構成の詳細については、link:https://docs.netapp.com/us-en/ontap/index.html["ONTAPのドキュメント"] 。以下の図は、ストレージ システムの論理構成を示しています。
@@ -305,6 +307,7 @@ image:aipod-nv-a90-logical.png["入出力ダイアログまたは書かれたコ
 
 
 
+[[dgx-h100-configuration-for-roce-storage-access]]
 === RoCE ストレージ アクセス用の DGX H100 構成
 
 このセクションでは、DGX H100 システムの構成に関する重要な詳細について説明します。これらの構成項目の多くは、DGX システムに展開された OS イメージに含めることも、起動時に Base Command Manager によって実装することもできます。これらは参考のためにここにリストされています。BCMでのノードとソフトウェアイメージの構成の詳細については、link:https://docs.nvidia.com/base-command-manager/index.html#overview["BCMのドキュメント"] 。

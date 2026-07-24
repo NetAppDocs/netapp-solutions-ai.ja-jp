@@ -20,6 +20,7 @@ Splunk SmartStore とNetApp StorageGRIDの組み合わせは、SmartStore とSto
 
 
 
+[[where-to-find-additional-information]]
 == 詳細情報の入手方法
 
 このドキュメントに記載されている情報の詳細については、次のドキュメントや Web サイトを参照してください。

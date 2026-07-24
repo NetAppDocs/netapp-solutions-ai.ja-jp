@@ -18,6 +18,7 @@ summary: instaclustr と pgvector - NetApp 向けベクター データベース
 
 
 
+[[vector-database-with-instaclustr-using-postgresql-pgvector]]
 == PostgreSQL を使用した Instaclustr によるベクターデータベース: pgvector
 
 このセクションでは、instaclustr 製品が pgvector 機能で postgreSQL とどのように統合されるかを詳細に説明します。 「PGVector と PostgreSQL を使用して LLM の精度とパフォーマンスを向上させる方法: 埋め込みの概要と PGVector の役割」の例があります。ご確認くださいlink:https://www.instaclustr.com/blog/how-to-improve-your-llm-accuracy-and-performance-with-pgvector-and-postgresql-introduction-to-embeddings-and-the-role-of-pgvector/["ブログ"]さらに詳しい情報を入手します。

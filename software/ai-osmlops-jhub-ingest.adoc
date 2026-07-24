@@ -18,6 +18,7 @@ NetApp SnapMirrorは、 NetAppストレージ システム間でデータを複�
 
 
 
+[[example-worklfow-and-demo]]
 == ワークフローとデモの例
 
 参照link:https://community.netapp.com/t5/Tech-ONTAP-Blogs/Accelerating-Data-Ingestion-and-AI-ML-Experimentation-with-NetApp-SnapMirror-and/ba-p/457814["このTech ONTAPブログ投稿"]NetApp SnapMirrorを使用して JupyterHub にデータを取り込む詳細なワークフロー例とデモをご覧ください。

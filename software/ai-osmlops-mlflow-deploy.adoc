@@ -21,6 +21,7 @@ NOTE: MLflow は Kubernetes 以外のプラットフォームにもデプロイ�
 
 
 
+[[prerequisites]]
 == 前提条件
 
 このセクションで説明する展開演習を実行する前に、次のタスクが既に実行されていることを前提としています。
@@ -31,24 +32,28 @@ NOTE: MLflow は Kubernetes 以外のプラットフォームにもデプロイ�
 
 
 
+[[install-helm]]
 == Helmをインストールする
 
 MLflow は、Kubernetes の一般的なパッケージ マネージャーである Helm を使用してデプロイされます。  MLflow をデプロイする前に、Kubernetes コントロール ノードに Helm をインストールする必要があります。  Helmをインストールするには、 https://helm.sh/docs/intro/install/["インストール手順"^]公式 Helm ドキュメントに記載されています。
 
 
 
+[[set-default-kubernetes-storageclass]]
 == デフォルトのKubernetesストレージクラスを設定する
 
 MLflow をデプロイする前に、Kubernetes クラスター内でデフォルトの StorageClass を指定する必要があります。クラスター内でデフォルトのストレージクラスを指定するには、link:ai-osmlops-kubeflow-deploy.html["Kubeflow デプロイメント"]セクション。クラスター内でデフォルトの StorageClass をすでに指定している場合は、この手順をスキップできます。
 
 
 
+[[deploy-mlflow]]
 == MLflowをデプロイする
 
 前提条件が満たされたら、Helm チャートを使用して MLflow のデプロイを開始できます。
 
 
 
+[[configure-mlflow-helm-chart-deployment]]
 === MLflow Helm Chart のデプロイメントを構成します。
 
 Helm チャートを使用して MLflow をデプロイする前に、*config.yaml* ファイルを使用して、 NetApp Tridentストレージ クラスを使用するようにデプロイを構成し、ニーズに合わせて他のパラメータを変更できます。  *config.yaml* ファイルの例は、次の場所にあります。 https://github.com/bitnami/charts/blob/main/bitnami/mlflow/values.yaml[]
@@ -58,6 +63,7 @@ NOTE: config.yaml ファイルの *global.defaultStorageClass* パラメータ�
 
 
 
+[[installing-the-helm-chart]]
 === Helm Chartのインストール
 
 Helm チャートは、次のコマンドを使用して、MLflow のカスタム *config.yaml* ファイルとともにインストールできます。
@@ -71,6 +77,7 @@ NOTE: このコマンドは、提供された *config.yaml* ファイルを介�
 
 
 
+[[check-deployment]]
 === デプロイメントの確認
 
 Helm チャートのデプロイが完了したら、次のコマンドを使用してサービスにアクセスできるかどうかを確認できます。
@@ -97,6 +104,7 @@ NOTE: NodePort サービスを使用してポート 30002 の MLflow にアク�
 
 
 
+[[access-mlflow]]
 === MLflow にアクセスする
 
 MLflowに関連するすべてのサービスが起動したら、指定されたNodePortまたはLoadBalancerのIPアドレス（例： `http://10.61.181.109:30002` ）

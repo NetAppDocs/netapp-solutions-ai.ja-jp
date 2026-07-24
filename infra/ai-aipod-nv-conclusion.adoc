@@ -18,12 +18,14 @@ summary: NetApp AIPodとNVIDIA DGX システム - 詳細情報の入手先
 
 
 
+[[conclusion]]
 == まとめ
 
 DGX BasePOD アーキテクチャは、同様に高度なストレージとデータ管理機能を必要とする次世代のディープラーニング プラットフォームです。  DGX BasePOD とNetApp AFFシステムを組み合わせることで、 NetApp AIPodと DGX システムのアーキテクチャをほぼあらゆる規模で実装できます。  AFF は、 NetApp ONTAPの優れたクラウド統合とソフトウェア定義機能と組み合わせることで、エッジ、コア、クラウドにわたる包括的なデータ パイプラインを実現し、DL プロジェクトを成功させます。
 
 
 
+[[additional-information]]
 == 追加情報
 
 このドキュメントに記載されている情報の詳細については、次のドキュメントや Web サイトを参照してください。
@@ -84,6 +86,7 @@ https://www.nvidia.com/en-us/data-center/products/ai-enterprise/["https://www.nv
 
 
 
+[[acknowledgements]]
 == 謝辞
 
 このドキュメントは、 NetAppソリューションおよびONTAPエンジニアリング チーム (David Arnette、Olga Kornievskaia、Dustin Fischer、Srikanth Kaligotla、Mohit Kumar、および Raghuram Sudhaakar) によって作成されました。著者らは、継続的なサポートをいただいたNVIDIAおよびNVIDIA DGX BasePODエンジニアリング チームにも感謝の意を表します。

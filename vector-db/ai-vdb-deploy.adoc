@@ -18,6 +18,7 @@ summary: ベクターデータベースの導入手順 - NetApp 向けベクタ�
 
 
 
+[[deployment-procedure]]
 == 展開手順
 
 このデプロイメント セクションでは、以下のようにラボのセットアップに Kubernetes を使用した milvus ベクター データベースを使用しました。
@@ -28,6 +29,7 @@ NetApp ストレージは、顧客データと Milvus クラスター データ�
 
 
 
+[[netapp-storage-setup-ontap]]
 === NetAppストレージのセットアップ – ONTAP
 
 * ストレージシステムの初期化
@@ -54,6 +56,7 @@ NAS S3 (Network Attached Storage Simple Storage Service) の場合は、以下�
 
 
 
+[[netapp-storage-setup-storagegrid]]
 === NetAppストレージのセットアップ – StorageGRID
 
 . storageGRID ソフトウェアをインストールします。

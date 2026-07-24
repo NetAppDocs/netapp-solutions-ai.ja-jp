@@ -18,6 +18,7 @@ summary: このセクションでは、このソリューションを検証す�
 
 
 
+[[operating-system-and-ai-inference-setup]]
 == オペレーティングシステムとAI推論のセットアップ
 
 AFF C190では、 NVIDIAドライバーとNVIDIA GPUをサポートするDockerを搭載したUbuntu 18.04を使用し、MLPerfを使用しました。 https://github.com/mlperf/inference_results_v0.7/tree/master/closed/Lenovo["コード"^] MLPerf Inference v0.7 への Lenovo 提出の一部として利用可能です。
@@ -52,6 +53,7 @@ make run_harness RUN_ARGS="--benchmarks=<BENCHMARKS> --scenarios=<SCENARIOS>"
 ....
 
 
+[[ai-inference-runs]]
 == AI推論実行
 
 3 種類の実行が実行されました。

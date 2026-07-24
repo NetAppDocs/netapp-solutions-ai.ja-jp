@@ -18,12 +18,14 @@ summary: データは NFS で利用可能であり、AWS SageMaker の S3 から
 
 
 
+[[technology-requirements]]
 == 技術要件
 
 データ二重性のユースケースには、 NetApp BlueXP、 NetApp Cloud Volumes ONTAP、AWS SageMaker Notebooks が必要です。
 
 
 
+[[software-requirements]]
 === ソフトウェア要件
 
 次の表は、ユースケースを実装するために必要なソフトウェア コンポーネントを示しています。
@@ -42,6 +44,7 @@ summary: データは NFS で利用可能であり、AWS SageMaker の S3 から
 |===
 
 
+[[deployment-procedures]]
 == 展開手順
 
 データ二重性ソリューションの展開には、次のタスクが含まれます。
@@ -55,6 +58,7 @@ summary: データは NFS で利用可能であり、AWS SageMaker の S3 から
 
 
 
+[[bluexp-connector]]
 === BlueXPコネクタ
 
 今回の検証ではAWSを使用しました。  Azure および Google Cloud にも適用できます。  AWS でBlueXPコネクタを作成するには、次の手順を実行します。
@@ -71,6 +75,7 @@ summary: データは NFS で利用可能であり、AWS SageMaker の S3 から
 
 
 
+[[netapp-cloud-volumes-ontap]]
 === NetAppCloud Volumes ONTAP
 
 BlueXPでCloud Volumes ONTAPインスタンスを作成するには、次の手順を実行します。
@@ -244,6 +249,7 @@ sagemaker_cvo_sn1::*>
 
 
 
+[[aws-sagemaker]]
 === AWS セージメーカー
 
 AWS SageMaker から AWS ノートブックを作成するには、次の手順を実行します。
@@ -318,6 +324,7 @@ sh-4.2$
 
 
 
+[[data-for-machine-learning]]
 === 機械学習用データ
 
 この検証では、クラウドソーシングのコミュニティ活動である DBpedia のデータセットを使用して、さまざまなウィキメディア プロジェクトで作成された情報から構造化されたコンテンツを抽出しました。
@@ -443,6 +450,7 @@ sh-4.2$
 
 
 
+[[validate-machine-learning-from-jupyter-notebooks]]
 == Jupyter Notebook から機械学習を検証する
 
 次の検証では、以下の SageMaker BlazingText の例を使用して、テキスト分類を通じて機械学習モデルを構築、トレーニング、およびデプロイする方法を示します。

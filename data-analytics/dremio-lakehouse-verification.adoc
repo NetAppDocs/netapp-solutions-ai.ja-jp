@@ -18,6 +18,7 @@ summary: ONTAPや storagegrid などのNetAppオブジェクト ストレージ�
 
 
 
+[[sql-query-on-object-storage]]
 === オブジェクトストレージのSQLクエリ
 
 . dremio.envでサーバーあたりのメモリを250GBに設定する

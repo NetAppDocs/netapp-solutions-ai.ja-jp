@@ -25,6 +25,7 @@ summary: このセクションでは、さまざまな Hadoop データ保護要
 
 
 
+[[where-to-find-additional-information]]
 == 詳細情報の入手方法
 
 このドキュメントに記載されている情報の詳細は、以下のドキュメントやウェブサイトをご参照ください。
@@ -49,6 +50,7 @@ https://www.netapp.com/media/16877-tr-4529.pdf["https://www.netapp.com/media/168
 
 
 
+[[acknowledgements]]
 == 謝辞
 
 * ポール・バーランド、 NetApp 、ANZビクトリア地区営業担当
@@ -59,6 +61,7 @@ https://www.netapp.com/media/16877-tr-4529.pdf["https://www.netapp.com/media/168
 
 
 
+[[version-history]]
 == バージョン履歴
 
 |===

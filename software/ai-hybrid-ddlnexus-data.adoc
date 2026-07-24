@@ -29,12 +29,14 @@ summary: Domino Data Lab とNetAppによるハイブリッド マルチクラウ
 |===
 
 
+[[option-1-create-a-cache-of-a-volume-that-resides-in-a-different-data-plane]]
 == オプション1 - 別のデータプレーンにあるボリュームのキャッシュを作成する
 
 とlink:https://docs.netapp.com/us-en/ontap/flexcache/accelerate-data-access-concept.html["NetApp FlexCacheテクノロジー"]、別のデータ プレーンに存在するNetAppボリュームのキャッシュを作成できます。たとえば、オンプレミスのデータプレーンにNetAppボリュームがあり、AWS データプレーンでそのボリュームにアクセスする必要がある場合は、AWS にボリュームのキャッシュを作成できます。このセクションでは、別のデータ プレーンに存在するNetAppボリュームのキャッシュを作成するために実行する必要があるタスクの概要を説明します。
 
 
 
+[[create-flexcache-volume-in-destination-environment]]
 === 移行先環境でFlexCacheボリュームを作成する
 
 
@@ -53,6 +55,7 @@ NOTE: System Manager はAmazon FSx ONTAPでは使用できません。
 
 
 
+[[expose-flexcache-volume-to-domino]]
 === FlexCacheボリュームをDominoに公開する
 
 次に、 FlexCacheボリュームを Domino MLOps プラットフォームに公開する必要があります。  FlexCacheボリュームをDominoに公開するには、「 Tridentによってプロビジョニングされていない既存のNFSボリュームを公開する」サブセクションに記載されている手順に従ってください。link:ai-hybrid-ddlnexus-vols.html["「既存のNetAppボリュームをDominoに公開する」セクション"]このソリューションの。
@@ -73,12 +76,14 @@ image:ddlnexus-005.png["入出力ダイアログまたは書かれたコンテ�
 
 
 
+[[option-2-replicate-a-volume-that-resides-in-a-different-data-plane]]
 == オプション2 - 別のデータプレーンにあるボリュームを複製する
 
 とlink:https://www.netapp.com/cyber-resilience/data-protection/data-backup-recovery/snapmirror-data-replication/["NetApp SnapMirrorデータレプリケーションテクノロジー"]、別のデータ プレーンに存在するNetAppボリュームのコピーを作成できます。たとえば、オンプレミスのデータプレーンにNetAppボリュームがあり、AWS データプレーンでそのボリュームにアクセスする必要がある場合は、AWS にボリュームのコピーを作成できます。このセクションでは、別のデータ プレーンに存在するNetAppボリュームのコピーを作成するために実行する必要があるタスクの概要を説明します。
 
 
 
+[[create-snapmirror-relationship]]
 === SnapMirror関係の作成
 
 まず、ソース ボリュームと宛先環境の新しい宛先ボリュームの間にSnapMirror関係を作成する必要があります。宛先ボリュームは、 SnapMirror関係を作成するプロセスの一環として作成されることに注意してください。
@@ -94,6 +99,7 @@ NOTE: System Manager はAmazon FSx ONTAPでは使用できません。
 
 
 
+[[break-snapmirror-relationship]]
 === SnapMirror関係を解除する
 
 次に、データ アクセス用に宛先ボリュームをアクティブ化するために、 SnapMirror関係を解除する必要があります。この手順を実行する前に、初期レプリケーションが完了するまで待機してください。
@@ -109,6 +115,7 @@ BlueXPを使用しない場合は、 ONTAP System Manager またはONTAP CLI を
 
 
 
+[[expose-destination-volume-to-domino]]
 === 宛先ボリュームを Domino に公開する
 
 次に、宛先ボリュームを Domino MLOps プラットフォームに公開する必要があります。宛先ボリュームをDominoに公開するには、「 Tridentによってプロビジョニングされていない既存のNFSボリュームを公開する」サブセクションに記載されている手順に従ってください。link:ai-hybrid-ddlnexus-vols.html["「既存のNetAppボリュームをDominoに公開する」セクション"]このソリューションの。

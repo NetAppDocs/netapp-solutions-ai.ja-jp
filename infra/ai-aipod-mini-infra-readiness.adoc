@@ -18,6 +18,7 @@ summary: このドキュメントでは、NetApp AIPod Mini for Enterprise RAG �
 
 
 
+[[business-use-case-readiness]]
 == ビジネスおよびユースケースの準備
 
 * ソリューションは、業務部門の成果（生産性、顧客サービス、法務、医療、製造、公共部門など）に適合していますか？
@@ -29,6 +30,7 @@ summary: このドキュメントでは、NetApp AIPod Mini for Enterprise RAG �
 
 
 
+[[technical-infrastructure-requirements]]
 == 技術およびインフラ要件
 
 * データパイプライン（データ準備、ETL、ベクターDBへの安全な取り込み）は準備ができていますか？
@@ -41,6 +43,7 @@ summary: このドキュメントでは、NetApp AIPod Mini for Enterprise RAG �
 
 
 
+[[software-ecosystem-alignment]]
 == ソフトウェアとエコシステムの連携
 
 * コンテナ化されたアプリは、提供されている Kubernetes および Helm チャートと互換性がありますか？
@@ -52,6 +55,7 @@ summary: このドキュメントでは、NetApp AIPod Mini for Enterprise RAG �
 
 
 
+[[data-governance-security]]
 == データガバナンスとセキュリティ
 
 * Kubernetes でロールベースアクセス制御（RBAC）を有効にしましたか。
@@ -62,6 +66,7 @@ summary: このドキュメントでは、NetApp AIPod Mini for Enterprise RAG �
 
 
 
+[[operational-support-considerations]]
 == 運用とサポートに関する考慮事項
 
 * 管理者は Kubernetes、Trident CSI、および OPEA スタック導入についてトレーニングを受けているか、または有効化されていますか。
@@ -72,6 +77,7 @@ summary: このドキュメントでは、NetApp AIPod Mini for Enterprise RAG �
 
 
 
+[[commercial-gtm-alignment]]
 == 商業およびGTMの連携
 
 * 段階的なロードマップ（部門→企業全体の AI 拡張）はありますか？

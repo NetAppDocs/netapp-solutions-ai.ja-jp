@@ -18,22 +18,26 @@ summary: 'この記事は、Amazon FSx for NetApp ONTAP (FSx ONTAP) を使用し
 
 
 
+[[introduction]]
 == はじめに
 
 このチュートリアルでは、コンピューター ビジョン分類プロジェクトの実用的な例を示し、SageMaker 環境内で FSx ONTAP をデータ ソースとして利用する ML モデルの構築に関する実践的な体験を提供します。このプロジェクトは、ディープラーニング フレームワークである PyTorch を使用して、タイヤ画像に基づいてタイヤの品質を分類することに重点を置いています。  Amazon SageMaker のデータソースとして FSx ONTAPを使用した機械学習モデルの開発に重点を置いています。
 
 
 
+[[what-is-fsx-ontap]]
 == FSx ONTAPとは
 
 Amazon FSx ONTAP は、AWS が提供する完全に管理されたストレージソリューションです。  NetApp のONTAPファイル システムを活用して、信頼性が高く高性能なストレージを提供します。 NFS、SMB、iSCSI などのプロトコルをサポートしているため、さまざまなコンピューティング インスタンスやコンテナーからのシームレスなアクセスが可能になります。このサービスは、優れたパフォーマンスを提供し、高速かつ効率的なデータ操作を保証するように設計されています。また、高い可用性と耐久性も提供し、データのアクセスと保護が維持されます。さらに、 Amazon FSx ONTAPのストレージ容量はスケーラブルなので、ニーズに応じて簡単に調整できます。
 
 
 
+[[prerequisite]]
 == 前提条件
 
 
 
+[[network-environment]]
 === ネットワーク環境
 
 image:mlops-fsxn-sagemaker-integration-training-002.png["ネットワーク環境"]
@@ -42,6 +46,7 @@ FSx ONTAP (Amazon FSx ONTAP) は AWS ストレージサービスです。これ�
 
 
 
+[[data-access]]
 === データ アクセス
 
 実際のシナリオでは、データ サイエンティストは通常、FSx ONTAPに保存されている既存のデータを活用して機械学習モデルを構築します。ただし、デモンストレーションの目的では、FSx ONTAPファイル システムは作成後最初は空であるため、トレーニング データを手動でアップロードする必要があります。これは、FSx ONTAP をボリュームとして SageMaker にマウントすることで実現できます。ファイルシステムが正常にマウントされると、マウントされた場所にデータセットをアップロードして、SageMaker 環境内でモデルをトレーニングするためにアクセスできるようになります。このアプローチにより、モデルの開発とトレーニングに SageMaker を使用しながら、FSx ONTAPのストレージ容量と機能を活用できます。
@@ -50,6 +55,7 @@ FSx ONTAP (Amazon FSx ONTAP) は AWS ストレージサービスです。これ�
 
 
 
+[[integration-overview]]
 == 統合の概要
 
 image:mlops-fsxn-sagemaker-integration-training-001.png["トレーニングワークフロー"]
@@ -58,10 +64,12 @@ FSx ONTAPのトレーニング データを使用して SageMaker でディー�
 
 
 
+[[step-by-step-integration]]
 == ステップバイステップの統合
 
 
 
+[[data-loader]]
 === データLoader
 
 PyTorch ディープラーニング ネットワークをデータでトレーニングするために、データのフィードを容易にするデータ ローダーが作成されます。データ ローダーはバッチ サイズを定義するだけでなく、バッチ内の各レコードを読み取って前処理する手順も決定します。データ ローダーを構成することで、データの処理をバッチで処理し、ディープ ラーニング ネットワークのトレーニングが可能になります。
@@ -191,6 +199,7 @@ data_loader = DataLoader(dataset, batch_size=batch_size, shuffle=True)
 
 
 
+[[model-training]]
 === モデルトレーニング
 
 [source, python]
@@ -245,6 +254,7 @@ for epoch in range(num_epochs):
 
 
 
+[[model-deployment]]
 === モデルの展開
 
 

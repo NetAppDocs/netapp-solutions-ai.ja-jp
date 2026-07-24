@@ -18,6 +18,7 @@ summary: このページでは、このソリューションで使用される�
 
 
 
+[[netapp-ontap-storage-controller]]
 == NetApp ONTAPストレージ コントローラ
 
 NetApp ONTAPは、高性能なエンタープライズ グレードのストレージ オペレーティング システムです。
@@ -32,12 +33,14 @@ image:kafka-sc-004.png["この図は、アプリケーションが S3 バケッ�
 
 
 
+[[primary-use-cases]]
 == 主な使用例
 
 S3 API をサポートする主な目的は、 ONTAP上のオブジェクト アクセスを提供することです。  ONTAP統合ストレージ アーキテクチャは、ファイル (NFS および SMB)、ブロック (FC および iSCSI)、およびオブジェクト (S3) をサポートするようになりました。
 
 
 
+[[native-s3-applications]]
 == ネイティブS3アプリケーション
 
 S3 を使用したオブジェクト アクセスにONTAPサポートを活用できるアプリケーションが増えています。大容量のアーカイブ ワークロードに適していますが、ネイティブ S3 アプリケーションにおける高パフォーマンスのニーズは急速に高まっており、次のようなメリットがあります。
@@ -52,6 +55,7 @@ S3 を使用したオブジェクト アクセスにONTAPサポートを活用�
 
 
 
+[[fabricpool-endpoints]]
 == FabricPoolエンドポイント
 
 ONTAP 9.8 以降、 FabricPool はONTAP内のバケットへの階層化をサポートし、 ONTAP間の階層化が可能になります。これは、既存のFASインフラストラクチャをオブジェクト ストア エンドポイントとして再利用したいお客様にとって最適なオプションです。
@@ -66,6 +70,7 @@ FabricPool は、次の 2 つの方法でONTAPへの階層化をサポートし�
 
 
 
+[[netapp-ontap-for-confluent-tiered-storage]]
 === Confluent 階層型ストレージ向けNetApp ONTAP
 
 すべてのデータ センターでは、ビジネスに不可欠なアプリケーションを稼働させ、重要なデータを利用可能かつ安全に維持する必要があります。新しいNetApp AFF A900システムは、 ONTAP Enterprise Edition ソフトウェアと高耐障害性設計を採用しています。当社の新しい超高速 NVMe ストレージ システムは、ミッション クリティカルな業務の中断を排除し、パフォーマンス チューニングを最小限に抑え、ランサムウェア攻撃からデータを保護します。
@@ -78,6 +83,7 @@ ONTAP S3 サーバーは、 ONTAPの成熟したスケールアウト ストレ�
 
 
 
+[[simple-management-with-ontap-system-manager]]
 === ONTAP System Managerによるシンプルな管理
 
 ONTAP System Manager は、ブラウザベースのグラフィカル インターフェイスであり、世界中に分散した場所にあるONTAPストレージ コントローラを単一の画面で構成、管理、監視できます。
@@ -104,18 +110,21 @@ ONTAPは、選択したサービス レベルを満たす、最も適切なデ�
 
 
 
+[[confluent]]
 == 合流
 
 Confluent Platform は、継続的なリアルタイム ストリームとしてデータに簡単にアクセス、保存、管理できる本格的なデータ ストリーミング プラットフォームです。 Apache Kafka のオリジナル作成者によって構築された Confluent は、エンタープライズ グレードの機能によって Kafka の利点を拡大するとともに、Kafka の管理や監視の負担を軽減します。現在、Fortune 100 企業の 80% 以上がデータ ストリーミング テクノロジーを活用しており、そのほとんどが Confluent を使用しています。
 
 
 
+[[why-confluent]]
 === Confluentを選ぶ理由
 
 Confluent は、履歴データとリアルタイム データを単一の信頼できる中央ソースに統合することで、まったく新しいカテゴリの最新のイベント駆動型アプリケーションを簡単に構築し、ユニバーサル データ パイプラインを実現し、完全なスケーラビリティ、パフォーマンス、信頼性を備えた強力な新しいユースケースを実現します。
 
 
 
+[[what-is-confluent-used-for]]
 === Confluent は何に使用されますか?
 
 Confluent Platform を使用すると、異なるシステム間でデータがどのように転送されるか、または統合されるかといった基礎となる仕組みを心配するのではなく、データからビジネス価値を引き出す方法に集中できます。具体的には、Confluent Platform は、データ ソースを Kafka に接続し、ストリーミング アプリケーションを構築するだけでなく、Kafka インフラストラクチャのセキュリティ保護、監視、管理も簡素化します。現在、Confluent Platform は、金融サービス、オムニチャネル小売、自律走行車から不正検出、マイクロサービス、IoT まで、さまざまな業界の幅広いユースケースで使用されています。
@@ -126,6 +135,7 @@ image:kafka-sc-006.png["この図は、Confluent Platform のコンポーネン�
 
 
 
+[[overview-of-confluent-event-streaming-technology]]
 === Confluent イベント ストリーミング テクノロジーの概要
 
 Confluent Platformの中核は https://kafka.apache.org/["カフカ"^]最も人気のあるオープンソース分散ストリーミング プラットフォームです。  Kafka の主な機能は次のとおりです。
@@ -139,6 +149,7 @@ Confluent Platform には、すぐに使用できる Schema Registry、REST Prox
 
 
 
+[[overview-of-confluent-platform-enterprise-features]]
 === Confluent プラットフォームのエンタープライズ機能の概要
 
 * *Confluent コントロール センター*  Kafka を管理および監視するための UI ベースのシステム。  Kafka Connect を簡単に管理し、他のシステムへの接続を作成、編集、管理できるようになります。

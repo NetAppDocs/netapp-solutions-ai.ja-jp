@@ -40,6 +40,7 @@ link:https://www.netapp.com/artificial-intelligence/["https://www.netapp.com/art
 
 
 
+[[acknowledgments]]
 == 謝辞
 
 * Domino Data Lab、技術提携担当 SA ディレクター、Josh Mineroff 氏

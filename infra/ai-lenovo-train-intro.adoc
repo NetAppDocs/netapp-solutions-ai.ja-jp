@@ -22,6 +22,7 @@ Sathish Thyagarajan、David Arnette、 NetApp Mircea Troaca、Lenovo
 
 
 
+[[target-audience]]
 == 対象
 
 このドキュメントは次の読者を対象としています。
@@ -34,6 +35,7 @@ Sathish Thyagarajan、David Arnette、 NetApp Mircea Troaca、Lenovo
 
 
 
+[[solution-architecture]]
 == ソリューションアーキテクチャ
 
 Lenovo ThinkSystem サーバーとAFFストレージを備えたNetApp ONTAPを使用したこのソリューションは、従来の CPU に加えて GPU の処理能力を使用して、大規模なデータセットでの AI トレーニングを処理するように設計されています。この検証では、1 台、2 台、または 4 台の Lenovo SR670 V2 サーバーと単一のNetApp AFF A400ストレージ システムを組み合わせたスケールアウト アーキテクチャにより、高いパフォーマンスと最適なデータ管理が実現されることが実証されています。次の図は、アーキテクチャの概要を示しています。

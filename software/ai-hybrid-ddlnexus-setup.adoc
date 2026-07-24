@@ -18,6 +18,7 @@ summary: Domino Data Lab とNetAppによるハイブリッド マルチクラウ
 
 
 
+[[prerequisites]]
 == 前提条件
 
 このセクションで説明する手順を実行する前に、次のタスクが既に実行されていることを前提としています。
@@ -33,6 +34,7 @@ summary: Domino Data Lab とNetAppによるハイブリッド マルチクラウ
 
 
 
+[[install-the-domino-enterprise-ai-platform-in-aws]]
 == AWS に Domino Enterprise AI プラットフォームをインストールする
 
 AWSにDomino Enterprise MLOpsプラットフォームをインストールするには、link:https://docs.dominodatalab.com/en/latest/admin_guide/c1eec3/deploy-domino/["Domino 管理者ガイド"] 。以前にプロビジョニングしたのと同じ Amazon EKS クラスターに Domino をデプロイする必要があります。さらに、この EKS クラスターにはNetApp Tridentがすでにインストールおよび設定されている必要があり、domino.yml インストール設定ファイルで共有ストレージ クラスとして Trident 管理ストレージ クラスを指定する必要があります。
@@ -45,12 +47,14 @@ NOTE: link:https://www.netapp.com/media/79922-tr-4952.pdf["技術レポート TR
 
 
 
+[[enable-domino-nexus]]
 == Domino Nexusを有効にする
 
 次に、Domino Nexus を有効にする必要があります。参照link:https://docs.dominodatalab.com/en/latest/admin_guide/c65074/nexus-hybrid-architecture/["Domino 管理者ガイド"]詳細については。
 
 
 
+[[deploy-a-domino-data-plane-in-your-on-premises-data-center]]
 == オンプレミスデータセンターに Domino データプレーンを導入する
 
 次に、オンプレミスのデータセンターに Domino データプレーンを展開する必要があります。このデータ プレーンは、以前にプロビジョニングしたオンプレミスの Kubernetes クラスターにデプロイする必要があります。さらに、この Kubernetes クラスターにはNetApp Tridentがすでにインストールされ、設定されている必要があります。参照link:https://docs.dominodatalab.com/en/latest/admin_guide/5781ea/data-planes/["Domino 管理者ガイド"]詳細については。

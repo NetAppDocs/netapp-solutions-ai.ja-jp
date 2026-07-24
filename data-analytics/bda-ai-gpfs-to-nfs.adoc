@@ -18,6 +18,7 @@ summary: このセクションでは、 NetApp XCP を使用して GPFS を構�
 
 
 
+[[configure-gpfs]]
 == GPFSの設定
 
 . サーバーの 1 つに Spectrum Scale Data Access for Linux をダウンロードしてインストールします。
@@ -471,6 +472,7 @@ total 5.0G
 
 
 
+[[export-gpfs-into-nfs]]
 == GPFSをNFSにエクスポートする
 
 GPFS を NFS にエクスポートするには、次の手順を実行します。
@@ -596,6 +598,7 @@ drwxr-xr-x   4 root root 4.0K Nov  5 20:35 ces
 
 
 
+[[configure-the-nfs-client]]
 == NFSクライアントを構成する
 
 NFS クライアントを構成するには、次の手順を実行します。

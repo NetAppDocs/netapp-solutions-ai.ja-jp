@@ -21,6 +21,7 @@ NOTE: JupyterHub は Kubernetes 以外のプラットフォームにもデプロ
 
 
 
+[[prerequisites]]
 == 前提条件
 
 このセクションで説明する展開演習を実行する前に、次のタスクが既に実行されていることを前提としています。
@@ -31,24 +32,28 @@ NOTE: JupyterHub は Kubernetes 以外のプラットフォームにもデプロ
 
 
 
+[[install-helm]]
 == Helmをインストールする
 
 JupyterHub は、Kubernetes の一般的なパッケージ マネージャーである Helm を使用してデプロイされます。  JupyterHub をデプロイする前に、Kubernetes コントロール ノードに Helm をインストールする必要があります。  Helmをインストールするには、 https://helm.sh/docs/intro/install/["インストール手順"^]公式 Helm ドキュメントに記載されています。
 
 
 
+[[set-default-kubernetes-storageclass]]
 == デフォルトのKubernetesストレージクラスを設定する
 
 JupyterHub をデプロイする前に、Kubernetes クラスター内でデフォルトの StorageClass を指定する必要があります。クラスター内でデフォルトのストレージクラスを指定するには、link:ai-osmlops-kubeflow-deploy.html["Kubeflow デプロイメント"]セクション。クラスター内でデフォルトの StorageClass をすでに指定している場合は、この手順をスキップできます。
 
 
 
+[[deploy-jupyterhub]]
 == JupyterHubをデプロイする
 
 上記の手順を完了すると、JupyterHub をデプロイする準備が整います。  JupyterHub のデプロイメントには次の手順が必要です。
 
 
 
+[[configure-jupyterhub-deployment]]
 === JupyterHub デプロイメントを構成する
 
 デプロイメントの前に、それぞれの環境に合わせて JupyterHub デプロイメントを最適化することをお勧めします。  *config.yaml* ファイルを作成し、Helm チャートを使用してデプロイ中にそれを利用できます。
@@ -60,6 +65,7 @@ NOTE: この config.yaml ファイルでは、 NetApp Trident StorageClass の *
 
 
 
+[[adding-shared-volumes]]
 === 共有ボリュームの追加
 
 すべての JupyterHub ユーザーに共有ボリュームを使用する場合は、それに応じて *config.yaml* を調整できます。たとえば、jupyterhub-shared-volume という共有 PersistentVolumeClaim がある場合、次のようにすべてのユーザー ポッドで /home/shared としてマウントできます。
@@ -81,6 +87,7 @@ NOTE: これはオプションの手順であり、これらのパラメータ�
 
 
 
+[[deploy-jupyterhub-with-helm-chart]]
 === Helm ChartでJupyterHubをデプロイする
 
 Helm に JupyterHub Helm チャート リポジトリを認識させます。
@@ -117,6 +124,7 @@ NOTE: この例では、
 
 
 
+[[check-deployment]]
 === デプロイメントの確認
 
 ステップ 2 の実行中に、次のコマンドでポッドが作成されていることを確認できます。
@@ -135,6 +143,7 @@ proxy-7cb9bc4cc-9bdlp   1/1       Running   0          37s
 ----
 
 
+[[access-jupyterhub]]
 === JupyterHub にアクセスする
 
 JupyterHub にアクセスするために使用できる IP を見つけます。出力例のように、proxy-public サービスの EXTERNAL-IP が使用可能になるまで、次のコマンドを実行します。

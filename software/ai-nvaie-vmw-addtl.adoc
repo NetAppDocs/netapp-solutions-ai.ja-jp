@@ -32,6 +32,7 @@ https://www.nvidia.com/en-us/data-center/products/ai-enterprise/["https://www.nv
 
 
 
+[[acknowledgments]]
 == 謝辞
 
 * Bobby Oommen 氏、シニア マネージャー、 NetApp

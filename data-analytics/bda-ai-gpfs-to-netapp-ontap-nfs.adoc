@@ -20,6 +20,7 @@ image:bda-ai-005.png["入出力ダイアログまたは書かれたコンテン�
 
 
 
+[[gpfs-essentials]]
 == GPFSの基本
 
 GPFS では次のノード タイプが使用されます。
@@ -33,12 +34,14 @@ GPFS では次のノード タイプが使用されます。
 
 
 
+[[list-of-operations-for-gpfs-nfs-and-xcp]]
 == GPFS、NFS、XCP の操作リスト
 
 このセクションでは、GPFS を作成し、GPFS を NFS エクスポートとしてエクスポートし、XCP を使用してデータを転送する操作のリストを示します。
 
 
 
+[[create-gpfs]]
 === GPFSを作成する
 
 GPFS を作成するには、次の手順を実行します。
@@ -62,6 +65,7 @@ GPFS を作成するには、次の手順を実行します。
 
 
 
+[[export-gpfs-into-nfs]]
 === GPFSをNFSにエクスポートする
 
 GPFS を NFS にエクスポートするには、次の手順を実行します。
@@ -74,6 +78,7 @@ GPFS を NFS にエクスポートするには、次の手順を実行します�
 
 
 
+[[configure-nfs-client]]
 === NFSクライアントを構成する
 
 NFS クライアントを構成するには、次の手順を実行します。

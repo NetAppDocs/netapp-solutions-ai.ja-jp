@@ -35,6 +35,7 @@ Sathish Thyagarajan、Michael Oglesby、 NetApp Byung Hoon Ahn、Jennifer Cwagen
 
 
 
+[[target-audience]]
 == 対象
 
 この技術レポートは、次の読者を対象としています。
@@ -48,6 +49,7 @@ Sathish Thyagarajan、Michael Oglesby、 NetApp Byung Hoon Ahn、Jennifer Cwagen
 
 
 
+[[solution-architecture]]
 == ソリューションアーキテクチャ
 
 このソリューションは、従来の CPU と並行して GPU の処理能力を活用し、大規模なデータセットに対するリアルタイムおよびバッチ推論 AI ワークロードを処理するように設計されています。この検証は、責任ある AI 導入を目指す組織に必要な、ML のプライバシー保護推論と最適なデータ管理を実証しています。このソリューションは、オンプレミスの中核にあるNetApp ONTAP AI、 NetApp DataOps Toolkit、および Jupyter Lab と CLI インターフェイスを使用した Protopia 難読化ソフトウェアと相互接続された、エッジおよびクラウド コンピューティング用の単一またはマルチノードの Kubernetes プラットフォームに適したアーキテクチャを提供します。次の図は、DataOps Toolkit と Protopia を搭載したNetAppによるデータ ファブリックの論理アーキテクチャの概要を示しています。

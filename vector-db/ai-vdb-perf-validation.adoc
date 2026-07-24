@@ -18,6 +18,7 @@ summary: ベクターデータベースのパフォーマンス検証 - NetApp�
 
 
 
+[[performance-validation]]
 == パフォーマンス検証
 
 パフォーマンス検証は、ベクター データベースとストレージ システムの両方で重要な役割を果たし、最適な操作と効率的なリソース利用を保証するための重要な要素となります。高次元データの処理や類似性検索の実行で知られるベクター データベースでは、複雑なクエリを迅速かつ正確に処理するために、高いパフォーマンス レベルを維持する必要があります。パフォーマンス検証は、ボトルネックを特定し、構成を微調整し、サービスの低下なしにシステムが予想される負荷を処理できることを保証するのに役立ちます。同様に、ストレージ システムでは、全体的なシステム パフォーマンスに影響を与える可能性のある遅延の問題やボトルネックが発生することなく、データが効率的に保存および取得されるようにするために、パフォーマンス検証が不可欠です。また、ストレージ インフラストラクチャの必要なアップグレードや変更について、情報に基づいた意思決定を行うのにも役立ちます。したがって、パフォーマンス検証はシステム管理の重要な側面であり、高いサービス品質、運用効率、およびシステム全体の信頼性の維持に大きく貢献します。
@@ -48,6 +49,7 @@ milvus と進捗状況に使用された方法論については以下を確認�
 |===
 
 
+[[vectordb-bench-with-milvus-standalone-cluster]]
 === Milvus スタンドアロン クラスターを使用した VectorDB-Bench
 
 VectorDB-Bench を使用して、milvus スタンドアロン クラスターで次のパフォーマンス検証を実行しました。  milvus スタンドアロン クラスターのネットワークとサーバー接続は次のとおりです。
@@ -95,6 +97,7 @@ image:vector-db-result-standalone.png["入出力ダイアログまたは書か�
 
 
 
+[[vectordb-bench-with-milvus-cluster]]
 === milvus クラスターを使用した VectorDB-Bench
 
 このセクションでは、Kubernetes 環境内での Milvus クラスターの展開について説明します。この Kubernetes セットアップは、Kubernetes マスター ノードとワーカー ノードをホストする VMware vSphere デプロイメント上に構築されました。
@@ -144,6 +147,7 @@ image:storagecluster-latency-iops-milcus.png["入出力ダイアログまたは�
 
 
 
+[[vectordb-bench-with-postgres-pgvecto-rs]]
 === Postgres を使用した VectorDB ベンチ (pgvecto.rs)
 
 VectorDB-Bench を使用して PostgreSQL (pgvecto.rs) に対して次のアクションを実行しました。PostgreSQL (具体的には pgvecto.rs) のネットワークとサーバー接続に関する詳細は次のとおりです。
@@ -161,6 +165,7 @@ image:pgvecto-storage-perf-metrics.png["入出力ダイアログまたは書か�
 
 
 
+[[performance-comparison-between-milvus-and-postgres-on-vector-db-bench]]
 === ベクターDBベンチにおけるmilvusとpostgresのパフォーマンス比較
 
 image:perf-comp-milvus-postgres.png["入出力ダイアログまたは書かれたコンテンツを示す図"]
@@ -177,6 +182,7 @@ pgvecto.rs は 1 秒あたりのクエリ数 (QPS) が 1,068、リコールが 0
 
 
 
+[[observation-based-on-our-performance-validations]]
 === パフォーマンス検証に基づく観察:
 
 パフォーマンス検証に基づいて、次のことが観察されました。

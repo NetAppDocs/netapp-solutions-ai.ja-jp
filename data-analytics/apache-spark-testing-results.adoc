@@ -75,6 +75,7 @@ E シリーズとStorageGRID の両方の検証では、Hadoop レプリケー�
 |===
 
 
+[[financial-sentiment-analysis]]
 == 金融感情分析
 
 我々は出版したlink:https://www.netapp.com/pdf.html?item=/media/17123-tr4910pdf.pdf["TR-4910: NetApp AIによる顧客コミュニケーションからの感情分析"^]エンドツーエンドの会話型AIパイプラインを構築した。 https://github.com/NetApp/netapp-dataops-toolkit["NetApp DataOps ツールキット"^] 、 AFFストレージ、 NVIDIA DGX システム。パイプラインは、DataOpsツールキットを活用して、バッチオーディオ信号処理、自動音声認識（ASR）、転移学習、感情分析を実行します。 https://developer.nvidia.com/riva["NVIDIA Riva SDK"^] 、そして https://developer.nvidia.com/tao["タオフレームワーク"^]。感情分析のユースケースを金融サービス業界に拡大し、SparkNLP ワークフローを構築し、名前付きエンティティの認識などのさまざまな NLP タスク用に 3 つの BERT モデルをロードし、NASDAQ トップ 10 企業の四半期決算発表の文章レベルの感情を取得しました。
@@ -160,6 +161,7 @@ image:apache-spark-011.png["Spark NLP 感情分析エンドツーエンドのワ
 
 
 
+[[distributed-training-with-horovod-performance]]
 == Horovodパフォーマンスによる分散トレーニング
 
 次のコマンドは、Sparkクラスタ内の実行時情報とログファイルを単一のコマンドで生成しました。 `master`それぞれ 1 つのコアを持つ 160 個のエグゼキュータを持つノード。メモリ不足エラーを回避するために、実行メモリは 5 GB に制限されました。セクションを参照link:spark-python-scripts.html["主要なユースケースごとの Python スクリプト"]データ処理、モデルトレーニング、モデル精度計算の詳細については、 `keras_spark_horovod_rossmann_estimator.py` 。
@@ -236,6 +238,7 @@ image:apache-spark-012.png["Horovod Spark ワークフロー ランタイム。"
 
 
 
+[[deep-learning-models-for-ctr-prediction-performance]]
 == CTR予測パフォーマンスのためのディープラーニングモデル
 
 CTR を最大化するように設計されたレコメンデーション システムでは、低次から高次まで数学的に計算できるユーザー ビヘイビアの背後にある高度な機能の相互作用を学習する必要があります。低次の機能と高次の機能の相互作用は、どちらか一方に偏ることなく、優れたディープラーニング モデルにとって同等に重要です。因数分解マシン ベースのニューラル ネットワークである Deep Factorization Machine (DeepFM) は、推奨用の因数分解マシンと特徴学習用のディープラーニングを新しいニューラル ネットワーク アーキテクチャに組み合わせています。

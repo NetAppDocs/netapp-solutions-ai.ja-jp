@@ -18,6 +18,7 @@ summary: このセクションでは、詳細なテスト手順の結果につ�
 
 
 
+[[image-recognition-training-using-resnet-in-ontap]]
 == ONTAPの ResNet を使用した画像認識トレーニング
 
 ResNet50 ベンチマークを 1 台と 2 台の SR670 V2 サーバーで実行しました。このテストでは、MXNet 22.04-py3 NGC コンテナを使用してトレーニングを実行しました。
@@ -41,6 +42,7 @@ python train_imagenet.py --gpus 0,1,2,3,4,5,6,7 --batch-size 408 --kv-store horo
 
 
 
+[[data-read-speed-local-versus-network-storage]]
 == データ読み取り速度: ローカルストレージとネットワークストレージ
 
 読み取り速度は、 `dd` ImageNet データセットのファイルの 1 つに対してコマンドを実行します。具体的には、ローカル データとネットワーク データの両方に対して次のコマンドを実行しました。
@@ -53,6 +55,7 @@ Local storage: 1.7 GB/s Network storage: 1.5 GB/s.
 
 
 
+[[shared-use-case-multiple-independent-simultaneous-jobs]]
 == 共有ユースケース: 複数の独立した同時ジョブ
 
 このテストでは、このソリューションの予想されるユースケースである、マルチジョブ、マルチユーザーの AI トレーニングをシミュレートしました。各ノードは共有ネットワーク ストレージを使用しながら独自のトレーニングを実行しました。結果は次の図に表示されており、ソリューション ケースではすべてのジョブが個々のジョブと基本的に同じ速度で実行され、優れたパフォーマンスが実現されたことがわかります。合計スループットはノード数に応じて直線的に増加しました。

@@ -18,6 +18,7 @@ summary: SnapCenterを使用したベクターデータベース保護 - NetApp�
 
 
 
+[[vector-database-protection-using-netapp-snapcenter]]
 == NetApp SnapCenterを使用したベクトル データベース保護。
 
 たとえば、映画制作業界では、顧客がビデオ ファイルやオーディオ ファイルなどの重要な埋め込みデータを所有していることがよくあります。ハードドライブの故障などの問題によりこのデータが失われると、業務に大きな影響が及び、数百万ドル規模の事業が危険にさらされる可能性があります。貴重なコンテンツが失われ、大きな混乱と経済的損失が発生する事例がありました。したがって、この重要なデータのセキュリティと整合性を確保することは、この業界にとって最も重要です。このセクションでは、 SnapCenter がONTAPにあるベクター データベース データと Milvus データをどのように保護するかについて詳しく説明します。この例では、顧客データ用にNFS ONTAPボリューム（vol1）から派生したNASバケット（milvusdbvol1）と、Milvusクラスタ構成データ用に別のNFSボリューム（vectordbpv）を使用しました。link:https://docs.netapp.com/us-en/snapcenter-47/protect-sco/backup-workflow.html["ここをクリックしてください。"] SnapCenterバックアップワークフロー

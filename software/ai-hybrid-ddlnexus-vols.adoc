@@ -18,6 +18,7 @@ summary: Domino Data LabとNetAppによるハイブリッドマルチクラウ�
 
 
 
+[[why-expose-netapp-ontap-volumes-to-domino]]
 == NetApp ONTAPボリュームを Domino に公開する理由は何ですか?
 
 NetAppボリュームを Domino と組み合わせて使用すると、次のような利点があります。
@@ -30,12 +31,14 @@ NetAppボリュームを Domino と組み合わせて使用すると、次のよ
 
 
 
+[[expose-existing-nfs-volumes-that-were-not-provisioned-by-trident]]
 == Tridentによってプロビジョニングされていない既存の NFS ボリュームを公開する
 
 既存のNetApp ONTAP NFS ボリュームがTridentによってプロビジョニングされていない場合は、このサブセクションで説明する手順に従ってください。
 
 
 
+[[create-pv-and-pvc-in-kubernetes]]
 === KubernetesでPVとPVCを作成する
 
 
@@ -45,6 +48,7 @@ NOTE: オンプレミスのボリュームの場合は、オンプレミスの K
 
 
 
+[[register-external-data-volume-in-domino]]
 === Domino に外部データボリュームを登録する
 
 次に、Domino に外部データ ボリュームを登録する必要があります。外部データボリュームを登録するには、link:https://docs.dominodatalab.com/en/latest/admin_guide/9c3564/register-external-data-volumes/["確認方法"] Domino 管理者ガイドを参照してください。ボリュームを登録するときは、「ボリューム タイプ」ドロップダウン メニューから必ず「NFS」を選択してください。  「NFS」を選択すると、「使用可能なボリューム」リストに PVC が表示されます。
@@ -53,12 +57,14 @@ image:ddlnexus-003.png["入出力ダイアログまたは書かれたコンテ�
 
 
 
+[[expose-existing-volumes-that-were-provisioned-by-trident]]
 == Tridentによってプロビジョニングされた既存のボリュームを公開する
 
 既存のボリュームがTridentによってプロビジョニングされた場合は、このサブセクションで概説されている手順に従ってください。
 
 
 
+[[edit-existing-pvc]]
 === 既存のPVCを編集する
 
 ボリュームがTridentによってプロビジョニングされている場合は、ボリュームに対応する永続ボリューム要求 (PVC) がすでに存在します。このボリュームをDominoに公開するには、PVCを編集し、次のラベルをラベルリストに追加する必要があります。 `metadata.labels`分野：
@@ -68,6 +74,7 @@ image:ddlnexus-003.png["入出力ダイアログまたは書かれたコンテ�
 ....
 
 
+[[register-external-data-volume-in-domino]]
 === Domino に外部データボリュームを登録する
 
 次に、Domino に外部データ ボリュームを登録する必要があります。外部データボリュームを登録するには、link:https://docs.dominodatalab.com/en/latest/admin_guide/9c3564/register-external-data-volumes/["確認方法"] Domino 管理者ガイドを参照してください。ボリュームを登録するときは、「ボリューム タイプ」ドロップダウン メニューから必ず「汎用」を選択してください。  「Generic」を選択すると、「使用可能なボリューム」リストに PVC が表示されます。

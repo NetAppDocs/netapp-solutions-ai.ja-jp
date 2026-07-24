@@ -18,6 +18,7 @@ summary: NetAppを使用したオープンソース MLOps - Tridentオペレー�
 
 
 
+[[import-an-existing-volume]]
 == 既存のボリュームをインポートする
 
 Kubernetes クラスター内のコンテナーにマウントするが、クラスター内の PVC に関連付けられていない既存のボリュームがNetAppストレージ システム/プラットフォーム上に存在する場合は、これらのボリュームをインポートする必要があります。これらのボリュームをインポートするには、 Tridentボリューム インポート機能を使用できます。
@@ -56,12 +57,14 @@ pb-fg-all-iface1     Bound    default-pb-fg-all-iface1-7d9f1     10995116277760 
 ....
 
 
+[[provision-a-new-volume]]
 == 新しいボリュームをプロビジョニングする
 
 Tridentを使用して、 NetAppストレージ システムまたはプラットフォームに新しいボリュームをプロビジョニングできます。
 
 
 
+[[provision-a-new-volume-using-kubectl]]
 === kubectl を使用して新しいボリュームをプロビジョニングする
 
 次のコマンド例は、kubectl を使用して新しいFlexVol volumeをプロビジョニングする方法を示しています。
@@ -91,6 +94,7 @@ tensorflow-results                Bound     default-tensorflow-results-2fd60   1
 ....
 
 
+[[provision-a-new-volume-using-the-netapp-dataops-toolkit]]
 === NetApp DataOps ツールキットを使用して新しいボリュームをプロビジョニングする
 
 NetApp DataOps Toolkit for Kubernetes を使用して、 NetAppストレージ システムまたはプラットフォームに新しいボリュームをプロビジョニングすることもできます。 NetApp DataOps Toolkit for Kubernetes は、 Tridentを使用してボリュームをプロビジョニングしますが、ユーザーのプロセスを簡素化します。参照link:https://github.com/NetApp/netapp-dataops-toolkit/blob/main/netapp_dataops_k8s/docs/volume_management.md["ドキュメント"]詳細については。

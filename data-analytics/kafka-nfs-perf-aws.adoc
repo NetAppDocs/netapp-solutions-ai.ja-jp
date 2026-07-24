@@ -18,12 +18,14 @@ NetApp NFS にマウントされたストレージ層を持つ Kafka クラス�
 
 
 
+[[kafka-in-aws-cloud-with-netapp-cloud-volumes-ontap-high-availability-pair-and-single-node]]
 == NetApp Cloud Volumes ONTAPを使用した AWS クラウドでの Kafka (高可用性ペアと単一ノード)
 
 NetApp Cloud Volumes ONTAP (HA ペア) を搭載した Kafka クラスターのパフォーマンスを AWS クラウドでベンチマークしました。このベンチマークについては、次のセクションで説明します。
 
 
 
+[[architectural-setup]]
 === 建築のセットアップ
 
 次の表は、NAS を使用した Kafka クラスターの環境構成を示しています。
@@ -48,6 +50,7 @@ NetApp Cloud Volumes ONTAP (HA ペア) を搭載した Kafka クラスターの�
 |===
 
 
+[[netapp-cluster-volume-ontap-setup]]
 === NetAppクラスタボリュームONTAPセットアップ
 
 . Cloud Volumes ONTAP HA ペアの場合、各ストレージ コントローラ上の各アグリゲートに 3 つのボリュームを持つ 2 つのアグリゲートを作成しました。単一のCloud Volumes ONTAPノードに対して、アグリゲート内に 6 つのボリュームを作成します。
@@ -103,6 +106,7 @@ image:kafka-nfs-029.png["この図は、NAS ベースの Kafka クラスター�
 
 
 
+[[openmessage-benchmarking-configurations]]
 === OpenMessageベンチマーク構成
 
 . NFS のパフォーマンスを向上させるには、NFS サーバーと NFS クライアント間のネットワーク接続を増やす必要があります。これは、nconnect を使用して作成できます。次のコマンドを実行して、nconnect オプションを使用してブローカー ノードに NFS ボリュームをマウントします。
@@ -325,6 +329,7 @@ consumerConfig: |
 
 
 
+[[methodology-of-testing]]
 == テストの方法論
 
 . 上記の仕様に従って、Terraform と Ansible を使用して Kafka クラスターがプロビジョニングされました。  Terraform は、Kafka クラスターの AWS インスタンスを使用してインフラストラクチャを構築するために使用され、Ansible はそれら上に Kafka クラスターを構築します。
@@ -342,6 +347,7 @@ sudo bin/benchmark –drivers driver-kafka/kafka-throughput.yaml workloads/1-top
 
 
 
+[[observation]]
 == 観察
 
 NFS 上で実行されている Kafka インスタンスのパフォーマンスをベンチマークするためのワークロードを生成するために、2 つの異なるタイプのドライバーが使用されました。ドライバー間の違いは、ログフラッシュプロパティです。

@@ -18,6 +18,7 @@ summary: このページでは、主要な AI、ML、DL のユースケースと
 
 
 
+[[spark-nlp-pipelines-and-tensorflow-distributed-inferencing]]
 == Spark NLPパイプラインとTensorFlow分散推論
 
 次のリストには、さまざまな開発レベルでデータ サイエンス コミュニティに採用されている最も人気のあるオープン ソース NLP ライブラリが含まれています。
@@ -40,6 +41,7 @@ Spark NLP の基盤となるディープラーニング エンジンは TensorFl
 
 
 
+[[horovod-distributed-training]]
 == Horovod分散トレーニング
 
 MapReduce 関連のパフォーマンスに関するコア Hadoop 検証は、TeraGen、TeraSort、TeraValidate、および DFSIO (読み取りと書き込み) を使用して実行されます。  TeraGenとTeraSortの検証結果は、 https://www.netapp.com/pdf.html?item=/media/16420-tr-3969pdf.pdf["Hadoop向けNetApp Eシリーズソリューション"] AFFの「ストレージ階層化」セクションを参照してください。
@@ -61,6 +63,7 @@ Spark で Horovod を実行するための API には、高レベルの Estimato
 
 
 
+[[multi-worker-deep-learning-using-keras-for-ctr-prediction]]
 == Keras を使用したマルチワーカー ディープラーニングによる CTR 予測
 
 ML プラットフォームとアプリケーションの最近の進歩により、大規模な学習に多くの注目が集まっています。クリックスルー率 (CTR) は、オンライン広告の表示回数 100 回あたりの平均クリックスルー数 (パーセントで表されます) として定義されます。これは、デジタル マーケティング、小売、電子商取引、サービス プロバイダーなど、さまざまな業界の垂直分野やユース ケースで重要な指標として広く採用されています。  CTRと分散トレーニングのパフォーマンス結果の適用の詳細については、link:apache-spark-testing-results.html#deep-learning-models-for-ctr-prediction-performance["CTR予測パフォーマンスのためのディープラーニングモデル"]セクション。
@@ -89,6 +92,7 @@ DCNに加えて、CTR予測のための他の一般的なディープラーニ�
 
 
 
+[[architectures-used-for-validation]]
 == 検証に使用されるアーキテクチャ
 
 この検証では、 AFF-A800 HA ペアを持つ 4 つのワーカー ノードと 1 つのマスター ノードを使用しました。すべてのクラスター メンバーは 10GbE ネットワーク スイッチを介して接続されていました。

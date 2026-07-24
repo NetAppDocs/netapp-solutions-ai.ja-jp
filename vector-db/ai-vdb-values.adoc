@@ -18,6 +18,7 @@ summary: values-xml - NetApp 向けベクター データベース ソリュー�
 
 
 
+[[appendix-a-values-yaml]]
 == 付録A: Values.yaml
 
 [source, yaml]

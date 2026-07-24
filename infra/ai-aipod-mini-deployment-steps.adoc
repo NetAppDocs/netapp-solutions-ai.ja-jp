@@ -22,6 +22,7 @@ Sathish Thyagarajan、Michael Oglesby、Arpita Mahajan NetApp
 
 
 
+[[assumptions]]
 == 前提条件：
 
 * デプロイメントユーザーには、ネームスペースを作成し、Helmチャートをインストールするための十分な権限があります。
@@ -34,6 +35,7 @@ Sathish Thyagarajan、Michael Oglesby、Arpita Mahajan NetApp
 
 
 
+[[prerequisites]]
 == 前提条件
 
 Git、Python3.11、Python3.11用のpipをインストールする
@@ -52,10 +54,12 @@ python3.11 -m pip --version
 ----
 
 
+[[erag-2-02-0-1-deployment-steps]]
 == ERAG 2.0/2.0.1 の導入手順
 
 
 
+[[1-pull-enterprise-rag-2-0-release-from-github]]
 === 1.GitHubからEnterprise RAG 2.0リリースをプルします
 
 [source, cli]
@@ -72,6 +76,7 @@ git checkout tags/release-2.0.1
 ----
 
 
+[[2-install-prerequisites]]
 === 2.前提条件をインストールする
 
 [source, cli]
@@ -86,6 +91,7 @@ ansible-galaxy collection install -r requirements.yaml --upgrade
 ----
 
 
+[[3-create-inventory-file]]
 === 3.インベントリファイルを作成する
 
 [source, cli]
@@ -124,6 +130,7 @@ ansible_connection=ssh
 ----
 
 
+[[4-set-up-passwordless-ssh-to-each-node]]
 === 4.各ノードにパスワードなしのSSHを設定する
 
 [source, cli]
@@ -134,6 +141,7 @@ ssh-copy-id REMOTE_USER@MACHINE_IP
 
 
 
+[[5-verify-connectivity]]
 === 5.接続を確認する
 
 [source, cli]
@@ -144,6 +152,7 @@ ansible all -i inventory/<cluster-name>/inventory.ini -m ping
 
 
 
+[[6-edit-config-yaml-file]]
 === 6. `config.yaml`ファイルを編集します
 
  `inventory/<cluster-name>/config.yaml`を編集して、環境の詳細を反映した展開を準備します。
@@ -182,6 +191,7 @@ kubeconfig: "<repository path>/deployment/inventory/<cluster-name>/artifacts/adm
 ----
 
 
+[[7-deploy-the-k8s-cluster-with-trident]]
 === 7.K8sクラスタをデプロイする（Tridentを使用）
 
 クラスタと Trident CSI をデプロイするために、configure タグと install タグを指定した ansible-playbook playbooks/infrastructure.yaml を実行します。
@@ -194,18 +204,21 @@ ansible-playbook playbooks/infrastructure.yaml --tags configure,install -i inven
 
 
 
+[[8-change-the-number-of-iwatch-open-descriptors]]
 === 8.iwatchオープン記述子の数を変更する
 
 詳細については、 https://github.com/opea-project/Enterprise-RAG/blob/release-2.0.0/docs/application_deployment_guide.md#change-number-of-iwatch-open-descriptors["iwatchオープンディスクリプタ"^]を参照してください。
 
 
 
+[[9-install-kubectl]]
 === 9.kubectlをインストールする
 
  https://kubernetes.io/docs/tasks/tools/install-kubectl-linux/["Kubectlをインストールする"]がまだインストールされていない場合は、参照してください。 `<repository path>/deployment/inventory/<cluster-name>/artifacts/admin.conf`からkubeconfigファイルを取得します。
 
 
 
+[[10-install-metallb-in-kubernetes-cluster]]
 === 10.KubernetesクラスタにMetalLBをインストールする
 
 Kubernetes クラスタで helm を使用して MetalLB をインストールします。
@@ -219,6 +232,7 @@ helm -n metallb-system install metallb metallb/metallb --create-namespace
 
 
 
+[[11-configure-metallb]]
 === 11.MetalLB を設定する
 
 MetalLB はレイヤー 2 モードで構成され、必要な IPAddressPool および L2Advertisement リソースは、文書化された構成ガイドラインに従って作成されました。
@@ -255,6 +269,7 @@ metadata:
 
 
 
+[[12-update-config-yaml-with-fqdn-volume-access-mode-ingress-and-s3-details]]
 === 12.FQDN、ボリュームアクセスモード、イングレス、S3の詳細を使用してconfig.yamlを更新します。
 
  `inventory/<cluster-name>/config.yaml`にあるconfig.yamlファイルを変更して、導入FQDNを定義し、ボリュームアクセスモードを設定し、Ingressの公開を設定し、ONTAP S3を統合します。
@@ -316,6 +331,7 @@ edp:
 
 
 
+[[13-configure-scheduled-synchronization-settings]]
 === 13.スケジュールされた同期設定を設定する
 
 Intel® AI for Enterprise RAGアプリケーション用のOPEAをインストールする場合は、 `scheduledSync`を有効にして、アプリケーションがS3バケットから新しいファイルや更新されたファイルを自動的に取り込むようにします。
@@ -341,6 +357,7 @@ celery:
 ----
 
 
+[[14-deploy-enterprise-rag-2-02-0-1]]
 === 14.Enterprise RAG 2.0/2.0.1 を導入する
 
 インストール前に、link:https://github.com/opea-project/Enterprise-RAG/blob/main/docs/application_deployment_guide.md["Intel® AI for Enterprise RAG アプリケーション導入ガイド"]に記載されている手順に従って、インフラストラクチャの準備状況を検証してください。この手順により、基盤となるインフラストラクチャが正しく構成され、Enterprise RAG Applicationを正常にインストールするために必要なすべての前提条件が満たされていることが保証されます。
@@ -355,6 +372,7 @@ ansible-playbook -u $USER playbooks/application.yaml --tags configure,install -e
 
 
 
+[[15-create-a-dns-entry]]
 === 15.DNSエントリを作成する
 
 DNS サーバーに Enterprise RAG Web ダッシュボードの DNS エントリを作成します。続行するには、Enterprise RAG のイングレスLoadBalancerに割り当てられた外部 IP アドレスを取得します：
@@ -369,16 +387,19 @@ kubectl -n ingress-nginx get svc ingress-nginx-controller
 
 
 
+[[16-access-enterprise-rag-ui]]
 === 16.Enterprise RAG UIにアクセスする
 
 ブラウザでその FQDN に移動して、Enterprise RAG UI にアクセスします。注：デフォルトの UI 認証情報は、cat ansible-logs/default_credentials.txt から取得できます。
 
 
 
+[[troubleshooting-guide]]
 == トラブルシューティングガイド
 
 
 
+[[1-issue-keycloak-helm-installation-conflict]]
 === 1.問題：Keycloak Helm インストールの競合
 
 シナリオ：ERAG のデプロイ中に、Keycloak のインストールが次のエラーで失敗する場合があります：
@@ -404,6 +425,7 @@ kubectl delete ns auth
 
 
 
+[[2-issue-trident-operator-helm-chart-version-not-found]]
 === 2.問題：Trident Operator Helm Chart のバージョンが見つかりません
 
 シナリオ：ERAG展開中に、Helmチャートバージョンの不一致により、Tridentオペレーターのインストールが失敗する可能性があります。次のエラーが発生する可能性があります：

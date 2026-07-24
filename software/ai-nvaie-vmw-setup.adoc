@@ -18,12 +18,14 @@ summary: NVIDIA AI Enterprise with NetAppおよび VMware - 初期セットア�
 
 
 
+[[prerequisites]]
 == 前提条件
 
 このセクションで説明する手順を実行する前に、VMware vSphere とNetApp ONTAPがすでに導入されていることを前提としています。参照link:https://docs.nvidia.com/ai-enterprise/latest/product-support-matrix/index.html["NVIDIA AI エンタープライズ製品サポートマトリックス"^]サポートされている vSphere バージョンの詳細については、こちらをご覧ください。参照link:https://docs.netapp.com/us-en/netapp-solutions/vmware/index.html["NetAppおよび VMware ソリューションのドキュメント"^]VMware vSphere をNetApp ONTAPとともに導入する方法の詳細については、 を参照してください。
 
 
 
+[[install-nvidia-ai-enterprise-host-software]]
 == NVIDIA AI Enterprise Host ソフトウェアをインストールする
 
 NVIDIA AI Entrpriseホストソフトウェアをインストールするには、link:https://docs.nvidia.com/ai-enterprise/latest/quick-start-guide/index.html["NVIDIA AI エンタープライズ クイック スタート ガイド"] 。

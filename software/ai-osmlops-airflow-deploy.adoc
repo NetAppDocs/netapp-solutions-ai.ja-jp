@@ -21,6 +21,7 @@ NOTE: Airflow は Kubernetes 以外のプラットフォームにもデプロイ
 
 
 
+[[prerequisites]]
 == 前提条件
 
 このセクションで説明する展開演習を実行する前に、次のタスクが既に実行されていることを前提としています。
@@ -31,18 +32,21 @@ NOTE: Airflow は Kubernetes 以外のプラットフォームにもデプロイ
 
 
 
+[[install-helm]]
 == Helmをインストールする
 
 Airflow は、Kubernetes の一般的なパッケージ マネージャーである Helm を使用してデプロイされます。 Airflow をデプロイする前に、デプロイ ジャンプ ホストに Helm をインストールする必要があります。デプロイメントジャンプホストにHelmをインストールするには、 https://helm.sh/docs/intro/install/["インストール手順"^]公式 Helm ドキュメントに記載されています。
 
 
 
+[[set-default-kubernetes-storageclass]]
 == デフォルトのKubernetesストレージクラスを設定する
 
 Airflow をデプロイする前に、Kubernetes クラスター内でデフォルトの StorageClass を指定する必要があります。 Airflow のデプロイメント プロセスでは、デフォルトの StorageClass を使用して新しい永続ボリュームをプロビジョニングしようとします。デフォルトの StorageClass として StorageClass が指定されていない場合、デプロイメントは失敗します。クラスター内でデフォルトのストレージクラスを指定するには、link:ai-osmlops-kubeflow-deploy.html["Kubeflow デプロイメント"]セクション。クラスター内でデフォルトの StorageClass をすでに指定している場合は、この手順をスキップできます。
 
 
 
+[[use-helm-to-deploy-airflow]]
 == Helm を使用して Airflow をデプロイする
 
 Helm を使用して Kubernetes クラスターに Airflow をデプロイするには、デプロイメント ジャンプ ホストから次のタスクを実行します。

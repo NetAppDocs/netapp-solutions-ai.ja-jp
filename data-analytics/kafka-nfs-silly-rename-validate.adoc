@@ -18,6 +18,7 @@ summary: 機能検証では、ストレージに NFSv3 をマウントした Kaf
 
 
 
+[[validation-setup]]
 == 検証設定
 
 セットアップは AWS 上で実行されます。次の表は、検証に使用されたさまざまなプラットフォーム コンポーネントと環境構成を示しています。
@@ -47,6 +48,7 @@ image:kafka-nfs-001.png["この画像は、プロデューサー スウォーム
 
 
 
+[[architectural-flow]]
 == 建築の流れ
 
 * *計算します。*専用サーバーで実行される 3 ノードの Zookeeper アンサンブルを備えた 4 ノードの Kafka クラスターを使用しました。
@@ -59,6 +61,7 @@ image:kafka-nfs-001.png["この画像は、プロデューサー スウォーム
 
 
 
+[[methodology-of-testing]]
 == テストの方法論
 
 . アップデート `-is-preserve-unlink-enabled true`kafka ボリュームに次のように追加します。

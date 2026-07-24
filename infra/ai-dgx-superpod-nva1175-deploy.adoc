@@ -10,6 +10,7 @@ summary: NVIDIA DGX SuperPODとNetApp AFF A90
 
 
 
+[[nva-deployment]]
 == NVAの展開
 
 [role="lead"]
@@ -21,6 +22,7 @@ image:nvidialogo.png["nvidiaロゴ"]
 
 
 
+[[program-summary]]
 == プログラム概要
 
 NVIDIA DGX SuperPOD™ は、組織向けのターンキー AI データ センター ソリューションを提供し、世界クラスのコンピューティング、ソフトウェア ツール、専門知識、継続的なイノベーションをシームレスに提供します。 DGX SuperPOD は、最小限のセットアップ時間と最大限の生産性で AI/ML および HPC ワークロードを展開するために必要なすべてを提供します。図 1 は、DGX SuperPOD の高レベル コンポーネントを示しています。
@@ -38,6 +40,7 @@ DGX SuperPOD には次のような利点があります。
 
 
 
+[[solution-overview]]
 == ソリューションの概要
 
 組織が人工知能 (AI) と機械学習 (ML) の取り組みを採用するにつれて、堅牢でスケーラブルかつ効率的なインフラストラクチャ ソリューションに対する需要はかつてないほど高まっています。こうした取り組みの中心にあるのは、データのセキュリティ、アクセシビリティ、リソースの最適化を確保しながら、ますます複雑化する AI モデルを管理およびトレーニングするという課題です。 
@@ -51,12 +54,14 @@ DGX SuperPOD には次のような利点があります。
 
 
 
+[[solution-technology]]
 === ソリューション技術
 
 NVIDIA DGX SuperPOD には、要求の厳しい AI ワークロードに実証済みのパフォーマンスを提供するために必要なサーバー、ネットワーク、ストレージが含まれています。  NVIDIA DGX™ H200 および B200 システムは世界クラスのコンピューティング能力を提供し、 NVIDIA Quantum InfiniBand および Spectrum™ Ethernet ネットワーク スイッチは超低遅延と業界をリードするネットワーク パフォーマンスを提供します。 NetApp ONTAPストレージの業界をリードするデータ管理およびパフォーマンス機能が追加されたことで、顧客は AI/ML イニシアチブをより迅速に、そしてデータ移行と管理オーバーヘッドを削減して実現できるようになります。このソリューションの特定のコンポーネントの詳細については、https://www.netapp.com/pdf.html?item=/media/125003-nva-1175-design-superpod-a90.pdf["NVA-1175 設計ガイド"]そして https://docs.nvidia.com/dgx-superpod/reference-architecture-scalable-infrastructure-b200/latest/index.html["+++ NVIDIA DGX SuperPODリファレンス アーキテクチャ+++"]ドキュメント。
 
 
 
+[[use-case-summary]]
 === ユースケースの概要
 
 NVIDIA DGX SuperPOD は、最も要求の厳しいワークロードのパフォーマンスとスケールの要件を満たすように設計されています。
@@ -70,12 +75,14 @@ NVIDIA DGX SuperPOD は、最も要求の厳しいワークロードのパフォ
 
 
 
+[[technology-requirements]]
 == 技術要件
 
 DGX SuperPOD は、必要な接続性とパフォーマンスを提供し、インフラストラクチャのボトルネックを解消するために必要なすべてのコンポーネントを含むスケーラブル ユニット (SU) の概念に基づいています。お客様は 1 つまたは複数の SU から開始し、要件を満たすために必要に応じて SU を追加できます。詳細については、 https://docs.nvidia.com/dgx-superpod/reference-architecture-scalable-infrastructure-b200/latest/index.html["+++ NVIDIA DGX SuperPODリファレンス アーキテクチャ+++"] 。このドキュメントでは、単一の SU のストレージ コンポーネントと構成について説明します。
 
 
 
+[[hardware-requirements]]
 === ハードウェア要件
 
 表 1 に、1SU のストレージ コンポーネントを実装するために必要なハードウェア コンポーネントを示します。  1 ～ 4 個のスケーラブル ユニットの具体的な部品と数量については、付録 A を参照してください。
@@ -97,6 +104,7 @@ DGX SuperPOD は、必要な接続性とパフォーマンスを提供し、イ�
 |===
 
 
+[[software-requirements]]
 === ソフトウェア要件
 
 表 2 に、AFF A90ストレージ システムを DGX SuperPOD と統合するために必要な最小限のソフトウェア コンポーネントとバージョンを示します。 DGX SuperPOD には、ここに記載されていない他のソフトウェア コンポーネントも含まれます。詳細はhttps://docs.nvidia.com/dgx-superpod/release-notes/latest/10-24-11.html["+++DGX SuperPOD リリースノート+++"]詳細についてはこちらをご覧ください。
@@ -124,6 +132,7 @@ DGX SuperPOD は、必要な接続性とパフォーマンスを提供し、イ�
 |===
 
 
+[[deployment-procedures]]
 == 展開手順
 
 NetApp ONTAPストレージを DGX SuperPOD と統合するには、次のタスクが必要です。
@@ -135,6 +144,7 @@ NetApp ONTAPストレージを DGX SuperPOD と統合するには、次のタス
 
 
 
+[[storage-system-installation-and-configuration]]
 === ストレージシステムのインストールと構成
 
 
@@ -452,6 +462,7 @@ spod_qos
 ----
 
 
+[[dgx-server-configuration-with-nvidia-base-command-manager]]
 === NVIDIA Base Command Manager を使用した DGX サーバーの構成
 
 DGX クライアントがAFF A90ストレージ システムを使用できるように準備するには、次のタスクを実行します。このプロセスでは、ストレージ ファブリックのネットワーク インターフェイスと静的ルートが DGX システム ノードですでに構成されていることを前提としています。次のタスクは、高度な構成プロセスの一環としてNetAppプロフェッショナル サービスによって完了されます。
@@ -653,12 +664,14 @@ commit
 ----
 
 
+[[conclusion]]
 == まとめ
 
 NetApp * AFF A90ストレージ システム* を搭載したNVIDIA DGX SuperPOD は、 AI インフラストラクチャ ソリューションの大きな進歩を表しています。セキュリティ、データ管理、リソース利用、スケーラビリティに関する主要な課題に対処することで、組織は運用効率、データ保護、コラボレーションを維持しながら AI イニシアチブを加速できます。このソリューションの統合アプローチにより、AI 開発パイプラインの一般的なボトルネックが解消され、データ サイエンティストやエンジニアはインフラストラクチャ管理ではなくイノベーションに集中できるようになります。
 
 
 
+[[where-to-find-additional-information]]
 == 詳細情報の入手方法
 
 このドキュメントに記載されている情報の詳細については、次のドキュメントや Web サイトを参照してください。
@@ -679,10 +692,12 @@ NetApp * AFF A90ストレージ システム* を搭載したNVIDIA DGX SuperPOD
 
 
 
+[[appendix-a-bill-of-materials-and-rack-elevations]]
 == 付録A: 部品表とラックの立面図
 
 
 
+[[bill-of-materials]]
 === 部品表
 
 表 3 には、1 台、2 台、3 台、および 4 台のスケーラブル ユニットのストレージを展開するために必要なNetAppコンポーネントの部品番号と数量を示します。
@@ -748,6 +763,7 @@ NetApp * AFF A90ストレージ システム* を搭載したNVIDIA DGX SuperPOD
 |===
 
 
+[[rack-elevations]]
 === ラックの高さ
 
 図 4 ～ 6 は、1 ～ 4 SU のラックの立面図の例を示しています。

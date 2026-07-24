@@ -18,6 +18,7 @@ Kafka のサイズ設定は、シンプル、詳細、リバース、パーテ�
 
 
 
+[[simple]]
 == 単純
 
 シンプル モードは、Apache Kafka を初めて使用するユーザーや初期状態のユース ケースに適しています。このモードでは、スループット MBps、読み取りファンアウト、保持期間、リソース使用率 (デフォルトは 60%) などの要件を指定します。また、オンプレミス (ベアメタル、VMware、Kubernetes、OpenStack) やクラウドなどの環境も入力します。この情報に基づいて、Kafka クラスターのサイズを決定すると、ブローカー、Zookeeper、Apache Kafka Connect Workers、スキーマ レジストリ、REST プロキシ、ksqlDB、および Confluent コントロール センターに必要なサーバーの数がわかります。
@@ -26,6 +27,7 @@ Kafka のサイズ設定は、シンプル、詳細、リバース、パーテ�
 
 
 
+[[producers]]
 === プロデューサー
 
 Apache Kafka のプロデューサー (ネイティブ クライアント、REST プロキシ、Kafka コネクタなど) を記述するには、次の情報を提供します。
@@ -81,6 +83,7 @@ Apache Kafka のプロデューサー (ネイティブ クライアント、REST
 
 
 
+[[consumers]]
 === 消費者
 
 Apache Kafka からデータを消費し、Apache Kafka にデータを返さないアプリケーションまたはサービス (ネイティブ クライアントや Kafka コネクタなど) について説明します。
@@ -117,6 +120,7 @@ Apache Kafka からデータを消費し、Apache Kafka にデータを返さな
 
 
 
+[[describe-your-environment]]
 === あなたの環境を説明してください
 
 * *クラスターはどのような環境で実行されますか?*  Amazon Web Services、Microsoft Azure、Google Cloud Platform、オンプレミスのベアメタル、オンプレミスの VMware、オンプレミスの OpenStack、オンプレミスの Kubernates のどれですか?

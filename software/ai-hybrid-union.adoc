@@ -15,12 +15,14 @@ David Espejo 氏、Union.ai Sathish Thyagarajan 氏、 NetApp
 
 
 
+[[overview]]
 == 概要
 
 Union.ai のハイブリッド オーケストレーション プラットフォームは、 NetApp ONTAPおよびFlexCache とシームレスに統合され、AI/ML トレーニング ワークフローを加速します。このソリューションにより、AI トレーニング ワークロードにクラウドベースの GPU コンピューティングを活用しながら、データをオンプレミスで安全に維持できます。  NetApp FlexCache は、必要なデータのみがクラウドにキャッシュされるようにし、効率的で安全かつスケーラブルなハイブリッド AI/ML パイプラインを実現します。
 
 
 
+[[customer-use-case-hybrid-cloud-ai-training]]
 == 顧客ユースケース: ハイブリッドクラウド AI トレーニング
 
 * オンプレミス データ: コンプライアンスとセキュリティのためにNetApp ONTAPに保存されます。
@@ -31,6 +33,7 @@ Union.ai のハイブリッド オーケストレーション プラットフォ
 
 
 
+[[customer-value]]
 == お客様のメリット
 
 * NetApp ONTAP のスケールアウト機能を使用して、大規模なデータセットで AI ワークロードを実行します。
@@ -42,6 +45,7 @@ Union.ai のハイブリッド オーケストレーション プラットフォ
 
 
 
+[[enabling-the-plugin-prerequisites]]
 == プラグインの有効化 – 前提条件
 
 [cols="32%,68%"]
@@ -80,6 +84,7 @@ ONTAPおよび Kubernetes クラスターへの管理者アクセス。
 |===
 
 
+[[reference-architecture]]
 == リファレンスアーキテクチャ
 
 次の図は、ハイブリッド AI トレーニング用にNetAppストレージと統合された Union.ai コントロール プレーンを示しています。
@@ -93,6 +98,7 @@ image::ai-hybrid-union-001.png[Union.ai とNetAppによるハイブリッド AI 
 
 
 
+[[step-1-create-a-flexcache-volume]]
 === _ステップ1: FlexCacheボリュームを作成する_
 
 ONTAPシステムマネージャの使用
@@ -110,6 +116,7 @@ ONTAPシステムマネージャの使用
 
 
 
+[[step-2-configure-trident]]
 === _ステップ2: Trident を構成する_
 
 両方のクラスターにTridentをインストールします。
@@ -153,6 +160,7 @@ kubectl apply -f storageclass-flexcache.yaml
 ----
 
 
+[[step-3-deploy-union-ai-workflows]]
 === _ステップ3：Union.aiワークフローをデプロイする_
 
 Union は PVC を使用してFlexCacheボリュームをトレーニング ジョブにマウントします。
@@ -212,6 +220,7 @@ train_model(pvc_path="/data/flexcache")
 
 
 
+[[step-4-validate-integration]]
 === ステップ4: 統合の検証_
 
 [cols="21%,79%"]
@@ -234,6 +243,7 @@ train_model(pvc_path="/data/flexcache")
 
 
 
+[[security-considerations]]
 == セキュリティに関する考慮事項
 
 * FSx for NetApp ONTAPに VPC エンドポイントを使用する
@@ -244,6 +254,7 @@ train_model(pvc_path="/data/flexcache")
 
 
 
+[[monitoring-and-optimization]]
 == 監視と最適化
 
 [cols="31%,69%"]
@@ -300,6 +311,7 @@ train_model(pvc_path="/data/flexcache")
 
 
 
+[[related-links]]
 == 関連リンク
 
 * https://docs.union.ai["+++Union.ai ドキュメント+++"]
@@ -310,12 +322,14 @@ train_model(pvc_path="/data/flexcache")
 
 
 
+[[conclusion]]
 == まとめ
 
 これで、Union.ai とNetApp FlexCacheを使用した検証済みのハイブリッド AI トレーニング環境が完成しました。トレーニング ジョブは、データセット全体を複製したりガバナンスを損なうことなく、オンプレミス データに安全かつ効率的にアクセスしながらクラウドで実行できます。
 
 
 
+[[union-ai-companion-guide]]
 === *Union.ai - コンパニオンガイド*
 
 
