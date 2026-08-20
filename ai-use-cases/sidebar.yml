@@ -3,6 +3,9 @@ section: ai-use-cases
 title: AIのユースケース
 url: "/ai-use-cases/index.html"
 entries:
+- title: NetApp による KV キャッシュ オフロードNetApp
+  pdf-filename: NetApp による KV キャッシュ オフロードNetApp
+  url: "/software/ai-kv-cache-offloading-netapp.html"
 - title: エンタープライズRAG向けNetApp AIPod Mini
   pdf-filename: RAG推論のためのNetApp AIPod Mini
   url: "/infra/ai-minipod.html"

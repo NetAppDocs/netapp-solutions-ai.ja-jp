@@ -5692,4 +5692,91 @@
   <block id="ace9c8e1fe823a5e2a7de8c7bb092f3f" category="cell">初版</block>
   <block id="00ba3b77f9aa3a279c72104e9d662ae9" category="cell">2026年2月</block>
   <block id="1e675dec21c2e02d448ee68cb571e2e2" category="cell">OPEA-Intel® AI for Enterprise RAG 2.0でアップデート</block>
+  <block id="3304f728a8dcd14019fd831a403cfc1e" category="summary">KV キャッシュを CPU メモリおよび共有 NetApp StorageGRID S3 または ONTAP NFS/pNFS ストレージにオフロードすることで、繰り返し発生するプリフィル処理を削減し、vLLM インスタンス間でのキャッシュの再利用を可能にする方法について説明します。</block>
+  <block id="ca6588daa66144f6ab2ded5595987f35" category="doc">NetApp による KV キャッシュ オフロードNetApp</block>
+  <block id="e6490880f26055ae5a4eece058f2c1d2" category="paragraph">企業向けAI投資の第一波は、モデルのトレーニングとファインチューニングによる能力構築に重点が置かれており、大規模な運用には焦点が当てられていなかった。組織が実験から本番環境へと移行するにつれて、重心はリアルタイム推論へとシフトします。すなわち、ユーザーが継続的にやり取りする検索アシスタント、チャットボット、コパイロット、およびエージェントワークフローです。このような環境では、GPUの使用率が急速に上昇するのは、すべてのリクエストで完全なトレーニングパスが実行されるからではなく、フォローアップの質問、会話の新たなターン、および同時接続ユーザーが増えるたびに推論スタックに負荷がかかるためです。</block>
+  <block id="3e6c601855907b028ee047507d8c1c7c" category="paragraph">すぐに一つのパターンが見えてくる。GPUは驚くほど多くの反復作業を行っており、既に処理したトークンに対してアテンションを再計算しているのだ。その繰り返しは、チューニングの問題だけではなく、メモリ アーキテクチャの問題でもある。業界の対応策は、KV キャッシュを中心とした階層化ストレージ アーキテクチャに基づくメモリ戦略である。</block>
+  <block id="930144eea821eac9cf40df04ad110fdc" category="section-title">KVキャッシュとは何ですか？</block>
+  <block id="0fc40e19bc551b3b240104924b2963ef" category="paragraph">簡単に言うと、KV（キーバリュー）キャッシングとは、大規模言語モデル（LLM）の推論を最適化するために使用される技術であり、以前に計算された値をKVキャッシュに保存することで、生成される新しいトークンごとにこれらの値を再計算する必要がなくなります。これを行わない場合、再計算が必要になります。</block>
+  <block id="ade12894937e116ab7cad72769cd9e37" category="inline-link-macro">Hugging Face KV キャッシングの概要</block>
+  <block id="bbfe5eab784db3c5b800a95a144c2948" category="paragraph">注：より詳細な技術概要については、<block ref="0be9e25cd8d60b9e144eee6a96505a6b" category="inline-link-macro-rx"></block>を参照してください。</block>
+  <block id="ebadf555f1e9a9dab526a2d1f034d9d3" category="section-title">KV キャッシュ オフロードとは何ですか？</block>
+  <block id="973146aaa16c825adc157f05573e7c94" category="paragraph">ほとんどの推論エンジンは、デフォルトでKVキャッシュをGPUメモリに格納します。需要が増加するまでは、それで十分です。KVキャッシュのサイズは、バッチサイズ（同時に処理されるプロンプトの数）とシーケンス長（各会話または生成ストリームの長さ）に比例してスケールします。コンテキストウィンドウが拡大し、複数ターンのチャットが一般的になり、推論サービスを利用するユーザーやエージェントが増えるにつれて、KVキャッシュの要件は利用可能なGPUメモリをすぐに超えてしまう可能性があります。そうなると、有用なキャッシュエントリが削除されることが多く、エンジンは既に処理したトークンに対するアテンションを再計算する必要が生じます。</block>
+  <block id="aa4986b501bd688f21f49a9b599ee5c8" category="paragraph">KVキャッシュのオフロードは、以前に処理されたプロンプトのKVキャッシュを、GPUやアクセラレータのメモリ以外の外部ターゲット（システムRAM、ローカルディスク、共有ストレージなど）に移動することで、この制約に対処します。オフロードされたエントリは、容量が許す限り保持され、GPUメモリがいっぱいになったときに破棄されるのではなく、類似のプレフィックスまたは後続のリクエストが到着したときに再度参照されます。事実上、これらのオフロードターゲットはGPUメモリの階層型スワップ領域として機能します。VRAMよりも低速ですが、容量が大きく耐久性も高いため、繰り返しプリフィル処理を行うことなく、システムが維持できる会話コンテキストと同時ワークロードの量を拡張できます。</block>
+  <block id="9b51270f29d8d491bd8264f2c6c21881" category="section-title">共有ストレージ階層の重要性</block>
+  <block id="b9a69da2dd11c68c952f0dcfc76456b2" category="paragraph">KVキャッシュのオフロードは、単一の推論エンジンがGPUメモリの容量を超えてしまった場合に既に効果を発揮します。キャッシュブロックをCPUのRAMに移動することで、1台のサーバーの処理能力を拡張できます。これは有用ですが、本番環境における問題の一部しか解決しません。実際の推論プラットフォームは、単一のサービングエンジンインスタンスとして動作することはほとんどありません。これらはロードバランサーの背後で動作し、水平方向に拡張可能で、多数の同時ユーザーとエージェントに対応します。その世界では、共有ストレージこそがKVキャッシュをローカルな最適化からプラットフォーム機能へと変えるものです。</block>
+  <block id="cad3b3acbc558882633d3acf9acff28c" category="list-text">*共有ストレージにより、サービスインスタンス間での再利用が可能になります* 共有ストレージの主な利点の1つは、複数のインスタンスやノード間で同じファイルやオブジェクトにアクセスできることです。これは特に、ロードバランサーの背後に2つ以上のサービングエンジンインスタンスを大規模に配置し、それぞれがKVキャッシュブロックを同じ共有バケットまたはNASボリュームにオフロードするように構成した場合に当てはまります。例えば、あるインスタンスがプロンプトプレフィックスを処理して結果として得られるキャッシュブロックをオフロードすると、別のインスタンスは、同じプリフィル処理を再計算する代わりに、キャッシュ ヒット時にそれらのブロックをロードできます。これは重要な点です。なぜなら、本番環境のトラフィックは分散しており、ユーザーの最初の質問はインスタンスAに届き、その後の質問や同様のシステムプロンプトを持つ別のユーザーはインスタンスBに届く可能性があるからです。共有ストレージがない場合、各インスタンスは独自のプライベートキャッシュ環境を維持します。</block>
+  <block id="bff00ed44accd731ad9bcbe06404ce59" category="list-text">*CPUメモリだけではマルチインスタンス展開には不十分です* CPU層は高速ですが、各サービスエンジンプロセスにローカルです。ピアツーピアチャネルを実装しない限り、あるインスタンスが別のインスタンスのローカルCPU RAMにオフロードしたKVキャッシュエントリにアクセスすることはできません。ピアツーピアチャネルを実装すると、レイテンシが増加し、運用上の複雑さも増します。共有ストレージは、この障壁を取り除きます。CPU RAMは各ノード上の高速ステージング層として依然として価値がありますが、共有S3またはNASは、複数のエンジンが読み書きできる共通のメモリプレーンを提供します。もはやGPUを単独でスケーリングするのではなく、共有キャッシュインフラストラクチャを使用してスケーリングします。</block>
+  <block id="83355756f34b2b3712961650fbba0dd5" category="list-text">*3層設計戦略の実現* + 望ましいアーキテクチャは以下を組み合わせたものです：</block>
+  <block id="a651f55117c6c06d75f68d0bc9bf7aa9" category="list-text">*GPUメモリ* — 処理中のリクエスト用のアクティブキャッシュ。</block>
+  <block id="87624bfa2c2942ad90d49e66764055f2" category="list-text">*CPUメモリ* — プロンプトがキューに入ると、高速にステージングされます。</block>
+  <block id="a295182a82df7e293c5204736a367006" category="list-text">*共有ストレージ* — 耐久性があり、大容量で、共有可能なバッキングストア。</block>
+  <block id="ddf1b84c768abd7bdb43b7cc21d0e5eb" category="paragraph">このアーキテクチャでは、新しいリクエストが到着すると、KV キャッシュ ブロックを共有層から CPU メモリにステージングできるため、GPU はアクティブな処理に集中しつつ、ストレージ上に永続的なキャッシュを保持することができます。</block>
+  <block id="fb105146dfdb55d5eac586db7c647db3" category="list-text">*推論の経済性、速度だけではない* 生産の観点から見ると、共有ストレージの重要性はレイテンシだけではありません。これは、メモリ、並行処理、およびコストの制御に関するものです。vLLM のようなサービスエンジンは、1 つのノード内で KV キャッシュを効率的に管理します。LMCache のような KV キャッシュオフロードフレームワークは、KV キャッシュを CPU メモリとストレージ間で移動可能な、ポータブルで共有可能な資産へと変換します。NetApp ONTAP や StorageGRID などの共有ストレージプラットフォームは、複数のインスタンス間での共有を実用的にする耐久性のある階層を提供します。LMCache が共有ストレージに接続されている場合、複数の vLLM インスタンスが同じオフロードされた KV キャッシュエントリにアクセスできるため、同時実行数の増加に伴いスループットが向上し、冗長な計算が削減されます。これにより、チャットボット、検索アシスタント、エージェント、および複数ターンのスレッド、共有システムプロンプト、または繰り返し発生するコンテキストパターンを持つあらゆるワークロードに直接関連する、繰り返し行われるプリフィルによる GPU サイクルの無駄を削減できます。</block>
+  <block id="0cb29553326357d4febc31550a079f6f" category="list-text">*推論パフォーマンスとGPU投資を向上* + このベンチマークは、会話の長さと同時負荷の増加に伴う推論パフォーマンスを比較します。KV キャッシュが GPU メモリのみに保持されている場合、利用可能な余裕はすぐに枯渇し、スループットが低下します（オレンジ色の線）。3 層構造（アクティブな処理には GPU、高速なステージングには CPU、耐久性のある共有可能なキャッシュには共有ストレージ）を採用することで、このプラットフォームはより多くのセッションを維持し、同様の急激なパフォーマンス低下を回避します。実際には、階層化によって繰り返し行われるプリフィル計算を削減することで、同じ GPU からより多くの処理を引き出すことができます。</block>
+  <block id="c9f0c044d1183e65e4246f0f777c7db6" category="list-text">*簡単に言うと：*</block>
+  <block id="eeb3075f685913fb1407f09ee714c39d" category="list-text">*GPU tier* — 進行中のアクティブな処理を担当します。</block>
+  <block id="3e10c898f907924aec09c41348b73124" category="list-text">*CPU 層* — 最近使用したキャッシュをサービス エンジンの近くに保持します。</block>
+  <block id="f17ba9fdb01b32e3d50c758487f403cf" category="list-text">*共有ストレージ層* — サーバー間でキャッシュを保持し、新しいセッションのためにGPU/CPUメモリを解放します。</block>
+  <block id="075d15002b446d230bbfd25fe7e2322d" category="paragraph">図1 - マルチラウンド推論ベンチマーク</block>
+  <block id="5825789cd31d24d3059d65aa4f11dcc7" category="inline-image-macro">「複数ラウンド推論ベンチマーク」,600,600</block>
+  <block id="1155dabcdad7761383cd7482d80d5b62" category="paragraph"><block ref="1155dabcdad7761383cd7482d80d5b62" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="706f913754250657feddfb2e5ca44fee" category="paragraph">ベンチマークによると、CPUメモリに加えて共有ストレージを追加してもパフォーマンスは低下せず、スループットの低下が現れるまでの動作可能範囲が拡大します。階層化によって推論用のメモリ層が効果的に追加されるため、セッション数、コンテキスト長、または同時実行数が増加するたびにGPUを追加する必要性が軽減されます。</block>
+  <block id="58bf82627b0120cf87bee658164a52b0" category="list-text">*エンタープライズ向け：標準プロトコル、独自のクライアントなし* + 共有ストレージは重要ですが、すべての共有ストレージが同じように作られているわけではありません。NetAppは、業界標準のプロトコルとツールを使用したKVキャッシュオフロードをサポートします。</block>
+  <block id="d57f1c1d6c88b2692e8beb3b90bb189c" category="list-text">*StorageGRID S3*</block>
+  <block id="f7f9bda4e746c174a0f969fc0e6ba7fd" category="list-text">*ONTAP NAS 向け NFS / pNFS*</block>
+  <block id="9cf5968d0eabb0daabd63829bcc8a514" category="paragraph">カスタムの独自推論クライアントは不要です。運用チームは、他のデータサービスで既に運用しているストレージプロトコルをそのまま使用でき、使い慣れたデータ保護、セキュリティ、マルチクラウドモビリティを基盤として活用できます。</block>
+  <block id="649b8296efd641f3d1ae6536c48b14dc" category="section-title">KV キャッシュ オフロードの導入</block>
+  <block id="e940bf23336b83140883012978c2db8f" category="paragraph">共有ストレージはKVキャッシュの容量を拡張し、複数のサービスインスタンス間での再利用を可能にします。その層を本番環境で使用するには、推論エンジンとKVキャッシュオフロードフレームワークを設定する必要があります。以下のセクションでは、一般的なツールオプションを使用してこのスタックを実装する方法について説明します。</block>
+  <block id="4362ccfd0de3056e8ea8cb31919ab813" category="section-title">vLLM</block>
+  <block id="7f5c413b7f9bb4e8a5ca3cc94cb63520" category="paragraph">vLLM は人気のあるハイパフォーマンスなオープンソース LLM 推論エンジンです。このソリューションでは、エンジンがユーザーからのリクエストを受信し、レスポンスを生成し、推論中に GPU メモリ内の KV キャッシュを管理します。vLLM はプラグイン可能で、使用するオフロードフレームワークを選択できます。以下のセクションでは、一般的なオフロードフレームワークを使用して vLLM ベースのサービングスタックを実装する方法について説明します。</block>
+  <block id="50e5fd19192e07efffa41b13d43d0ebb" category="section-title">LMCache（インプロセスモード）</block>
+  <block id="0aec371732fb440700cdfe980ff61f6c" category="paragraph">LMCacheは、人気の高いオープンソースのKVキャッシュオフロードフレームワークです。このセクションでは、LMCacheを使用してKVキャッシュをオフロードするvLLMベースのサービングスタックを実装する方法について説明します。この実装では、LMCache は vLLM と連携して KV キャッシュを GPU メモリから CPU RAM、ローカルディスク、共有ストレージ （StorageGRID S3 または ONTAP NAS マウントなど）などのより大きな階層に移動します。</block>
+  <block id="5ab8afaf9a6af91ba4e01243fe6647a3" category="paragraph">デフォルト設定では、vLLMはKVキャッシュをGPUメモリのみに保持します。システム負荷が増加すると、それがボトルネックとなります。このソリューションでは、vLLMはLMCacheとペアになっており、vLLMがモデルを提供し、LMCacheはCPUと共有NetAppストレージ間でキャッシュをオフロードして再利用します。LMCacheはコネクタを介してvLLMに接続します。起動時にvLLMの--kv-transfer-configフラグを使用して有効にすると、vLLMとLMCacheはキャッシュをストレージに保存し、キャッシュ ヒット時にそれを再ロードします。</block>
+  <block id="e7b167f10d39c97dfbfd8b86719d8d02" category="paragraph">インプロセスモードは、vLLMでLMCacheを実行する本来の方法です。インプロセスモードを使用する場合、LMCacheはvLLMプロセス内で実行されます。LMCacheの後のバージョンではマルチプロセスモードが追加され、これは現在、より優れた機能サポートとパフォーマンスを実現するための推奨手法となっています。このセクションでは、現在のLMCacheドキュメントで非推奨とされているインプロセスモードについて説明します。新規導入の場合は、マルチプロセスモードの使用を検討してください。</block>
+  <block id="dfe96b550d192cc65dce163e9c99efa3" category="paragraph">このデプロイメントでは、以下の操作を行います。</block>
+  <block id="f5425487a0fb76199b434ffa6b562ec5" category="list-text">vLLMとLMCacheをインストールする</block>
+  <block id="4711c5ee9794e7a9a7fc598b2052dba7" category="list-text">LMCacheコネクタを有効にしてvLLMを起動する</block>
+  <block id="ab8233d16365100f0468e3f4d06ceb71" category="list-text">vLLMルーターの背後に、2つのvLLMインスタンス（それぞれ別のGPU上で動作）を配置し、両方のインスタンスが同じ共有ストレージバックエンドを使用する3層構成（GPU + CPU + 共有ストレージ）をデプロイします。</block>
+  <block id="6f5c94108224613702399110d9c88fda" category="list-text">Linux GPU サーバー（NVIDIA ドライバー（CUDA を含む）および少なくとも 1 つの GPU（完全な 2 インスタンス＋ルーター構成の場合は 2 つの GPU または複数のサーバー））</block>
+  <block id="725ab488055925b6e9ab3988424fb439" category="list-text">Pythonとuvがインストールされています</block>
+  <block id="a5e0c0f501b7d16633ca471a72d8f887" category="list-text">Docker と NVIDIA Container Toolkit がインストールされていること（手順 4 の vLLM ルーターに必要）</block>
+  <block id="e568117ce9440cdf58e23f65c74e158f" category="list-text">モデル（例：Hugging Face）をダウンロードし、ストレージエンドポイントに到達するためのネットワークアクセス</block>
+  <block id="2f4c064e6723dbf06ed74ac453743a76" category="section-title">StorageGRID S3バックエンド</block>
+  <block id="f8cff3918ca4f121b66711874eee2f41" category="list-text">KVキャッシュ用に作成されたS3バケット</block>
+  <block id="40171e37cd503923cadbe66fff09d21a" category="list-text">バケットの読み取り/書き込み認証情報</block>
+  <block id="b27cfc9ab2a78d09bcf4b435e24c12d7" category="list-text">GPUサーバーからS3エンドポイントへのネットワーク接続</block>
+  <block id="0b42884cebd12fc96d40e93da96dcba4" category="list-text">仮想ホスト型S3リクエストが有効</block>
+  <block id="7bf99048aa537879091eb575efc5351c" category="section-title">ONTAP pNFS/NFS バックエンド</block>
+  <block id="11ec8d0b9baea92eb53ba3b2c88a5352" category="list-text">ONTAP ボリュームが GPU サーバーにエクスポートされました</block>
+  <block id="35047239cd786ee33e6f769131d20918" category="list-text">vLLMを実行する*各*サーバー上にマウントパス（例：/mnt/kvcache）が作成されます。ハイパフォーマンス pNFS over RDMA (RoCE) のマウントコマンドの例：</block>
+  <block id="ca3a3d21bdf991335d3cb33e94313eae" category="section-title">1.vLLM と LMCache をインストールする</block>
+  <block id="f7a93d70ea56088d92447f73b063c8f1" category="inline-link-macro">インストール手順書</block>
+  <block id="22c64a0024b47d306390e82b597fe219" category="paragraph">仮想環境を作成し、vLLM と LMCache をインストールします。詳細については、LMCache <block ref="47f4de650deac02a8b3254d1be2c4feb" category="inline-link-macro-rx"></block> を参照してください。お客様の CUDA バージョンに応じた正しいインストールパスに従うことが非常に重要です。</block>
+  <block id="46e65b7ffabd9624608d37176b505384" category="paragraph">この時点で、推論エンジン（vLLM）とキャッシュ レイヤー（LMCache）が揃っています。</block>
+  <block id="0069509238d7435b807bf0a823cd2c34" category="section-title">2.LMCacheの設定</block>
+  <block id="2f66e37c88bb529a9281b576276b8097" category="paragraph">vLLMはそれ自体ではKVキャッシュのオフロードを行いません。LMCacheは、vLLMのKV転送コネクタを介して有効にします。CPUと共有ストレージ層の設定を定義するYAMLファイル（lmcache-config.yaml）を作成します。LMCacheは、vLLM推論の起動シーケンスの一部として、このYAMLファイルを読み込みます。</block>
+  <block id="b1807a8d66a32949dd6238faaad97416" category="section-title">サンプル スニペット：StorageGRID S3 共有ティア</block>
+  <block id="eba46e079501b83a11e3263894dc0d33" category="paragraph">注：バケット名、エンドポイント、認証情報、<block ref="ac8a7a1bfa69971af75ba35aef790859" prefix=" " category="inline-code"></block>をお客様の環境に合わせて置き換えてください。</block>
+  <block id="efe84dc7c1c74014a972410d9d72f7c7" category="section-title">サンプル スニペット：ONTAP pNFS/NAS 共有層</block>
+  <block id="b99235f52db366559ccc7234c23fc5df" category="paragraph">ステップ3の前に、サイトのNFS/pNFS手順を使用してONTAPエクスポートをマウントしてください。</block>
+  <block id="56de37710ec9b7ef0f4e3e3f55657220" category="section-title">3.vLLMインスタンスを2つ実行する（サーバー間でキャッシュを共有する）</block>
+  <block id="0116699812a32d1a3901dd0b5a587eb7" category="paragraph">両方のインスタンスで共通の環境変数を設定します：</block>
+  <block id="e8f09a8cc16b1e876beb177710b3fbc0" category="paragraph">*インスタンス 1* （GPU 0、ポート 8001）：</block>
+  <block id="55edf1cc9348f18864dd341a18e29b1c" category="paragraph">*インスタンス2*（GPU 1、ポート8002 — 別端末）：</block>
+  <block id="df5aea0191cb67de617d45d6010106fd" category="paragraph">同じ設定ファイルとハッシュシードを使用することで、両方のインスタンスがキャッシュブロックの識別情報を共有し、共有ストレージから互いのオフロードされたデータを読み取ることができます。両方のインスタンスで<block ref="dcbf16eb93f3fa65d284f83c0ea2ebe8" prefix=" " category="inline-code"></block>を設定してください。ルーターはこの値を<block ref="66949e536809f7c1586770fbcbbe16c0" prefix=" " category="inline-code"></block>として渡すことで、ルーティングされたリクエストがインスタンスによって受け入れられるようになります。</block>
+  <block id="a3d2c039981670e6ebb212de6c613029" category="paragraph">注：単一の GPU インスタンスを使用して、階層化ストレージ アーキテクチャを実装することもできます。その場合は、手順 4 をスキップしてください。</block>
+  <block id="9357a115fc3269394f696534b39a002d" category="section-title">4.vLLMルーター（単一エントリポイント）をデプロイする</block>
+  <block id="679d1fcf5b4f10193d5184d1909fddfc" category="paragraph">両方のインスタンスが正常に動作したら、クライアントが OpenAI 互換の単一の URL を使用するようにルーターをデプロイします。</block>
+  <block id="a46c85a3198f684b97156100bb4e4d45" category="paragraph">トラフィックを \http://localhost:8000/v1 に送信します。ルーターはリクエストを分散し、LMCache と共有ストレージにより、単一の GPU 内だけでなく、インスタンス間でキャッシュを再利用できます。</block>
+  <block id="cedd6919d3ad665b86c1bb6a7b1a2b74" category="paragraph">例えば、curl を使用してルーターにリクエストを送信するには、次のようにします（&lt;shared_api_key&gt; をそれぞれの API キーに置き換えてください）：</block>
+  <block id="f561717f81abe92f4528cc95535aa5b7" category="section-title">5.階層化が正しく機能していることを確認する</block>
+  <block id="ffad8f46bfb8ccf93fa9ba71281c6565" category="list-text">両方のvLLMプロセスは8001番ポートと8002番ポートで待機し、ルーターは8000番ポートで応答します。</block>
+  <block id="1b1c3389da68e03487f611548d164b2e" category="list-text">長いプレフィックスを付けたリクエストをルーター経由で送信します。</block>
+  <block id="eae448191e33585af7a97cd3e6c294df" category="list-text">オブジェクトまたはファイルが共有ストレージ（S3バケットまたは ls -ltr /mnt/kvcache）に表示されていることを確認します。</block>
+  <block id="7ca38662394a19a6cad6972387d39384" category="list-text">同様のリクエストを再度送信してください。2回目のリクエストでは、ログにプリフィルまたはキャッシュ ヒットの動作がより速く表示されるはずです。</block>
+  <block id="148e9c5944ddcb8f9e4aca6961bd5861" category="list-text">ルーター経由で再度処理を行い、トラフィックが別のインスタンスに到達するようにします。</block>
+  <block id="ad9a3bc80573e30d355ceade1a1a0df0" category="paragraph">階層化ストレージ アーキテクチャ（tiered KV cache architecture）を導入すると、KVキャッシュがGPUメモリからCPUメモリおよび共有NetAppストレージに移動するため、繰り返しのプリフィルでGPUサイクルを無駄にすることなく、ユーザー数やコンテキスト長に応じて推論を拡張できます。共有ストレージは、キャッシュを複数のサービング インスタンス間で再利用可能なインフラへと変え、既存のGPU投資からより多くの価値を引き出すのに役立ちます。</block>
+  <block id="f333cd9299f433a3c4b700d33c3c8aa9" category="paragraph">NetAppストレージは、このティアに最適です。なぜなら、S3およびNFS/pNFSを介した標準アクセス、複数のサービングエンジンインスタンスが同時に使用できる共有キャッシュ、そして耐久性、保護、ガバナンスのためにすでに利用しているエンタープライズデータサービスなど、本番環境の推論に必要な機能をすべて備えているからです。独自のクライアントは必要ありません。KVキャッシュオフロードフレームワークは、使い慣れたプロトコルを使用して StorageGRID S3 または ONTAP NAS マウントに接続します。</block>
+  <block id="76c31e105f288ff172a4369d68076253" category="paragraph">NetAppは、推論の実行方法やチームのデータ管理方法を変更することなく、KVキャッシュのオフロードに対応したなじみのあるストレージ基盤を提供します。</block>
 </blocks>
