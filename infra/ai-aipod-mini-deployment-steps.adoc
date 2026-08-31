@@ -200,7 +200,7 @@ kubeconfig: "<repository path>/deployment/inventory/<cluster-name>/artifacts/adm
 ----
 ansible-playbook playbooks/infrastructure.yaml --tags configure,install -i inventory/<cluster-name>/inventory.ini -e @inventory/<cluster-name>/config.yaml
 ----
-注：ノードにパスワードなしのsudoが設定されていない場合は、このコマンドに `--ask-become-pass`を追加する必要があります。 `--ask-become-pass`を使用する場合、各ノードでsshユーザーが同じパスワードを持つことが重要です。詳細については、 https://github.com/opea-project/Enterprise-RAG/blob/main/deployment/roles/infrastructure/netapp_trident_csi_setup/netapp_trident_integration.md["NetApp Trident CSI統合（エンタープライズRAG向け）"^]を参照してください。詳細については、 https://docs.netapp.com/us-en/trident/trident-get-started/kubernetes-deploy.html["Tridentインストール ドキュメント"^]を参照してください。
+注：ノードにパスワードなしのsudoが設定されていない場合は、このコマンドに `--ask-become-pass`を追加する必要があります。 `--ask-become-pass`を使用する場合、各ノードでsshユーザーが同じパスワードを持つことが重要です。- 詳細については、 https://github.com/opea-project/Enterprise-RAG/blob/main/deployment/roles/infrastructure/netapp_trident_csi_setup/netapp_trident_integration.md["NetApp Trident CSI統合（エンタープライズRAG向け）"^]を参照してください。詳細については、 https://docs.netapp.com/us-en/trident/trident-install/kubernetes-deploy-operator.html["Tridentインストール ドキュメント"^]を参照してください。
 
 
 

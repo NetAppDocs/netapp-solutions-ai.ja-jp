@@ -2,7 +2,7 @@
 sidebar: sidebar 
 permalink: data-analytics/spark-solutions-overview.html 
 keywords: fas, aff, e-series, cloud volumes ontap, nfs, direct access, snapmirror, paas, 
-summary: 'NetApp には、 FAS/ AFF、E シリーズ、 Cloud Volumes ONTAP の3 つのストレージ ポートフォリオがあります。当社では、Apache Spark を使用した Hadoop ソリューション向けに、 AFFおよび E シリーズをONTAPストレージ システムで検証しました。  NetAppが提供するデータ ファブリックは、データ アクセス、制御、保護、セキュリティのためのデータ管理サービスとアプリケーション (ビルディング ブロック) を統合します。' 
+summary: NetAppには3つのストレージポートフォリオがあります。FASおよびAFF、Eシリーズ、そしてCloud Volumes ONTAPです。Apache Sparkを使用したHadoopソリューション向けに、AFFおよびEシリーズとONTAPストレージシステムを検証しました。NetAppが提供するデータファブリックは、データへのアクセス、制御、保護、およびセキュリティのためのデータ管理サービスとアプリケーション（構成要素）を統合します。 
 ---
 = NetApp Spark ソリューションの概要
 :hardbreaks:

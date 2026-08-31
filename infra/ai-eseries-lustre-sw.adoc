@@ -1,0 +1,89 @@
+---
+sidebar: sidebar 
+permalink: infra/ai-eseries-lustre-sw.html 
+keywords: Lustre, NetApp E-Series, software, SANtricity, Rocky Linux, Pacemaker, Corosync, DOCA, Lustre client 
+summary: Lustre と NetApp Eシリーズストレージのデプロイに使用されるソフトウェアコンポーネントと Ansible 自動化を確認します。 
+---
+= Lustre と NetApp Eシリーズストレージ - ソフトウェアコンポーネント
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media/
+
+
+[role="lead"]
+NetApp Eシリーズストレージを使用してLustreをデプロイするソフトウェアスタックとAnsibleオートメーションを確認してください。サーバー、ストレージ、およびネットワークについては、link:ai-eseries-lustre-hw.html["ハードウェア コンポーネント"]を参照してください。
+
+
+
+[[building-block-software]]
+== ビルディングブロックソフトウェア
+
+以下の表は、EシリーズアレイおよびOSS/MDSサーバーノードで使用されるソフトウェアコンポーネントの一覧です。サポートされているバージョンとコンポーネントの組み合わせについては、link:https://imt.netapp.com/imt/#welcome["NetApp Interoperability Matrix Tool（IMT）"^]を信頼できる情報源として参照してください。*E-Series Lustre* を検索し、展開前にオペレーティングシステム、Lustre、SANtricity OS、DOCA-OFED、HCAファームウェア、およびHAパッケージのバージョンを確認してください。
+
+[cols="30%,70%"]
+|===
+| コンポーネント | 機能 
+
+
+| SANtricity OS | 各Eシリーズ アレイ上で動作し、SANtricity System Manager、デュアルアクティブ コントローラによる高可用性と自動I/Oパス フェイルオーバー、自動ロード バランシングとパス監視、ダイナミック ディスク プールと従来のRAID、自動ドライブ再構築、ミラーリング キャッシュ保護、データ保証、プロアクティブなドライブ正常性監視、オンラインでのソフトウェア、ファームウェア、および構成変更を提供します。 
+
+
+| Lustre | クライアントには単一のPOSIX準拠の名前空間を提供すると同時に、メタデータとファイルデータを複数のターゲットに分散させて並列アクセスを可能にします。管理サーバー（MGS）はファイルシステム構成を保存し、メタデータターゲット（MDT）は名前空間を管理し、オブジェクトストレージターゲット（OST）はEシリーズボリュームにファイルデータを保存します。この分離により、構成要素を追加することでパフォーマンスと容量を拡張できます。 
+
+
+| Red Hat Enterprise Linux (RHEL) または Rocky Linux | Lustreターゲットサービス、HAクラスタリング、ストレージおよびネットワーク接続のためのカーネル、システムサービス、およびパッケージフレームワークを提供します。サポートされているオペレーティングシステムのリポジトリには、Pacemaker、Corosync、フェンスエージェント、NVMe-oF、およびマルチパスのパッケージも含まれており、これらはソリューションスタックとしてまとめてテストされます。 
+
+
+| 高可用性クラスタサービス（Pacemaker、Corosync、およびフェンスエージェント） | これらのサービスを組み合わせることで、OSS/MDSサーバーノード全体にわたるLustreターゲットに対して、連携のとれた高可用性が実現されます。クラスタのメンバーシップとクォーラムを維持し、リソースを監視し、順序付けられたフェイルオーバーを調整し、応答しないノードを隔離してから、他の場所で共有ターゲットをアクティブ化します。この調整により、Eシリーズボリュームへのスプリットブレインアクセスを防止し、障害発生時にファイルシステムの整合性を保護します。 
+
+
+| NVIDIA DOCA-OFED | HCAドライバ、RDMAライブラリ、およびInfiniBandとRoCEファブリック向けの管理ユーティリティを提供します。同じソフトウェアスタックが、EシリーズアレイへのバックエンドNVMe-oFの低レイテンシアクセスと、LustreクライアントとのフロントエンドLNet通信の高スループットをサポートします。 
+|===
+NetAppは、Rocky Linux 9.8およびRed Hat Enterprise Linux 9.8用のLustreサーバーRPMパッケージ（ビルド済み）を提供しています。
+
+
+
+[[ansible-automation]]
+== Ansibleによる自動化
+
+Lustre と NetApp Eシリーズ ストレージは、Eシリーズ アレイおよび OSS/MDS サーバー ノードへの管理アクセスを持つコントロール ノードから Ansible オートメーションを使用して提供およびデプロイされます。Ansible インベントリは、アレイ、サーバー、ストレージ割り当て、ネットワーク インターフェイス、HA クラスタ リソースなど、目的のソリューションをモデル化します。
+
+NetApp EシリーズLustre Ansibleコレクションは、SANtricityおよびホストコレクションを使用してエンドツーエンド展開をオーケストレーションします。これらのコレクションを組み合わせることで、Eシリーズ ストレージのプロビジョニングとマッピング、サーバーオペレーティングシステムの準備、NVMe-oFおよびLNet接続の構成、Lustreターゲットのデプロイ、およびPacemakerリソースの作成が行われます。この自動化により、設定の再現性が向上し、既存のファイルシステムに構成要素を追加する作業が簡素化されます。
+
+以下の表は、Ansibleコントロールノードで使用される主要なソフトウェアパッケージをまとめたものです。現在のパッケージの依存関係については、link:https://github.com/NetApp/ansible-lustre["NetApp EシリーズLustre Ansibleコレクション"^]を参照してください。
+
+[cols="35%,65%"]
+|===
+| パッケージ | 依存または目的 
+
+
+| Python | Ansibleの実行環境と必要なPythonモジュールを提供します。 
+
+
+| ansible-core | Pythonが必要で、NetApp EシリーズのAnsibleコレクションを実行します。 
+
+
+| 追加のPythonパッケージ | `cryptography`、 `ipaddr`、 `netaddr`、 `passlib`、 `resolvelib`、 `jinja2`、および `pyyaml` 
+
+
+| NetApp EシリーズLustre Ansibleコレクション | Lustre、LNet、NVMe-oFホスト接続、およびPacemakerリソースを設定します。 
+
+
+| NetApp Eシリーズ SANtricity Ansible コレクション | SANtricity Web Services API を使用して、Eシリーズ アレイ、ストレージ プール、ボリューム、およびホスト マッピングを設定します。 
+
+
+| NetApp Eシリーズ ホスト Ansible コレクション | OSS/MDSサーバーノードをEシリーズアレイへのLNetおよびNVMe-oF接続用に準備します。 
+|===
+
+
+[[lustre-client-software]]
+== Lustreクライアントソフトウェア
+
+Lustreクライアントソフトウェアを使用すると、システムはフロントエンドのLNetファブリックを介して並列ファイルシステムにアクセスできます。各クライアントは、実行中のカーネルとサーバーにデプロイされているLustreリリースの両方と互換性のあるLustreカーネルモジュールとLustreクライアントユーティリティが必要です。
+
+link:https://wiki.whamcloud.com/display/PUB/Lustre+Support+Matrix["Lustre サポートマトリックス"^]を使用して、お使いのLustreバージョンに対応するクライアントオペレーティングシステムとカーネルを見つけてください。NetAppは、事前にビルドされたLustreクライアントパッケージを提供していません。link:https://github.com/NetApp/netapp-lustre["netapp-lustreリポジトリ"^]にあるNetApp提供のLustreソースコードから、クライアントオペレーティングシステムとカーネル用のクライアントパッケージをビルドしてください。Lustreクライアントパッケージがインストールされると、 `lustre_client`ロールはネットワークインターフェースとLNetを設定し、Lustreファイルシステムのためのpersistent systemdマウントユニットを作成できます。
+
+クライアントの展開手順については、link:ai-eseries-lustre-deploy.html["解決策をデプロイする"]を参照してください。

@@ -42,15 +42,15 @@ NetAppストレージは、ローカル SSD ストレージと同等以上のパ
 
 * NetAppオールフラッシュアレイ製品ページ
 +
-https://www.netapp.com/us/products/storage-systems/all-flash-array/aff-a-series.aspx["https://www.netapp.com/us/products/storage-systems/all-flash-array/aff-a-series.aspx"^]
+https://www.netapp.com/aff-a-series/["https://www.netapp.com/aff-a-series/"^]
 
 * NetApp AFF A400ページ
 +
-https://docs.netapp.com/us-en/ontap-systems/a400/index.html["https://docs.netapp.com/us-en/ontap-systems/a400/index.html"]
+https://docs.netapp.com/us-en/ontap-systems/a400/overview.html["https://docs.netapp.com/us-en/ontap-systems/a400/overview.html"^]
 
 * NetApp ONTAPデータ管理ソフトウェア製品ページ
 +
-http://www.netapp.com/us/products/data-management-software/ontap.aspx["http://www.netapp.com/us/products/data-management-software/ontap.aspx"^]
+https://www.netapp.com/ontap-data-management-software/["https://www.netapp.com/ontap-data-management-software/"^]
 
 * MLPerf
 +

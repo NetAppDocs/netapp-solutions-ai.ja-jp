@@ -121,7 +121,7 @@ ONTAPシステムマネージャの使用
 
 両方のクラスターにTridentをインストールします。
 
-🔗 https://docs.netapp.com/us-en/trident/trident-get-started/kubernetes-deploy.html["+++Tridentインストール ガイド+++"]
+🔗 https://docs.netapp.com/us-en/trident/trident-install/kubernetes-deploy-operator.html["+++Tridentインストール ガイド+++"]
 
 Tridentバックエンドを作成する
 

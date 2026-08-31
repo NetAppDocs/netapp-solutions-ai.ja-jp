@@ -1,0 +1,31 @@
+---
+sidebar: sidebar 
+permalink: infra/ai-eseries-lustre-intro.html 
+keywords: Lustre, NetApp E-Series, EF80, HPC, AI, parallel file system, NVMe-oF, high-performance storage 
+summary: Lustre と NetApp Eシリーズストレージは、NetApp Eシリーズオールフラッシュアレイを使用した再現可能なビルディングブロックアーキテクチャにより、AIおよびHPCワークロード向けに検証済みのスケーラブルな並列ファイルシステムを提供します。 
+---
+= Lustre と NetApp Eシリーズストレージ - 概要
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media/
+
+
+[role="lead"]
+Lustre と NetApp Eシリーズストレージは、HAサーバーペアとEシリーズオールフラッシュアレイの繰り返し可能な構成要素から構築された、AIおよびHPCワークロード向けの検証済み並列ファイルシステムソリューションです。
+
+
+
+[[solution-overview]]
+== ソリューションの概要
+
+Lustre と NetApp EシリーズストレージはオープンソースのLustre並列ファイルシステムと NetApp Eシリーズブロックストレージを組み合わせることで、データ集約型ワークロード向けのスケーラブルなハイパフォーマンス基盤を提供します。各ビルディングブロックは、高可用性（HA）用に構成された2つのOSS/MDSサーバーノードと2つのEシリーズ オールフラッシュアレイをペアにしています。バックエンドのNVMe-oF接続によりブロックI/Oがアレイに伝送され、別のLNetファブリックがクライアントとOSS/MDSサーバーノードを接続して並列ファイルシステムアクセスを実現します。
+
+基本構成要素は、管理サーバー（MGS）、初期メタデータターゲット（MDT）、およびオブジェクトストレージターゲット（OST）をホストします。追加の構成要素は、ベースとなるMGSに登録され、ワークロードの需要増加に応じてメタデータ容量、データ容量、および総スループットを拡張します。
+
+次の図は、複数のビルディングブロックとLustreクライアントがLNet経由で接続されたデプロイメントの例を示しています。
+
+.Lustre と NetApp Eシリーズストレージソリューションの概要
+image:eseries-lustre-overview-diagram.png["Lustre と NetApp Eシリーズストレージソリューションの概要（構成要素とクライアントを含む）"]

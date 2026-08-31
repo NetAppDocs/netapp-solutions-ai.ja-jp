@@ -1,0 +1,282 @@
+---
+sidebar: sidebar 
+permalink: infra/ai-eseries-lustre-hw.html 
+keywords: Lustre, NetApp E-Series, EF80, hardware, servers, storage, network, NVMe-oF, BYOS 
+summary: NetApp Eシリーズ ストレージを使用したLustreのサーバー、Eシリーズ アレイ、ストレージ レイアウト、およびネットワーク要件を確認します。 
+---
+= Lustre と NetApp Eシリーズストレージ - ハードウェアコンポーネント
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media/
+
+
+[role="lead"]
+サーバー、NetApp Eシリーズ アレイ、ストレージ レイアウト、およびネットワークのハードウェア要件は、NetApp Eシリーズ ストレージを使用して Lustre のサイズ設定と注文を行う際にご使用ください。ソフトウェア コンポーネントについては、link:ai-eseries-lustre-sw.html["ソフトウェアコンポーネント"]を参照してください。
+
+
+
+[[server-requirements]]
+== サーバー要件
+
+このソリューションは、BYOS（Bring Your Own Server：サーバー持ち込み）モデルを採用しています。各構成要素には、以下の仕様を満たすか、それを上回る2つのOSS/MDSサーバーノードが必要です。
+
+
+
+[[node-specifications]]
+=== ノード仕様
+
+以下の表は、OSS/MDSノードごとの最小サーバー要件を示しています。
+
+|===
+| コンポーネント | 要件 
+
+
+| 数量 | ビルディングブロックごとに2つのノード 
+
+
+| CPU | AMD EPYCまたはIntel Xeon、32コア以上 
+
+
+| メモリ | 256 GB DDR5（最小） 
+
+
+| ネットワークHCA | 6つのデュアルポート200Gb HCA（<<platform-connectivity,HCA接続>>を参照） 
+
+
+| PCIeスロット | 2× PCIe Gen5 x16 および 4× PCIe Gen5 x8 （<<pcie-slots,PCIeスロットの要件>> を参照） 
+
+
+| ブートドライブ | RAID 1構成のドライブ2台（ソフトウェアRAIDまたはハードウェアRAIDを推奨） 
+|===
+NetAppは、Lenovo ThinkSystem SR665 V3サーバーを使用してソリューションを検証しました。これらの要件を満たす場合、他社製の同等サーバーもサポート対象となります。
+
+
+
+[[hca-connectivity]]
+[[platform-connectivity]]
+=== HCA接続
+
+以下の表は、OSS/MDSサーバーノードごとのHCA、LNetフロントエンドポート、およびNVMe-oFパスの要件を示しています。
+
+|===
+| ノードあたりのHCA数 | LustreノードあたりのLNetポート数 | LustreノードあたりのNVMe-oFパス数 | HCAの例 
+
+
+| 6（12ポート） | 4 | 合計8個（各アレイに4個ずつ） | MCX755106AS-HEAT（デュアルポート200Gb PCIe gen5カード） 
+|===
+NetApp は、EF80ストレージ アレイの帯域幅を最大化するために、ノードあたり6台のHCAを推奨します。
+
+
+
+[[pcie-slot-requirements]]
+[[pcie-slots]]
+=== PCIeスロットの要件
+
+EF80ビルディングブロック内の各OSS/MDSサーバーノードには、6つのデュアルポートHCAが搭載されています。内訳は、LNet用が2つ、NVMe-oF用が4つです。スロット幅は各HCAで使用可能な帯域幅を決定するため、カード単体の幅ではなく、各スロットとライザーの電気的幅を確認してください。Gen5 x8スロットにGen5 x16カードを挿入すると、x8で動作します。
+
+* *LNet HCAs:* フロントエンドのスループットを最大限に引き出すには、PCIe Gen5 x16 スロットにインストールしてください。
+* *NVMe-oF HCAs:* PCIe Gen5 x8 または PCIe Gen5 x16 スロットに取り付けます。
+* *NUMAバランス：* HCAを2つのNUMAゾーンに均等に分割し、各ゾーンに2つのLNetインターフェースと4つのNVMe-oFインターフェースを配置します。
+
+
+以下の表は、EF80ビルディングブロック内の各OSS/MDSサーバーノードに必要な最小スロット数を示しています。
+
+|===
+| トラフィックタイプ | ノードあたりのHCA数 | 最小スロット幅 | NUMAゾーンごとのスロット数 
+
+
+| LNet | 2 | PCIe Gen5 x16 | 1 
+
+
+| NVMe-oF | 4 | PCIe Gen5 x8 | 2 
+|===
+オプションとして、デュアルポートHCAのポートを分割し、一方のポートでLNetトラフィックを、もう一方のポートでNVMe-oFトラフィックを伝送するように設定できます。これら4つのHCAをすべてPCIe Gen5 x16スロットに取り付けて、すべてのLNetポートがフルスループットに達するようにします。その後、残りのNVMe-oFポート用に、さらに2つのHCAをGen5 x8またはGen5 x16スロットに追加します。
+
+.Lenovo ThinkSystem SR665 V3 のライザー構成例
+[%collapsible]
+====
+以下の2つのライザーの組み合わせはどちらも、EF80ビルディングブロックのスロット要件を満たしています。
+
+*最小スロット幅*
+
+ライザー位置1と2にBPQUライザーを取り付けてください。各BPQUライザーには、PCIe Gen5 x16スロットが1つとPCIe Gen5 x8スロットが2つ搭載されています。これらのライザーを組み合わせることで、LNet用のGen5 x16スロットが2つ、NVMe-oF用のGen5 x8スロットが4つ提供され、これらはNUMAゾーン間で均等に分配されます。
+
+image:eseries-lustre-sr665v3-bpqu-6hca-layout.png["Lenovo ThinkSystem SR665 V3の背面図。BPQUライザーが位置1と2に配置されており、NUMAゾーンごとに1つのPCIe Gen5 x16スロットと2つのPCIe Gen5 x8スロットが示されています。"]
+
+*すべてのGen5 x16スロット*
+
+ライザー位置1と2にはBPQVライザーを、ライザー位置3にはBLL9ライザーを取り付けてください。各BPQVライザーには、2つのPCIe Gen5 x16スロットが搭載されています。BLL9ライザーは、NUMAゾーン0にスロット7、NUMAゾーン1にスロット8（いずれもPCIe Gen5 x16）を提供します。この組み合わせにより、NUMAゾーンごとに3つずつ、合計6つのGen5 x16スロットが提供され、同じHCAのポート間でLNetとNVMe-oFのトラフィックを分割することをサポートします。
+
+image:eseries-lustre-sr665v3-bpqv-6hca-layout.png["レノボ ThinkSystem SR665 V3の背面図。位置1と2にBPQVライザー、位置3にBLL9ライザーが配置され、2つのNUMAゾーンにバランスよく配置された6つのPCIe Gen5 x16スロットが確認できます。"]
+
+====
+
+
+[[ef80-standard-building-block]]
+== EF80標準ビルディングブロック
+
+EF80は、このソリューションリリースにおいて検証済みの標準プラットフォームです。
+
+
+
+[[array-specifications]]
+=== アレイ仕様
+
+以下の表は、EF80アレイの構成要素（2つのアレイ）の仕様を示しています。
+
+|===
+| コンポーネント | 仕様詳細 
+
+
+| モデル | NetApp EF80 
+
+
+| フォーム ファクタ | 2Uベースシャーシ、24個の内部NVMe SSDスロット 
+
+
+| コントローラ | デュアルコントローラー（AとB） 
+
+
+| システムの | アレイあたり24× NVMe SSD 
+
+
+| 入出力接続 | 検証済みのLustre設計では、アレイあたり8× 200Gb NVMe/IBまたはNVMe/RoCEホストポート 
+|===
+EF80プラットフォームは、各コントローラに2ポートのホストI/Oモジュールを3つ搭載した場合、アレイあたり最大12個のホストポートをサポートします。検証済みのLustre設計では、スロット1と2にホストI/Oモジュールを使用し、アレイあたり8つのホストポートを提供します。
+
+各EF80アレイは、コントローラ間のミラーリングのために専用のスロット4 I/Oモジュールも使用します。コントローラAのポート4aをコントローラBのポート4aに、コントローラAのポート4bをコントローラBのポート4bに接続してください。これらの接続はキャッシュミラーリングとI/O転送を提供するものであり、ホストのNVMe-oFトラフィックには使用されません。参照してくださいlink:https://docs.netapp.com/us-en/e-series/install-hw-ef50-ef80/install-cable.html#step-1-cable-the-inter-controller-mirroring-connections["EF50とEF80のコントローラ間ミラーリング接続ケーブルを接続する"^]。
+
+EFシリーズの全モデルの詳細仕様については、link:https://www.netapp.com/pdf.html?item=/media/14036-ds-4082.pdf["NetApp EFシリーズ オールフラッシュ アレイ データシート"^]を参照してください。
+
+
+
+[[drive-layout-24-drives-per-array]]
+=== ドライブ構成（アレイあたり24台のドライブ）
+
+基本ビルディングブロック内の各EF80アレイは、24個のNVMeドライブスロットすべてを使用します。
+
+* MGS/MDTストレージ用のRAID 1構成のドライブ4台（共有ボリュームグループまたはDDP割り当て）
+* OSTストレージ用にRAID 6構成のドライブ10台（最初のOSTプール）
+* OSTストレージ用（セカンドOSTプール）にRAID 6構成のドライブ10台を使用
+
+
+このストレージ レイアウトは、3.84 TB、7.68 TB、または 15.3 TB のドライブを従来のボリュームグループで使用する場合に適用されます。30.7 TB または 61.4 TB の Capacity Flash （QLC） ドライブを使用する場合は、24 台のドライブすべてにわたって単一のダイナミック ディスク プールをプロビジョニングし、プール内に MGS および MDT ボリューム用の RAID 1 ボリュームを作成し、OST にはデフォルトの RAID 6 ボリュームを使用します。
+
+
+NOTE: 1.92 TBのドライブは、現時点ではこのソリューションには推奨されていません。上記に記載されている、検証済みのドライブ容量のいずれかを使用してください。
+
+image:eseries-lustre-ef80-driveslots.png["Lustre ストレージ レイアウト（EF80 アレイあたり 24 台の NVMe ドライブ）"]
+
+
+
+[[volume-and-target-counts-base-building-block]]
+=== ボリュームとターゲットカウント（基本構成要素）
+
+以下の表は、基本構成要素ごとのMGS、MDT、およびOSTの数を示しています。
+
+|===
+| 対象タイプ | BB1個あたりのカウント | RAID / プール | Notes 
+
+
+| MGS | 1 | RAID 1 | 基本構成要素のみ；アレイ1 
+
+
+| MDT | 8 | RAID 1 | 配列あたり4個 
+
+
+| OST | 32 | RAID 6 (TLC) または DDP (QLC) | アレイあたり16 
+|===
+Ansibleインベントリを作成する際の出発点として、以下のボリュームサイズ設定ガイドラインを使用してください。
+
+|===
+| Volume | 推奨サイズ | Notes 
+
+
+| MGS | 5～10 GiB | 設定データのみ 
+
+
+| MDT | RAID 1容量 ÷ MDT数 | それぞれ約1～2 TiB（標準値） 
+
+
+| OST | RAID 6またはDDP容量÷プールあたりのOST数 | ドライブ容量に応じてスケーリングします。link:ai-eseries-lustre-sizing.html["サイズガイド"]を参照してください。 
+|===
+
+
+[[primary-building-block-volume-distribution]]
+=== プライマリビルディングブロックのボリューム分散
+
+次の図は、基本EF80ビルディングブロックにおけるOSS/MDSサーバーノードおよびEシリーズアレイ全体にわたるLustreターゲットの推奨配置とNVMe-oF接続を示しています。図では、管理ターゲットを *MGT*（管理ターゲット）と表記しています。1つのMGTは、このドキュメントの別の箇所で参照されているMGS（管理サーバー）サービスをホストします。
+
+.基本構成要素の目標分布（EF80）
+image:eseries-lustre-target-distribution.png["OSS/MDSサーバーノードおよびEシリーズアレイ全体にわたるLustreターゲットの分散とNVMe-oFパス（基本EF80ビルディングブロック内）"]
+
+以下の表は、ボリュームが2つのアレイ間でどのように分散されているか、および各ターゲットがどちらのサーバーを優先するかを示しています。
+
+[cols="1,1,1,1,1,2"]
+|===
+| 対象タイプ | アレイ1 | アレイ2 | サーバー1 | サーバー2 | Notes 
+
+
+| MGS | 1 | 0 | 1 | 0 | 基本ビルディングブロックのみ 
+
+
+| MDT | 4 | 4 | 4 | 4 | 各サーバーは、各アレイから2つのMDTを優先的に選択します。 
+
+
+| OST | 16 | 16 | 16 | 16 | RAID 6プールあたり8 × アレイあたり2プール、または同等のDDP割り当て 
+
+
+| *総ボリューム数* | *21* | *20* | *21* | *20* |  
+|===
+
+
+[[storage-pool-selection-tlc-vs-qlc]]
+== ストレージプールの選択：TLC vs QLC
+
+アレイ内のNVMeドライブ容量に基づいてEシリーズのプールタイプを選択してください：
+
+* *3.84 TB、7.68 TB、および 15.3 TB ドライブ：* OST ボリュームには *RAID 6 ボリュームグループ* を、MGS および MDT ボリュームには *RAID 1 ボリュームグループ* を使用するか、共有ドライブプールには DDP を使用します。
+* *30.7 TB および 61.4 TB 容量のフラッシュ (QLC) ドライブ：* *ダイナミック ディスク プール (DDP)* のみを使用してください。MGS および MDT ストレージ用に、DDP 内に RAID 1 ボリュームを作成します。DDP から OST ストレージ用の RAID 6 ボリュームを作成します。
+
+
+ドライブのサイズとレイアウト別の構築ブロックごとの使用可能容量の見積もりについては、link:ai-eseries-lustre-sizing.html["サイズガイド"]を参照してください。
+
+
+
+[[network-requirements]]
+== ネットワーク要件
+
+
+
+[[backend-nvme-of]]
+=== バックエンド（NVMe-oF）
+
+* NVMe/InfiniBandまたは各OSS/MDSノードと各EシリーズアレイとのNVMe/RoCE
+* NVMe/RoCE バックエンド インターフェイス上の MTU 9000 （通常）
+* 各Lustreノードからストレージアレイへの8つのパス（各アレイへ4つ）
+* EF80は、ノードごとに6つのHCAを使用します（NVMe-oFの場合はi2、i3、i5、i6、LNetの場合はi1、i4）。ノードAを、ラベルの末尾が `a`であるコントローラポートにケーブル接続します（例： `1a`や `2a`）。ノードBを、ラベルの末尾が `b`であるコントローラポートにケーブル接続します（例： `1b`や `2b`）。link:ai-eseries-lustre-deploy-hardware.html["EF80 6 HCAバックエンドケーブル接続"]を参照してください。
+
+
+
+
+[[frontend-lnet]]
+=== フロントエンド（LNet）
+
+* LNet の IPoIB または RoCE (`@o2ib` ネットワークタイプ）
+* RoCEフロントエンドインターフェースのMTU 9000（標準）
+* フロントエンドポートが4つ利用可能な場合（EF80：i1およびi4 HCA、両方のポート）、マルチレールLNetの使用を推奨します。
+* 専用のInfiniBandまたはRoCEスイッチファブリックで、OSS/MDSサーバーノードとLustreクライアントを接続
+* RoCEファブリックではロスレスRoCE（PFC）を推奨します
+
+
+
+
+[[management]]
+=== 管理
+
+* サーバーBMCおよびアレイ管理ポート用の帯域外管理ネットワーク
+* 専用のCorosyncネットワークまたは共有フロントエンドファブリック（サイトによって異なる）
+

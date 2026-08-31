@@ -1,0 +1,74 @@
+---
+sidebar: sidebar 
+permalink: infra/ai-eseries-lustre-deploy.html 
+keywords: Lustre, NetApp E-Series, EF80, deployment, Ansible, NVMe-oF 
+summary: NetApp Ansible自動化を使用してNetApp EシリーズストレージでLustreをデプロイするには、ワークフローに従ってください。 
+---
+= NetApp EシリーズストレージでLustreをデプロイする
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media/
+
+
+[role="lead"]
+Lustre を NetApp Eシリーズストレージとともにデプロイするには、ハードウェア、環境準備、インベントリ、Ansible デプロイ、および検証の各タスクを順番に完了してください。
+
+
+
+[[prerequisites]]
+== 前提条件
+
+デプロイを開始する前に、以下の点を確認してください。
+
+* link:ai-eseries-lustre-sizing.html["サイズガイド"]のサイジングとビルディングブロックのガイダンスに従い、link:ai-eseries-lustre-hw.html["ハードウェア コンポーネント"]に一致するハードウェアを選択しました。
+* サーバー、HCA、Eシリーズ、オペレーティングシステム、Lustre、SANtricity OS、およびDOCA-OFEDの組み合わせが、link:https://imt.netapp.com/imt/#welcome["NetApp Interoperability Matrix Tool"^]の *E-Series Lustre* に記載されていることを確認しました。
+* 計画されているビルディングブロック用のすべてのOSS/MDSサーバーノードとEシリーズアレイは現場に到着しており、ラックに取り付ける準備ができています。
+* サーバーBMC、アレイ管理ポート、およびAnsibleコントロールノードとして機能するホストの資格情報とネットワーク アクセスがあります。
+
+
+
+NOTE: NetAppは、link:https://github.com/NetApp/ansible-lustre/tree/release/1.0.0["NetApp EシリーズLustre Ansibleコレクション"^]を使用したLustre HAクラスターとLustreクライアントのデプロイをサポートします。Lustreターゲット、LNet、NVMe-oFホスト接続、またはPacemakerリソースを手動で設定しないでください。
+
+
+
+[[deployment-workflow]]
+== 導入ワークフロー
+
+以下のタスクを順番に完了してください。
+
+. link:ai-eseries-lustre-deploy-hardware.html["Lustre ハードウェアのラックとケーブル接続"]。
++
+LustreサーバーとEF80アレイをラックに設置し、バックエンドのNVMe-oFファブリックとフロントエンドのLNetファブリックをケーブルで接続します。
+
+. link:ai-eseries-lustre-deploy-prepare.html["Lustreのデプロイ環境を準備する"]。
++
+アレイとサーバーを設定した後、コントロールノードに Ansible とその依存関係をインストールします。
+
+. link:ai-eseries-lustre-deploy-inventory.html["Lustre Ansibleインベントリをカスタマイズする"]。
++
+サイトの構成に使用するテンプレートを選択し、サーバー、アレイ、ネットワーク、ビルディングブロック、および認証情報を入力します。
+
+. link:ai-eseries-lustre-deploy-cluster.html["Lustre HAクラスタとクライアントをデプロイする"]。
++
+サーバーオペレーティングシステムを準備し、NVIDIA DOCA-OFEDをインストールし、メインのデプロイメントプレイブックを実行して、Lustreクライアントを設定します。
+
+. link:ai-eseries-lustre-deploy-verify.html["Lustreのデプロイメントを検証および拡張する"]。
++
+本番環境で使用する前に、クラスターの状態、マウントポイント、および容量を確認してください。ファイルシステムに新たな構成要素が必要になった場合は、既存のインベントリを拡張します。
+
+
+
+
+
+[[related-information]]
+== 関連情報
+
+* link:https://github.com/NetApp/ansible-lustre/tree/release/1.0.0["NetApp EシリーズLustre Ansibleコレクション"^]
+* link:https://github.com/NetApp/netapp-lustre/tree/master["NetApp Lustre ソースリポジトリ"^]
+* link:https://github.com/NetApp/ansible-lustre/blob/release/1.0.0/roles/lustre/docs/ha_user_guide.md["HA管理ユーザーガイド"^]
+* link:https://github.com/NetApp/ansible-lustre/blob/release/1.0.0/roles/lustre/docs/performance_tuning.md["パフォーマンスチューニングガイド"^]
+* link:https://github.com/NetApp/ansible-lustre/tree/release/1.0.0/getting_started/lustre_deployment_template/clients["Lustreクライアント展開テンプレート"^]
+

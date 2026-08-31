@@ -33,6 +33,35 @@ entries:
 - title: Eシリーズストレージを搭載したNetApp上のBeeGFS
   pdf-filename: Eシリーズストレージを搭載したNetApp上のBeeGFS
   url: "/infra/ai-eseries-beegfs.html"
+- title: Lustre と NetApp Eシリーズ ストレージ
+  pdf-filename: Lustre と NetApp Eシリーズ ストレージ
+  entries:
+  - title: はじめに
+    url: "/infra/ai-eseries-lustre-intro.html"
+  - title: ソリューションアーキテクチャ
+    url: "/infra/ai-eseries-lustre-architecture.html"
+  - title: ハードウェア コンポーネント
+    url: "/infra/ai-eseries-lustre-hw.html"
+  - title: ソフトウェアコンポーネント
+    url: "/infra/ai-eseries-lustre-sw.html"
+  - title: サイズガイド
+    url: "/infra/ai-eseries-lustre-sizing.html"
+  - title: 解決策をデプロイする
+    entries:
+    - title: 導入ワークフロー
+      url: "/infra/ai-eseries-lustre-deploy.html"
+    - title: ラックおよびケーブル用ハードウェア
+      url: "/infra/ai-eseries-lustre-deploy-hardware.html"
+    - title: デプロイ環境を準備する
+      url: "/infra/ai-eseries-lustre-deploy-prepare.html"
+    - title: Ansibleインベントリをカスタマイズする
+      url: "/infra/ai-eseries-lustre-deploy-inventory.html"
+    - title: HAクラスタとクライアントをデプロイする
+      url: "/infra/ai-eseries-lustre-deploy-cluster.html"
+    - title: 展開状況を確認し、拡張する
+      url: "/infra/ai-eseries-lustre-deploy-verify.html"
+  - title: 関連リソース
+    url: "/infra/ai-eseries-lustre-resources.html"
 - title: EシリーズストレージでIBM Spectrum Scaleを導入
   pdf-filename: EシリーズストレージでIBM Spectrum Scaleを導入
   url: "/infra/ai-eseries-spectrumscale.html"

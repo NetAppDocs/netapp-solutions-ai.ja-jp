@@ -1,0 +1,61 @@
+---
+sidebar: sidebar 
+permalink: infra/ai-eseries-lustre-deploy-verify.html 
+keywords: Lustre, NetApp E-Series, deployment verification, Pacemaker, scaling 
+summary: Lustreクラスタの健全性、マウント状態、容量を確認し、追加の構成要素を使用してファイルシステムを拡張します。 
+---
+= Lustreデプロイメントの検証と拡張
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media/
+
+
+[role="lead"]
+本番環境で使用する前に、クラスターの状態、Lustreマウント、ファイルシステムの容量を確認し、必要に応じて同じインベントリを使用して構成要素を追加してください。
+
+
+
+[[verify-the-deployment]]
+== デプロイメントを確認する
+
+.手順
+. Lustreサーバーから、すべてのPacemakerリソースが想定されるノードで起動していることを確認します。
++
+[source, cli]
+----
+pcs status
+----
+. Lustreクライアントから、Lustreファイルシステムがマウントされていることを確認します。
++
+[source, cli]
+----
+mount -t lustre
+----
+. Lustreクライアントから、ファイルシステムの容量と、MDTおよびOSTターゲットが表示されていることを確認します。
++
+[source, cli]
+----
+lfs df -h
+----
+
+
+IOR、mdtest、fio を使用したパフォーマンス検証については、link:ai-eseries-lustre-sizing.html["サイズガイド"]を参照してください。
+
+制御されたターゲット移行または HA フェイルオーバー テストについては、link:https://github.com/NetApp/ansible-lustre/blob/release/1.0.0/roles/lustre/docs/ha_user_guide.md["HA管理ユーザーガイド"^]の手順に従ってください。
+
+
+
+[[expand-the-file-system]]
+== ファイルシステムを拡張する
+
+容量やメタデータのパフォーマンスを向上させるには、既存のインベントリにビルディングブロックを追加して拡張します。新しいビルディングブロック用に別のインベントリを作成しないでください。プレイブックは、固有のMDTおよびOSTインデックスを自動的に割り当て、既存のMGSに対して新しいターゲットを登録します。
+
+.手順
+. 新しいビルディングブロックホスト、アレイ、リソースグループ（MDT+OSTまたはOSTのみ）を同じインベントリに追加し、 `host_vars`および `group_vars`ファイルは元のデプロイで使用したものを使用します。
+. 更新されたインベントリに対して、メインのデプロイメントプレイブックを再実行します。
+
+
+スケーリングルールについてはlink:ai-eseries-lustre-architecture.html["ソリューションアーキテクチャ"]を、各構成要素タイプをいつ追加するかについてのガイダンスはlink:ai-eseries-lustre-sizing.html["サイズガイド"]を参照してください。

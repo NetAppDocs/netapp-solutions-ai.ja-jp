@@ -1,0 +1,107 @@
+---
+sidebar: sidebar 
+permalink: infra/ai-eseries-lustre-deploy-prepare.html 
+keywords: Lustre, NetApp E-Series, Ansible control node, EF80, deployment 
+summary: EF80アレイ、Lustreサーバー、およびAnsibleコントロールノードをデプロイ用に準備します。 
+---
+= Lustreのデプロイメント環境を準備する
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media/
+
+
+[role="lead"]
+各 EF80 アレイと Lustre サーバーの管理アクセスおよび基本設定を構成し、ソリューションをデプロイするための Ansible コントロールノードを準備します。
+
+
+
+[[prepare-e-series-arrays]]
+== Eシリーズアレイの準備
+
+.手順
+. 各コントローラーの管理インターフェイスを設定し、SANtricity System Manager に到達できることを確認します。
+. Ansibleインベントリで使用するアレイ名と管理者認証情報を設定します。
+. アレイが最適な状態であり、すべてのドライブが存在し、正しくレポートされていることを確認してください。
+
+
+管理接続の設定方法については、link:https://docs.netapp.com/us-en/e-series/["Eシリーズのマニュアル"^]を参照してください。
+
+
+
+[[prepare-lustre-servers]]
+== Lustreサーバーを準備する
+
+.手順
+. 各サーバーのベースボード管理コントローラー（BMC）を帯域外アクセス用に設定し、UEFI システム設定を最大パフォーマンスになるように設定します。
+. サポートされているオペレーティングシステム（RHELまたはRocky Linux）をインストールし、ホスト名と管理ネットワークポートを設定します。
+. *E-Series Lustre* ソリューションの要件を満たすように、すべてのファームウェアおよびソフトウェアパッケージを準備します。要件については、link:ai-eseries-lustre-sw.html["ソフトウェアコンポーネント"]を参照してください。
+
+
+
+
+[[prepare-the-ansible-control-node]]
+== Ansibleコントロールノードを準備する
+
+すべての Lustre サーバーと E シリーズアレイへの管理ネットワーク アクセスを持つ仮想または物理 Linux システムを、Ansible コントロールノードとして指定します。
+
+以下の手順はUbuntu 24.04を使用します。別の Linux ディストリビューションの手順については、link:https://docs.ansible.com/ansible/latest/installation_guide/intro_installation.html["Ansibleのインストールに関するドキュメント"^]を参照してください。
+
+.手順
+. Python、pip、およびPython仮想環境パッケージをインストールします。
++
+[source, console]
+----
+sudo apt-get install python3 python3-pip python3-setuptools python3-venv
+----
+. Python仮想環境を作成してアクティブ化する：
++
+[source, console]
+----
+python3 -m venv ~/pyenv
+source ~/pyenv/bin/activate
+----
+. 有効化された仮想環境にAnsibleと必要なPythonパッケージをインストールします：
++
+[source, console]
+----
+pip install "ansible-core>=2.19" cryptography jinja2 ipaddr netaddr \
+  passlib pyyaml resolvelib
+----
+. NetApp EシリーズLustre Ansibleコレクションをインストールします。コレクションのインストールでは、SANtricityおよびHostコレクションを含む依存コレクションもインストールされます：
++
+[source, console]
+----
+ansible-galaxy collection install netapp_eseries.lustre
+----
+. インストールされている Ansible、Python、およびコレクションのバージョンを確認します。
++
+[source, console]
+----
+ansible --version
+python3 --version
+ansible-galaxy collection list netapp_eseries.lustre
+----
+. コントロールノードから各LustreサーバーへのパスワードなしSSH接続を設定します。 `<ip_or_hostname>`をサーバーの管理IPアドレスまたはホスト名に置き換えます。
++
+[source, console]
+----
+ssh-keygen
+ssh-copy-id <ip_or_hostname>
+----
++
+各Lustreサーバーについて、同じ手順を繰り返します `ssh-copy-id`。
+
+
+
+
+NOTE: EシリーズアレイへのパスワードレスSSHを設定しないでください。Ansibleは、インベントリで定義された認証情報を使用して、SANtricity Web Services APIを介してアレイを管理します。
+
+
+
+[[after-you-finish]]
+== 終了後の操作
+
+link:ai-eseries-lustre-deploy-inventory.html["Ansibleインベントリをカスタマイズする"]。

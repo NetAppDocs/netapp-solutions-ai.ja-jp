@@ -1,0 +1,49 @@
+---
+sidebar: sidebar 
+permalink: infra/ai-eseries-lustre-resources.html 
+keywords: Lustre, NetApp E-Series, EF80, documentation, references, Ansible 
+summary: NetApp Eシリーズストレージを使用したLustreの関連ドキュメント、ツール、およびソフトウェアをご確認ください。 
+---
+= Lustre と NetApp Eシリーズストレージ - 関連リソース
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media/
+
+
+[role="lead"]
+Lustre と NetApp Eシリーズストレージのデプロイメントをプランまたは拡張する際は、関連するドキュメント、ツール、ソフトウェアについて、これらのリンクを使用してください。サイジングとデプロイの手順については、link:ai-eseries-lustre-sizing.html["サイズガイド"] および link:ai-eseries-lustre-deploy.html["解決策をデプロイする"] を参照してください。
+
+
+
+[[netapp-resources]]
+== NetAppのリソース
+
+* link:https://imt.netapp.com/imt/#welcome["NetApp Interoperability Matrix Tool"^]。*E-Series Lustre* を検索します。
+* link:https://www.netapp.com/pdf.html?item=/media/14036-ds-4082.pdf["NetApp EFシリーズ オールフラッシュ アレイ データシート"^]
+* link:https://docs.netapp.com/us-en/e-series-santricity/["NetApp SANtricity System Manager ドキュメント"^]
+* link:https://github.com/NetApp/ansible-lustre/tree/release/1.0.0["NetApp ansible-lustreコレクション"^]。インベントリフィールドのガイダンスについては、link:ai-eseries-lustre-deploy-inventory.html["Lustre Ansibleインベントリをカスタマイズする"]を参照してください。
+* link:https://github.com/NetApp/netapp-lustre/tree/master["NetApp Lustre ソースリポジトリ"^]。NetAppは、Rocky Linux 9.8およびRed Hat Enterprise Linux 9.8用のLustreサーバーRPMパッケージ（ビルド済み）を提供します。NetAppソースから、クライアントオペレーティングシステムとカーネル用のLustreクライアントパッケージをビルドします。
+
+
+
+
+[[lustre-community]]
+== Lustreコミュニティ
+
+* link:https://www.lustre.org/["Lustreファイルシステム"^]
+* link:https://wiki.whamcloud.com/display/PUB/Lustre+Support+Matrix["Lustre サポートマトリックス"^]クライアントオペレーティングシステムおよびカーネル向け
+* link:https://wiki.lustre.org/Lustre_Tuning["Lustre Wiki：Lustreチューニング"^]
+
+
+
+
+[[related-netapp-ai-infrastructure-solutions]]
+== 関連する NetApp AI インフラストラクチャソリューション
+
+* link:ai-eseries-beegfs.html["Eシリーズストレージを搭載したNetApp上のBeeGFS"]
+* link:ai-eseries-spectrumscale.html["NetApp Eシリーズストレージを使用したIBM Spectrum Scaleのデプロイ"]
+* link:ai-eseries-superpod.html["NVIDIA DGX SuperPODとNetApp EFシリーズ"]
+

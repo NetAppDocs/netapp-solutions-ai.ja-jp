@@ -1,0 +1,150 @@
+---
+sidebar: sidebar 
+permalink: infra/ai-eseries-lustre-deploy-cluster.html 
+keywords: Lustre, NetApp E-Series, Ansible, DOCA-OFED, Lustre client 
+summary: NetApp Ansible プレイブックを使用して、Lustre HA クラスターとクライアントをデプロイします。 
+---
+= Lustre HAクラスタとクライアントをデプロイする
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media/
+:client-tmpl: https://github.com/NetApp/ansible-lustre/blob/release/1.0.0/getting_started/lustre_deployment_template/clients/ROCE_lustre_cluster_clients
+
+
+[role="lead"]
+サーバーオペレーティングシステムを準備し、NVIDIA DOCA-OFEDをインストールし、Lustre HAクラスタをデプロイし、NetApp Ansibleプレイブックを使用してLustreクライアントを設定します。
+
+始める前に、link:ai-eseries-lustre-deploy-inventory.html["Lustre Ansibleインベントリをカスタマイズする"]に記載されているインベントリを完成させて保管してください。
+
+
+
+[[deploy-the-lustre-ha-cluster]]
+== Lustre HA クラスターをデプロイする
+
+.手順
+. 作業コピーの `building_blocks/playbooks`ディレクトリから、Lustreサーバー上のオペレーティングシステムを準備します。 `<inventory_path>`をカスタマイズしたインベントリディレクトリへのパスに置き換えます。
++
+[source, console]
+----
+ansible-playbook -i <inventory_path>/lustre_inventory.yml deploy_lustre_os/deploy_lustre_os_playbook.yml
+----
+. 各 Lustre サーバーに NVIDIA DOCA-OFED をインストールします。前の手順でインストールしたカーネルに対して、カーネルモジュールをビルドします。カーネルの手順については、link:https://networking-docs.nvidia.com/doca/archive/3-2-3/doca-host-installation-and-upgrade#id-(3.2.3-Jun_Oct25LTSU3)DOCA-HostInstallationandUpgrade-DOCAExtraPackageanddoca-kernel-support["NVIDIA DOCA-Hostのインストールとアップグレード"^] を参照してください。以下の例は、RHEL または Rocky Linux への DOCA-OFED のインストール方法を示しています。
++
+.. DOCAホストリポジトリパッケージをインストールし、パッケージキャッシュを更新してください。 `<doca_host_package>`をお使いのオペレーティングシステムとアーキテクチャに対応したDOCAホストパッケージに置き換えてください。
++
+[source, console]
+----
+dnf install -y wget tar
+wget https://www.mellanox.com/downloads/DOCA/<doca_host_package>.rpm
+rpm -i <doca_host_package>.rpm
+dnf clean all
+dnf makecache
+----
+.. 実行中のカーネル向けにDOCAカーネルモジュールをビルドします。このスクリプトは、作成したパッケージのパスを出力します。
++
+[source, console]
+----
+dnf install -y doca-extra
+/opt/mellanox/doca/tools/doca-kernel-support
+----
+.. スクリプトが作成したカーネルモジュールリポジトリパッケージをインストールし、パッケージキャッシュを更新します。 `<doca_kernel_repo>`を前の手順のパスに置き換えます：
++
+[source, console]
+----
+rpm -Uvh <doca_kernel_repo>.rpm
+dnf makecache
+----
+.. DOCA-OFEDのユーザー空間、カーネル、およびNVMeパッケージをインストールします。 `<kernel_version>`を実行中のカーネルバージョンに置き換えます：
++
+[source, console]
+----
+dnf install -y doca-ofed-userspace
+dnf install -y --disablerepo=doca doca-kernel-<kernel_version>
+dnf install -y kmod-mlnx-nvme
+----
+
+
+. メインのデプロイメントプレイブックを実行します。
++
+[source, console]
+----
+ansible-playbook -i <inventory_path>/lustre_inventory.yml lustre_playbook.yml
+----
++
+
+NOTE: デプロイメントの規模に応じてAnsibleが並行して設定するホスト数を制御するには、 `--forks`を調整します。たとえば、大規模なクラスタの場合は `--forks 20`を追加します。
+
+
+
+プレイブックは、Eシリーズのボリュームグループまたは DDP プールとボリュームをプロビジョニングし、NVMe-oF ホスト接続を設定し、Lustre ターゲットのフォーマットとマウントを行い、LNet を設定し、パフォーマンスチューニングを適用し、Pacemaker HA リソースを設定します。
+
+
+NOTE: 1つの構成要素からなるデプロイメントは、2ノードクラスタのPacemakerクラスタを形成します。フェイルオーバーが発生した場合、ノードAには追加の投票権が与えられます。2ノードクラスタで定足数を達成するには、qdeviceの設定を検討してください。デプロイメントに複数の構成要素が含まれる場合、各構成要素は、文書化されたクラスタの上限まで、より大きなPacemakerクラスタに2ノードのサーバーペアを提供します。フェンスとクォーラムの構成をlink:https://github.com/NetApp/ansible-lustre/blob/release/1.0.0/roles/lustre/docs/ha_user_guide.md["HA管理ユーザーガイド"^]で確認し、ノード障害発生時にクラスタがターゲットを安全に復旧できるようにしてください。
+
+
+
+[[deploy-lustre-clients]]
+== Lustreクライアントをデプロイする
+
+ファイルシステムへのアクセスが必要なシステムであれば、クライアント展開テンプレートをカスタマイズし、クライアントプレイブックを実行することで、Lustreクライアントをあらゆるシステムに展開できます。
+
+.手順
+. 互換性のあるクライアントオペレーティングシステムとカーネルをlink:https://wiki.whamcloud.com/display/PUB/Lustre+Support+Matrix["Lustre サポートマトリックス"^]から選択してください。そのカーネル用のLustreクライアントパッケージが未インストールの場合は、link:https://github.com/NetApp/netapp-lustre["netapp-lustre"^]からビルドしてインストールしてください。
+.  `clients`テンプレートディレクトリ（共有 `passwords.yml`ファイルを含む）の作業コピーを作成し、ファブリックに合ったテンプレートを選択してください。
++
+** *InfiniBand：* link:https://github.com/NetApp/ansible-lustre/tree/release/1.0.0/getting_started/lustre_deployment_template/clients/IB_lustre_cluster_clients["IB_lustre_cluster_clients"^]
+** *RoCE：* link:https://github.com/NetApp/ansible-lustre/tree/release/1.0.0/getting_started/lustre_deployment_template/clients/ROCE_lustre_cluster_clients["ROCE_lustre_cluster_clients"^]
+
+
+. クライアント用に `lustre_client_inventory.yml`、 `host_vars`、および `group_vars`をカスタマイズします。表中の行参照は、 `ansible-lustre` `release/1.0.0`タグ内のRoCEクライアントテンプレートファイルを指します。InfiniBandクライアントテンプレートは、特に明記されていない限り、同じ変数を使用します。
++
+[cols="2,3,4,2,4"]
+|===
+| フィールド | Ansible変数 | テンプレートファイル(`release/1.0.0`） | Scope | Notes 
+
+
+| クライアントホスト | `lustre_clients` | link:https://github.com/NetApp/ansible-lustre/blob/release/1.0.0/getting_started/lustre_deployment_template/clients/ROCE_lustre_cluster_clients/lustre_client_inventory.yml#L4["lustre_client_inventory.yml#L4"^] | クライアントごと | 各クライアントのホスト名を一覧表示してください。 
+
+
+| クライアント SSH ユーザーと become パスワード | `ssh_client_user` / `ssh_client_become_pass` | link:https://github.com/NetApp/ansible-lustre/blob/release/1.0.0/getting_started/lustre_deployment_template/clients/passwords.yml#L2["passwords.yml#L2"^] | クラスター全体 | SSH ユーザーが `root`でない場合にのみ、become パスワードを設定してください。 
+
+
+| LNetインターフェース | `eseries_lustre_lnet` | link:https://github.com/NetApp/ansible-lustre/blob/release/1.0.0/getting_started/lustre_deployment_template/clients/ROCE_lustre_cluster_clients/group_vars/all.yml#L7["group_vars/all.yml#L7"^] | クラスター全体 | クライアント側のLNetインターフェース名（L13の値）。 
+
+
+| MGS NIDsをマウント | `lustre_client_mounts.mgsnode` | link:https://github.com/NetApp/ansible-lustre/blob/release/1.0.0/getting_started/lustre_deployment_template/clients/ROCE_lustre_cluster_clients/group_vars/all.yml#L17["group_vars/all.yml#L17"^] | クラスター全体 | ファイルシステムをマウントするために使用されるMGS NID（L20の値）。 
+
+
+| ファイルシステム名 | `lustre_client_mounts.fsname` | link:https://github.com/NetApp/ansible-lustre/blob/release/1.0.0/getting_started/lustre_deployment_template/clients/ROCE_lustre_cluster_clients/group_vars/all.yml#L21["group_vars/all.yml#L21"^] | クラスター全体 | クラスターと一致する必要があります `fsname`。 
+
+
+| マウント ポイント | `lustre_client_mounts.mount_point` | link:https://github.com/NetApp/ansible-lustre/blob/release/1.0.0/getting_started/lustre_deployment_template/clients/ROCE_lustre_cluster_clients/group_vars/all.yml#L22["group_vars/all.yml#L22"^] | クラスター全体 | クライアントのマウントディレクトリ。 
+
+
+| クライアント管理IP | `ansible_host` | link:https://github.com/NetApp/ansible-lustre/blob/release/1.0.0/getting_started/lustre_deployment_template/clients/ROCE_lustre_cluster_clients/host_vars/client_01.yml#L4["host_vars/client_01.yml#L4"^] | クライアントごとに繰り返す | クライアントごとに1つ `host_vars/client_NN.yml`のファイル。 
+
+
+| ストレージ ファブリック インターフェース | `eseries_roce_interfaces` | link:https://github.com/NetApp/ansible-lustre/blob/release/1.0.0/getting_started/lustre_deployment_template/clients/ROCE_lustre_cluster_clients/host_vars/client_01.yml#L10["host_vars/client_01.yml#L10"^] | クライアントごとに繰り返す | フロントエンドインターフェースのアドレス（L15の値）。InfiniBand テンプレートはここで `eseries_ipoib_interfaces`を使用します。 
+|===
++
+各クライアントの設定を繰り返してください。クライアントごとに `host_vars/client_NN.yml`ファイルを1つ作成し、対応するホストを `lustre_client_inventory.yml`に追加してください。共有 `clients/passwords.yml`ファイルに必要な情報を入力し、クライアントプレイブックを実行する前にAnsible Vaultで暗号化してください。
+
+. クライアントテンプレートディレクトリからクライアントプレイブックを実行します。
++
+[source, console]
+----
+ansible-playbook -i lustre_client_inventory.yml lustre_client_playbook.yml
+----
+
+
+クライアントプレイブックは、クライアントのネットワークインターフェースとLNetを設定し、Lustreファイルシステム用の永続的なsystemdマウントユニットを作成できます。
+
+
+
+[[after-you-finish]]
+== 終了後の操作
+
+link:ai-eseries-lustre-deploy-verify.html["デプロイメントを確認する"]。

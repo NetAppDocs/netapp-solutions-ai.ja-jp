@@ -4,8 +4,6 @@
   <block id="7a206e7f1f7bd7df4f649256e750768b" category="doc">NetApp のエキスパートによる AI ソリューションのブログを読む</block>
   <block id="683be49e9105a56d06431bcdc1630cb6" category="paragraph">業界のトレンド、イノベーション、現実世界への影響、開発者リソース、コミュニティの洞察、 NetApp AI ソリューションを活用するための実用的なツールを紹介する AI/ML ブログをお読みください。</block>
   <block id="5bbe94ba0a14c52be3cc9534b43f4713" category="paragraph-title">AIのトレンドと業界の洞察</block>
-  <block id="78463a384a5aa4fad5fa73e2f506ecfc" category="inline-link-macro">英語</block>
-  <block id="69501f595c5bd3cdb17ea63c90291622" category="paragraph">さまざまな分野にわたる業界のトレンド、イノベーション、現実世界の AI の影響を探ります。<block ref="3b277c3e8740f32e48fe9dd888ed34aa" category="inline-link-macro-rx"></block> &amp;f:@facet_soultion_mktg=[AI、アナリティクス、人工知能]++[ NetAppでAIブログを読む^]</block>
   <block id="d5769d364696d52f17c7b56bd51573f8" category="paragraph-title">開発者リソースとコミュニティ</block>
   <block id="bb765a119d53333b43f301b6a00a388a" category="inline-link-macro">PubでAIブログを読む</block>
   <block id="43c273574ee7233878bcc9fc0bd893c9" category="paragraph">AI/ML 実践者向けの技術的な洞察、実用的なツール、コミュニティ主導のコンテンツ。<block ref="f89e2ffa35ae5933259a8ae6e49a69ad" category="inline-link-macro-rx"></block></block>
@@ -198,8 +196,6 @@
   <block id="7a431daf3a478d96ed5ffc10a4056228" category="paragraph">FSx ONTAP (Amazon FSx ONTAP) は AWS ストレージサービスです。これには、 NetApp ONTAPシステム上で実行されるファイルシステムと、それに接続する AWS 管理のシステム仮想マシン (SVM) が含まれます。提供された図では、AWS によって管理されるNetApp ONTAPサーバーは VPC の外部に配置されています。  SVM は SageMaker とNetApp ONTAPシステム間の仲介役として機能し、SageMaker から操作要求を受信して、基盤となるストレージに転送します。 FSx ONTAPにアクセスするには、SageMaker を FSx ONTAPデプロイメントと同じ VPC 内に配置する必要があります。この構成により、SageMaker と FSx ONTAP間の通信とデータ アクセスが保証されます。</block>
   <block id="f8aacfa5c683858912c498f517c9b457" category="section-title">データ アクセス</block>
   <block id="70385d02db6379c01d4b7b17101f2004" category="paragraph">実際のシナリオでは、データ サイエンティストは通常、FSx ONTAPに保存されている既存のデータを活用して機械学習モデルを構築します。ただし、デモンストレーションの目的では、FSx ONTAPファイル システムは作成後最初は空であるため、トレーニング データを手動でアップロードする必要があります。これは、FSx ONTAP をボリュームとして SageMaker にマウントすることで実現できます。ファイルシステムが正常にマウントされると、マウントされた場所にデータセットをアップロードして、SageMaker 環境内でモデルをトレーニングするためにアクセスできるようになります。このアプローチにより、モデルの開発とトレーニングに SageMaker を使用しながら、FSx ONTAPのストレージ容量と機能を活用できます。</block>
-  <block id="23ea498668d1fa717fb7cfb600bf3238" category="inline-link-macro">パート 1 - Amazon FSx for NetApp ONTAP (FSx ONTAP) をプライベート S3 バケットとして AWS SageMaker に統合する</block>
-  <block id="95d89db7f4a106e280e1c30cde658610" category="paragraph">データ読み取りプロセスでは、FSx ONTAP をプライベート S3 バケットとして構成する必要があります。詳細な設定手順については、以下を参照してください。<block ref="8e7379c67a0724b1a49308a7ae6ac3d5" category="inline-link-macro-rx"></block></block>
   <block id="30eaeebc8f9611f55e018d1dd51789ba" category="section-title">統合の概要</block>
   <block id="7ffc912d31a398685c5667622bb5ed7f" category="inline-image-macro">トレーニングワークフロー</block>
   <block id="29e5f040e75c8e4e628e90efc594e3ef" category="paragraph"><block ref="29e5f040e75c8e4e628e90efc594e3ef" category="inline-image-macro-rx" type="image"></block></block>
@@ -315,7 +311,6 @@
   <block id="090e55ccd8633a454f9d471ca3ed004d" category="list-text">クラウド管理者とアーキテクトは、ハイブリッド クラウド リソースをセットアップおよび管理できる必要があります。</block>
   <block id="3cb782c6019ddcbb4e7f6bf8ae154d40" category="list-text">ビジネス ユーザーは、分析、AI、ML、DL アプリケーションにアクセスしたいと考えています。</block>
   <block id="3dfd24951a51ec1661b0294f59bea86e" category="paragraph">この技術レポートでは、 NetApp AFF、E シリーズ、 StorageGRID、NFS ダイレクト アクセス、Apache Spark、Horovod、Keras が、これらのそれぞれの役割にどのように役立ち、ビジネスに価値をもたらすかについて説明します。</block>
-  <block id="49c9a66d1f76b5f264fea5d54130b82a" category="summary">TeraGen ベンチマーク ツールの TeraSort および TeraValidate スクリプトを使用して、E5760、E5724、およびAFF-A800 構成での Spark パフォーマンス検証を測定しました。さらに、Spark NLP パイプラインと TensorFlow 分散トレーニング、Horovod 分散トレーニング、DeepFM による CTR 予測のための Keras を使用したマルチワーカー ディープラーニングという 3 つの主要なユース ケースがテストされました。</block>
   <block id="41be8de44faa8ba43210d7494ee095d2" category="doc">テスト結果</block>
   <block id="60637296d8b6dcd84aaff3afc778241d" category="paragraph">TeraGen ベンチマーク ツールの TeraSort および TeraValidate スクリプトを使用して、E5760、E5724、およびAFF-A800 構成での Spark パフォーマンス検証を測定しました。さらに、Spark NLP パイプラインと TensorFlow 分散トレーニング、Horovod 分散トレーニング、DeepFM による CTR 予測のための Keras を使用したマルチワーカー ディープラーニングという 3 つの主要なユース ケースがテストされました。</block>
   <block id="653a9ba51c0af0c11aab6af3ecfdc8c6" category="paragraph">E シリーズとStorageGRID の両方の検証では、Hadoop レプリケーション ファクター 2 を使用しました。  AFF検証では、1 つのデータ ソースのみを使用しました。</block>
@@ -2177,7 +2172,6 @@
   <block id="cfb5f1c014066f18d7979fa1d35a934d" category="paragraph">次の 3 つの Python スクリプトは、テストされた 3 つの主要なユース ケースに対応しています。まず<block ref="b01d528ada3b5a6e0e9094642b727562" prefix=" " category="inline-code"></block>。</block>
   <block id="d3abf6f12cafa2cc1b795b31cd547c75" category="paragraph">2番目のスクリプトは<block ref="b502aa50c7ae6d7ea7adaf15de40ffe5" prefix=" " category="inline-code"></block>。</block>
   <block id="6e9120b39f924b2eed528e3bcdd009ac" category="paragraph">3番目のスクリプトは<block ref="5e1386bf4aaea9725a3cc5bc8e2bc9f4" prefix=" " category="inline-code"></block>。</block>
-  <block id="90f0f970ed32524c528ba2778079d485" category="summary">NetApp には、 FAS/ AFF、E シリーズ、 Cloud Volumes ONTAP の3 つのストレージ ポートフォリオがあります。当社では、Apache Spark を使用した Hadoop ソリューション向けに、 AFFおよび E シリーズをONTAPストレージ システムで検証しました。  NetAppが提供するデータ ファブリックは、データ アクセス、制御、保護、セキュリティのためのデータ管理サービスとアプリケーション (ビルディング ブロック) を統合します。</block>
   <block id="12a9f57585cd6b3b985dd451bf552845" category="doc">NetApp Spark ソリューションの概要</block>
   <block id="c7516072fbed3396e6f4c39a5f2356a6" category="paragraph">NetApp には、 FAS/ AFF、E シリーズ、 Cloud Volumes ONTAP の3 つのストレージ ポートフォリオがあります。当社では、Apache Spark を使用した Hadoop ソリューション向けに、 AFFおよび E シリーズをONTAPストレージ システムで検証しました。</block>
   <block id="710b54a5dd637d8e21574c4fb3eea545" category="inline-image-macro">データ ファブリックは、データ管理サービスとアプリケーションを提供します。</block>
@@ -3246,7 +3240,6 @@
   <block id="3a4a320ee019614122e99baebf056b86" category="list-text">ローカルストレージを使用した単一サーバーAI推論</block>
   <block id="adf25fe660bba733a104887732393fdd" category="list-text">ネットワークストレージを使用した単一サーバーAI推論</block>
   <block id="34e4c32e4097a70208139be85d5dc892" category="list-text">ネットワークストレージを使用したマルチサーバーAI推論</block>
-  <block id="8708911de20cfce9bafb315fd0cde0a2" category="summary">提案されたアーキテクチャのパフォーマンスを評価するために、多数のテストが実行されました。  6 つの異なるワークロード (画像分類、オブジェクト検出 [小]、オブジェクト検出 [大]、医療用画像処理、音声テキスト変換、自然言語処理 [NLP]) があり、オフライン、単一ストリーム、マルチストリームの 3 つの異なるシナリオで実行できます。</block>
   <block id="3274a50ba9f0d3c0adefdfa11c5094be" category="doc">テスト結果</block>
   <block id="a274daca2deace9b89099b24f248715c" category="paragraph">提案されたアーキテクチャのパフォーマンスを評価するために、多数のテストが実行されました。</block>
   <block id="37bf74d7f686cd395d40af1cc2ed7c55" category="paragraph">6 つの異なるワークロード (画像分類、オブジェクト検出 [小]、オブジェクト検出 [大]、医療用画像処理、音声テキスト変換、自然言語処理 [NLP]) があり、オフライン、単一ストリーム、マルチストリームの 3 つの異なるシナリオで実行できます。</block>
@@ -3394,14 +3387,8 @@
   <block id="2ea563f362255807faae7242f06c9881" category="list-text">Karthikeyan Nagalingam 氏、 NetAppテクニカル マーケティング エンジニア</block>
   <block id="cccf21ceeae034a9e54b62eb00d9b6b3" category="list-text">Jarrett Upton、Lenovo AI Lab Systems 管理者</block>
   <block id="fdc944d7a0de8d8e3dfff03c6a0e03c6" category="list-text">NetAppオールフラッシュアレイ製品ページ</block>
-  <block id="d875955d78b62e4aff0847425410f79a" category="inline-link"><block ref="d875955d78b62e4aff0847425410f79a" category="inline-link-rx"></block></block>
-  <block id="45f6f9585c85146b389a4f896653a5f9" category="paragraph"><block ref="45f6f9585c85146b389a4f896653a5f9" category="inline-link-rx"></block></block>
   <block id="ec5282877903d9d2aceb3db45b21da54" category="list-text">NetApp AFF A400ページ</block>
-  <block id="1f84bc4168c48270f2cc931b900d9eb4" category="inline-link"><block ref="1f84bc4168c48270f2cc931b900d9eb4" category="inline-link-rx"></block></block>
-  <block id="04438df627d0343d17b2f6f307b489ed" category="paragraph"><block ref="04438df627d0343d17b2f6f307b489ed" category="inline-link-rx"></block></block>
   <block id="9d92155996555576a58d20e697fc2bd6" category="list-text">NetApp ONTAPデータ管理ソフトウェア製品ページ</block>
-  <block id="dae4be95628a9cc8cb5ecb4b90cd738e" category="inline-link"><block ref="dae4be95628a9cc8cb5ecb4b90cd738e" category="inline-link-rx"></block></block>
-  <block id="2f08744b4a39af375744e1fc4a15b53a" category="paragraph"><block ref="2f08744b4a39af375744e1fc4a15b53a" category="inline-link-rx"></block></block>
   <block id="45913847e0b47b72b60766711f7a8c21" category="inline-link"><block ref="45913847e0b47b72b60766711f7a8c21" category="inline-link-rx"></block></block>
   <block id="229469a202dbd3052c7b165bd55eda87" category="paragraph"><block ref="229469a202dbd3052c7b165bd55eda87" category="inline-link-rx"></block></block>
   <block id="dedba6b3261804ab1e5c2b75051c62ac" category="list-text">NVIDIA SMI (nvidia-smi)</block>
@@ -4178,7 +4165,6 @@
   <block id="217af7d1776d22530d98be04d104fd49" category="cell">23.07</block>
   <block id="db5eb84117d06047c97c9a0191b5fffe" category="section-title">サポート</block>
   <block id="b2e75bbfb9933bc21b7f875e8676641d" category="inline-link-macro">ネットアップに連絡</block>
-  <block id="952c6ea6549ebf347f6aae3d6b029756" category="paragraph">NetApp は、Apache Airflow、JupyterHub、MLflow、Kubeflow、Kubernetes に対するエンタープライズ サポートを提供していません。完全にサポートされたMLOpsプラットフォームにご興味がございましたら、<block ref="15a32e54137b30751a17b6bf2b412f99" category="inline-link-macro-rx"></block> NetApp がパートナーと共同で提供する、完全にサポートされた MLOps ソリューションについて説明します。</block>
   <block id="6999319a5a39a9ca41436977f2cb8b8d" category="summary">NetAppによるオープンソース MLOps - テクノロジー概要</block>
   <block id="4c9ffff73cd2c66ec9f6be3cb2b21333" category="paragraph">このセクションでは、 NetAppを使用した OpenSource MLOps のテクノロジの概要に焦点を当てます。</block>
   <block id="5cd2adc9e2a5254e4c1da803519f298b" category="section-title">人工知能</block>
@@ -5401,7 +5387,6 @@
   <block id="6eac7b0a5cfc938d19f189c4a925ae85" category="section-title">_ステップ2: Trident を構成する_</block>
   <block id="56c52a0dabd55220d0a00db845f7eb1f" category="paragraph">両方のクラスターにTridentをインストールします。</block>
   <block id="45d2098b426afc9ab859375c1adbe887" category="inline-link">+++Tridentインストール ガイド+++</block>
-  <block id="d250649bce56841bd7a8ae7e4a825154" category="paragraph">🔗 <block ref="d4fe2bbcee5aa3fc712cc2604ddb189d" category="inline-link-rx"></block></block>
   <block id="ce18e85a5244ef1099f883c207b32d36" category="paragraph">Tridentバックエンドを作成する</block>
   <block id="1d505b9bfd6afef0b98758bef1cef23c" category="paragraph">401 Unauthorized エラーが発生した場合は、 ONTAPユーザーに十分な API 権限があり、正しいユーザー名 (vsadmin) とパスワードが使用されていることを確認してください。</block>
   <block id="e5250cf37b377ddb3586661f3e7bdc3e" category="paragraph">ストレージクラスの定義</block>
@@ -5551,7 +5536,6 @@
   <block id="b360c8c43818ee701c2c04aea42cd62a" category="section-title">7.K8sクラスタをデプロイする（Tridentを使用）</block>
   <block id="0e2e4419e3eb7aa754e49ee968cd9405" category="paragraph">クラスタと Trident CSI をデプロイするために、configure タグと install タグを指定した ansible-playbook playbooks/infrastructure.yaml を実行します。</block>
   <block id="41ea2d03e0d611507cffcee378f6559a" category="inline-link">NetApp Trident CSI統合（エンタープライズRAG向け）</block>
-  <block id="6a1fa30ffb46efef37952483ac8b77d0" category="paragraph">注：ノードにパスワードなしのsudoが設定されていない場合は、このコマンドに<block ref="13d87b4892426ec19bdc58a4643d3104" prefix=" " category="inline-code"></block>を追加する必要があります。<block ref="13d87b4892426ec19bdc58a4643d3104" prefix=" " category="inline-code"></block>を使用する場合、各ノードでsshユーザーが同じパスワードを持つことが重要です。詳細については、<block ref="df44a473c05d78f41c72a7649c842643" category="inline-link-rx"></block>を参照してください。詳細については、<block ref="0fa543c14587a20e022922b0d6d40500" category="inline-link-rx"></block>を参照してください。</block>
   <block id="6ea33c0cef6e57544b8e10c644b762af" category="section-title">8.iwatchオープン記述子の数を変更する</block>
   <block id="8b594829fa102007d7fb98eb374b87bd" category="inline-link">iwatchオープンディスクリプタ</block>
   <block id="0b90ae516b9c9e0b43fab8d0faccdace" category="paragraph">詳細については、<block ref="7175b82763deb794c2905a8612fbe6de" category="inline-link-rx"></block>を参照してください。</block>
@@ -5779,4 +5763,626 @@
   <block id="ad9a3bc80573e30d355ceade1a1a0df0" category="paragraph">階層化ストレージ アーキテクチャ（tiered KV cache architecture）を導入すると、KVキャッシュがGPUメモリからCPUメモリおよび共有NetAppストレージに移動するため、繰り返しのプリフィルでGPUサイクルを無駄にすることなく、ユーザー数やコンテキスト長に応じて推論を拡張できます。共有ストレージは、キャッシュを複数のサービング インスタンス間で再利用可能なインフラへと変え、既存のGPU投資からより多くの価値を引き出すのに役立ちます。</block>
   <block id="f333cd9299f433a3c4b700d33c3c8aa9" category="paragraph">NetAppストレージは、このティアに最適です。なぜなら、S3およびNFS/pNFSを介した標準アクセス、複数のサービングエンジンインスタンスが同時に使用できる共有キャッシュ、そして耐久性、保護、ガバナンスのためにすでに利用しているエンタープライズデータサービスなど、本番環境の推論に必要な機能をすべて備えているからです。独自のクライアントは必要ありません。KVキャッシュオフロードフレームワークは、使い慣れたプロトコルを使用して StorageGRID S3 または ONTAP NAS マウントに接続します。</block>
   <block id="76c31e105f288ff172a4369d68076253" category="paragraph">NetAppは、推論の実行方法やチームのデータ管理方法を変更することなく、KVキャッシュのオフロードに対応したなじみのあるストレージ基盤を提供します。</block>
+  <block id="7f81d4beec39a48a9c89bdc01911cb68" category="inline-link-macro">NetApp.com でAIブログを読む</block>
+  <block id="0bf9d2d7a2690fbfa406fbab84718f0a" category="paragraph">さまざまな分野における業界動向、イノベーション、そして現実世界におけるAIの影響を探ります。<block ref="664aa1dcd8c100045b2cda193137e6b7" category="inline-link-macro-rx"></block></block>
+  <block id="5b7c2e1131022c94db3527c404bf4075" category="paragraph">データ読み取りプロセスには、FSx ONTAP をプライベート S3 バケットとして設定することが含まれます。詳細な設定手順については、<block ref="a4f6db8ee799d71c8436c5d66421c857" category="inline-link-macro-rx"></block> を参照してください。</block>
+  <block id="f6f063eccd373c25744d28ef8af6a6db" category="summary">E5760、E5724、およびAFF-A800の構成におけるSparkのパフォーマンス検証を測定するために、TeraGenベンチマークツールのTeraSortスクリプトとTeraValidateスクリプトを使用しました。</block>
+  <block id="7effc798d6695bcdf299c9d6f49fb7e5" category="summary">NetAppには3つのストレージポートフォリオがあります。FASおよびAFF、Eシリーズ、そしてCloud Volumes ONTAPです。Apache Sparkを使用したHadoopソリューション向けに、AFFおよびEシリーズとONTAPストレージシステムを検証しました。NetAppが提供するデータファブリックは、データへのアクセス、制御、保護、およびセキュリティのためのデータ管理サービスとアプリケーション（構成要素）を統合します。</block>
+  <block id="8f162c0dfd9f119fb9683160247618d5" category="paragraph">注：ノードにパスワードなしのsudoが設定されていない場合は、このコマンドに<block ref="13d87b4892426ec19bdc58a4643d3104" prefix=" " category="inline-code"></block>を追加する必要があります。<block ref="13d87b4892426ec19bdc58a4643d3104" prefix=" " category="inline-code"></block>を使用する場合、各ノードでsshユーザーが同じパスワードを持つことが重要です。- 詳細については、<block ref="df44a473c05d78f41c72a7649c842643" category="inline-link-rx"></block>を参照してください。詳細については、<block ref="ee42a3ab3b8bbd38a7c5f36f55d2fb5d" category="inline-link-rx"></block>を参照してください。</block>
+  <block id="dc9609005748fb37ba46e98cc99030e1" category="summary">NetApp Eシリーズ ストレージを使用した Lustre の構成要素の設計、スケーリングルール、HA モデル、ネットワークトポロジー、およびクライアント統合について説明します。</block>
+  <block id="83ffc53d15196aeb1a817460dbb486aa" category="doc">Lustre と NetApp Eシリーズ ストレージ - 解決策アーキテクチャ</block>
+  <block id="8ae9700922a0bb4891f51a48ed4ef464" category="paragraph">Lustre と NetApp Eシリーズ ストレージが、構成要素、高可用性、ネットワークトポロジー、およびクライアントをどのように活用して、容量、パフォーマンス、およびフェイルオーバーを計画できるようにするかについて説明します。</block>
+  <block id="2168104e73d11c05aa64fc655516a82f" category="section-title">ビルディングブロック設計</block>
+  <block id="26534a28e7b4d9bd2dfa3eadc9cf999d" category="paragraph">ビルディングブロックは、NetApp Eシリーズ Lustre 解決策の基本的なスケーラブルな単位です。各ビルディングブロックは、Lustre オブジェクトストレージサーバー（OSS）およびメタデータサーバー（MDS）機能を提供する高可用性（HA）ペアとして構成された2つのサーバーノード、2つのNetApp Eシリーズ オールフラッシュアレイ、サーバーとアレイ間の専用バックエンド NVMe over Fabrics（NVMe-oF）接続、およびクライアントとノード間通信のための専用フロントエンド Lustre ネットワーキング（LNet）接続で構成されています。PacemakerとCorosyncのHAクラスタは、1つ以上のビルディングブロックからのサーバーペアを含むことができます。NetApp<block ref="a0483fb858f70ef7270ed27766b1a748" prefix=" " category="inline-code"></block>コレクションは、Ansible 自動化を使用して Lustre サービスをデプロイおよび構成します。</block>
+  <block id="17a6f4a0cccca248a9e2b75f4387a067" category="paragraph-title">Lustre ビルディングブロック</block>
+  <block id="b1c9036bef997910c340a575472f7e91" category="inline-image-macro">2つのOSS/MDSサーバーノードと2つのEシリーズEF80アレイを備えたLustre HAビルディングブロック</block>
+  <block id="d669f6c4bb64d85cbd5ff5963a5c6e12" category="paragraph"><block ref="d669f6c4bb64d85cbd5ff5963a5c6e12" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="3cfddb8045406573ceedbf76423d82fb" category="paragraph">構成要素は、ファイルシステムの成長要件に合わせて拡張可能です。すべてのファイルシステムには、1つの基本構成要素が必要です。基本構成要素は、管理ターゲット（MGT）上に管理サーバー（MGS）をホストし、初期メタデータターゲット（MDT）およびオブジェクトストレージターゲット（OST）の容量を提供します。追加の構成要素はファイルシステムを拡張し、基本構成要素のMGSに対してMDTおよびOSTターゲットを登録します。モジュール式のアプローチにより、ワークロードのニーズに応じて容量とパフォーマンスを個別に拡張できます。</block>
+  <block id="b9ffd0f5d2fbeca8a21d0e7f6c3fd99d" category="paragraph">NetAppは、ほとんどのデプロイメントに対して以下の構成要素構成プロファイルを推奨します。MGS、MDT、およびOSTのカウントは、Eシリーズ ストレージアレイのパフォーマンスと容量を最大化するように最適化された推奨デフォルト値です。ワークロードのニーズに合わせて、Ansibleインベントリ内のターゲット数、ボリュームサイズ、およびEシリーズのドライブ割り当てを調整してください。たとえば、より大きなメタデータストレージ容量を必要とするデプロイメントでは、同じビルディングブロックハードウェア内でより多くのMDTをプロビジョニングし、OSTを少なくすることができます。</block>
+  <block id="88e8c06052f9e72ef6c6e4069fd7b276" category="paragraph">以下の表は、構成要素の種類と推奨される目標数をまとめたものです。</block>
+  <block id="26e2cdaaf8f34633fee6f31dbb424c86" category="cell">MGS</block>
+  <block id="e0f67ead95c63aee6a8fe009bacf6c50" category="cell">MDT</block>
+  <block id="5e67f7a1d587efcc376c11c9806cf456" category="cell">OST</block>
+  <block id="ad8783089f828b927473fb61d51940ec" category="cell">用途</block>
+  <block id="095a1b43effec73955e31e790438de49" category="cell">基本</block>
+  <block id="5e19de7ff972cdc4394b10f96a9fb0fa" category="cell">ファイルシステムの最初の構成要素。MGSおよび初期のMDTとOSTの容量をホストします。</block>
+  <block id="4b160bd7bc9d2d97b1132396a4548529" category="cell">MDT+OST</block>
+  <block id="9ee291176e6650ee7aca2375921cfd81" category="cell">メタデータとデータ容量を追加します。基本構成要素MGSに対して登録します。</block>
+  <block id="5d93aaa6378dba134d0b51c6efb34fba" category="cell">OST のみ</block>
+  <block id="edbad65223505b7cb3e8a1910da9a48a" category="cell">データ容量のみを追加します。基本構成要素MGSに対して登録します。</block>
+  <block id="f93aa434cbe5bab4ec93ef90f5d87697" category="list-text">*ドライブの種類とプールレイアウト：* Eシリーズは従来のRAIDボリュームグループとダイナミックディスクプール（DDP）をサポートします。TLC NVMeドライブの場合、OSTストレージにはRAID 6ボリュームグループを、MGSおよびMDTストレージにはRAID 1ボリュームグループを使用してください。QLC NVMeドライブの場合は、共有ドライブプールにDDPを使用してください。</block>
+  <block id="afa16f87b0793f1f055d7f4c8fc94a8c" category="inline-link-macro">ターゲット分散とNVMe-oF接続</block>
+  <block id="e47f832e68af8d68b0991a362aa4db96" category="list-text">＊ターゲットの分散：＊各ビルディングブロック内のLustreターゲットは、両方のOSS/MDSサーバーノードと両方のEシリーズ アレイ間でバランスよく配置されます。このレイアウトにより、I/OがサーバーのCPUとアレイコントローラーに分散され、NVMe-oFパスのパフォーマンスが向上し、冗長性が維持されます。<block ref="b951df04c708233bd0e6aa30024a444e" category="inline-link-macro-rx"></block>の<block ref="3cc6169fe479d4e15a96418fa2b92a35" category="inline-link-macro-rx"></block>を参照してください。</block>
+  <block id="697ea025ecb303d4f40d1bf3a8b4bde0" category="inline-link-macro">NetApp Interoperability Matrix Tool（IMT）</block>
+  <block id="5368a693aa74a0eba7b84abbd9be3a75" category="paragraph">サポートされているオペレーティングシステム、Lustreバージョン、アレイファームウェア、および関連するビルディングブロックコンポーネントは、<block ref="dea5a7fef452493e48f46a815b88571f" category="inline-link-macro-rx"></block>の *E-Series Lustre* に記載されています。詳細なボリューム数、ドライブレイアウト、およびサイジングガイドラインについては、<block ref="b951df04c708233bd0e6aa30024a444e" category="inline-link-macro-rx"></block>を参照してください。ソフトウェアコンポーネントについては、<block ref="50dec6b1119ecf8040454f42ce24288c" category="inline-link-macro-rx"></block>を参照してください。</block>
+  <block id="b6bf6b7b72e2440dd65804236671aaf2" category="section-title">スケーリングに関する推奨事項</block>
+  <block id="219f5cf2d51ca12a90e8e6f6dead489f" category="paragraph">Lustreファイルシステムは、メタデータ容量、データ容量、またはその両方が制限要因となった場合に、構成要素を追加することで拡張します。MDTはファイル数とメタデータIOPSに基づいてスケーリングし、OSTは容量と集約スループット要件に基づいてスケーリングします。</block>
+  <block id="be46f21ebcdd3e8dbc3407f201e7671f" category="list-text">*ファイルシステムごとに1つの基本ビルディングブロック：* 正確に1つの基本ビルディングブロックをデプロイします。これは、MGS、初期MDT、およびOSTターゲットをホストします。</block>
+  <block id="a51646c3ef687993c117154c9bd9c2e9" category="list-text">*追加のビルディングブロックプロファイル：* 既存のMDT容量が十分で、データ容量またはスループット要件を増やす必要がある場合は、OST専用のビルディングブロックを追加します。メタデータのパフォーマンスや名前空間の容量がボトルネックになった場合は、MDT+OSTのビルディングブロックを追加します。</block>
+  <block id="bc8b43c37df464527d4967a75891ed34" category="list-text">*HAクラスタの制限：* PacemakerおよびCorosyncの各HAクラスタを5つのビルディングブロック（10個のLustreサーバーノード）に制限します。大規模な構成では、リソースの制約を回避するために、大規模なデプロイメントを複数のHAクラスタに均等に分割します。</block>
+  <block id="49a6e0259d41be0a04ea6873c59a3935" category="paragraph">次の図は、42Uラックに最大5つのビルディングブロックを積み重ねた状態を示しています（ラックごとに1つのPacemaker HAクラスタ）。複数のラックが単一のLustreファイルシステムに参加できますが、MGSをホストするのは基本ビルディングブロックのみです。</block>
+  <block id="adb3b1a9740a4792db095434b57d730d" category="paragraph-title">Lustreパラレルファイルシステムラックスケーリング</block>
+  <block id="3124af7a7890d90dc620feeb1baf29f4" category="inline-image-macro">Lustre並列ファイルシステムは、複数の42Uラックにまたがってスケーリングし、各ラックには1つのPacemaker HAクラスタ内に最大5つのビルディングブロックが含まれます。</block>
+  <block id="31f2e44e6941fd0758165db8d6a4b611" category="paragraph"><block ref="31f2e44e6941fd0758165db8d6a4b611" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="1be138531fe213ae00cd83288ff59040" category="paragraph">サイズの例については、<block ref="fd37d50a703eb90bca5592e7cf7939cb" category="inline-link-macro-rx"></block>を参照してください。</block>
+  <block id="cf03dce6d27c37ae2bf803a5ad8ddb93" category="section-title">HAアーキテクチャ</block>
+  <block id="8a13f8617619d3e648e8c45a19f4c599" category="paragraph">Lustre with NetApp E-Series Storageは、NetApp Eシリーズ ストレージと統合された共有ディスク高可用性（HA）アーキテクチャを使用します。PacemakerがHAリソースを管理し、Corosyncがクラスタメンバーシップとメッセージングを提供します。これらが連携して、各ビルディングブロック内の2つのOSS/MDSサーバノード間におけるLustreターゲットのフェイルオーバーを管理します。マルチパスNVMe-oFが両方のOSS/MDSサーバノードを同じEシリーズ ボリュームに接続するため、必要に応じてどちらのノードでもターゲットサービスを引き継ぐことができます。</block>
+  <block id="384280ea651954973b3d9bce2e1c4fea" category="paragraph">MGS、MDT、およびOSTはそれぞれ、Pacemakerリソースグループ内の依存関係とともにHAリソースとして構成されます。Pacemakerは、リソースが正しい順序で起動および停止し、同じノード上に常駐し、一度に1つのノードでのみ実行されることを保証します。両方のノードから同じターゲットに同時にアクセスすると、基盤となるファイルシステムが破損する可能性があります。</block>
+  <block id="229f171ab4ff38290d5b4ca86d00f328" category="list-text">*ターゲットのフェイルオーバー：* OSS/MDSサーバーノードは両方ともクラスタ内でピアですが、各Lustreターゲットは一度に1つのノードでのみアクティブになります。Pacemakerの監視リソースは、各ターゲットとその依存関係の状態を監視し、ターゲットが現在のノードで利用できなくなった場合にフェイルオーバーをトリガーします。障害発生時、Pacemakerは影響を受けるリソースグループをパートナーノード上で正しい順序で再起動し、サービスが再開されるとクライアントは透過的にターゲットの新しい場所に再接続します。各ターゲットは単一のノード上でアクティブ化されるため、ファイルシステムが両方のノードからの同時書き込みにさらされることはありません。</block>
+  <block id="29a2de841205976f47a4fa0209832a9c" category="list-text">*共有ストレージ アクセス：* マルチパスNVMe-oFパスは、各OSS/MDSサーバーノードをビルディングブロック内のすべてのEシリーズコントローラに接続するため、どのノードからでもすべてのターゲットボリュームにアクセスできます。サーバーノードに障害が発生した場合、パートナーノードは既に同じボリュームへのアクティブなパスを保持しているため、ストレージ接続を再構成することなくターゲットの所有権を引き継ぐことができます。アレイコントローラまたはパスに障害が発生した場合、マルチパスはI/Oを稼働中のコントローラにリダイレクトします。この二重冗長性により、LustreターゲットはOSS/MDSサーバーノード間またはアレイコントローラー間で、バッキングボリュームへのアクセスを失うことなくフェイルオーバーできます。</block>
+  <block id="a482c53de2fc843e0bb2f865a9f6a655" category="list-text">*STONITH フェンシング：* 障害が発生すると、Pacemaker は障害のあるノードと通信して、ターゲットが停止していることを確認できない場合があります。Pacemaker は、他の場所でこれらのターゲットを再起動する前に、障害が発生したノードをフェンスし、理想的には電源を遮断して、そのノードが確実に停止していることを確認します。フェンシングは、両方のノードが同時に同じターゲットにアクセスして基盤となるファイルシステムを破損させるスプリットブレイン状態を防ぎ、フェイルオーバー時のデータ整合性を維持します。NetApp は、Redfish 対応のベースボード管理コントローラー（BMC）を搭載したサーバーに<block ref="ed7a45bcbbe63a63733ab17ec2246fcc" prefix=" " category="inline-code"></block>を推奨します。その他のフェンスエージェント（<block ref="138fd23846f5d48fe0a28591814e283f" prefix=" " category="inline-code"></block>など）もサポートされています。</block>
+  <block id="1fdcbe69d913b747190662ff186848c2" category="inline-link-macro">HAユーザーガイド</block>
+  <block id="89f3bec5eaf56f644be8beb09688b8e8" category="inline-link-macro">ansible-lustreコレクション</block>
+  <block id="1635607a80c549691f35dccafcee86d0" category="paragraph">クラスタ管理とフェンシング設定については、<block ref="6e79803b16c52a648633d8620cb9f221" category="inline-link-macro-rx"></block>の<block ref="b3db81bf0fae1fdfc6b6cee591291abc" category="inline-link-macro-rx"></block>を参照してください。</block>
+  <block id="82c161268dfe0b9b1287ad4fe5c236b0" category="section-title">ネットワーク アーキテクチャ</block>
+  <block id="d2893affb3627b50d8c0adf917d16ba5" category="paragraph">このソリューションでは、ストレージバックエンドのトラフィックとLNetフロントエンドのトラフィックにそれぞれ別のネットワークパスを使用します。</block>
+  <block id="602b1c8167e99c819b0279b3ea2a890e" category="inline-link-macro">Lustre ハードウェアのラックとケーブル接続</block>
+  <block id="7ed3467ebc44638b347f49a62ba1e2fb" category="inline-link-macro">ターゲット分布</block>
+  <block id="31bcce12b5160e4886c47b8a0d991888" category="list-text">*バックエンド（NVMe-oF）：* OSS/MDSサーバーノードは、NVMe/InfiniBandまたはNVMe/RoCEを使用して、NVMe-oF経由でEシリーズ アレイに接続します。NVMe-oFパスは、LustreターゲットサービスとEシリーズ ボリュームの間でブロックI/Oを転送します。EF80の6つのHCAバックエンドのケーブル接続については、<block ref="18bea05bda8ed8f518d518ea28b4f1ab" category="inline-link-macro-rx"></block>を参照してください。ノードとアレイ間での推奨されるターゲット配置については、<block ref="b951df04c708233bd0e6aa30024a444e" category="inline-link-macro-rx"></block>の<block ref="ff23c4948ae50c95f779a1609ba4e520" category="inline-link-macro-rx"></block>を参照してください。</block>
+  <block id="f7dd9a813b10b7d4884b4643def972f5" category="list-text">*フロントエンド（LNet）：* LustreクライアントとOSS/MDSサーバーノードは、NVIDIA OFEDスタックの<block ref="c49f0c3c2926c11287cf9b9355c7aa1f" prefix=" " category="inline-code"></block>ネットワークタイプを使用してLNet経由で通信します。InfiniBandとRoCEはどちらも検証済みのフロントエンドトランスポートです。ansible-lustreコレクションは、マルチレールLNet用のすべてのフロントエンドインターフェースを設定します。マルチレールLNetは、複数のポートを集約することで帯域幅を拡大し、クライアントおよびノード間のトラフィックに対してパスの冗長性を提供します。</block>
+  <block id="a43c363f559b33460c8075b618d0eaf8" category="list-text">*管理とクラスター：* アウトオブバンド管理ネットワークは、サーバー管理、BMC アクセス、およびアレイ管理を提供します。STONITH フェンシングエージェント（<block ref="ed7a45bcbbe63a63733ab17ec2246fcc" prefix=" " category="inline-code"></block>など）は、このネットワークを使用してサーバーの BMC にアクセスし、障害が発生したノードから電源を遮断します。Corosync は、フロントエンドファブリックに加えて、このネットワーク上でクラスタ通信を追加リングとして実行することもできます。Corosync を複数のリングで構成することで、クラスタメッセージングの冗長性が向上し、単一のネットワーク障害によってクォーラムが中断されるリスクが軽減されます。</block>
+  <block id="145312809fb4d503a6e0ac92674276ac" category="section-title">Lustre クライアント</block>
+  <block id="5ab70d1058c71efddd71a0b5b4a39d61" category="inline-link-macro">Lustre サポートマトリックス</block>
+  <block id="ecd1920a56f570c6a4fe79526a61389b" category="paragraph">Lustreクライアントは、クライアントカーネルモジュールをロードし、OSS/MDSサーバーノードへのLNet接続を確立し、ファイルシステムをマウントして、単一の一貫性のあるPOSIX準拠の名前空間をアプリケーションに提供します。入出力は、アクティブなOST全体に並列に分散されます。クライアントノードはビルディングブロックの外部にあり、フロントエンドのLNetファブリックを介してファイルシステムを使用します。クライアントオペレーティングシステムはこの解決策のIMTには記載されていません。テスト済みのクライアントディストリビューションと、デプロイされたLustreリリースでサポートされているカーネルバージョン（例：Red Hat Enterprise Linux 9、SUSE Linux Enterprise Server 15、Ubuntu 24.04）については、<block ref="612e690bea76796aad3a16779b18be6e" category="inline-link-macro-rx"></block>を参照してください。</block>
+  <block id="9998d218109c40ea696c5c329fc14bc7" category="paragraph">クライアントノードは、OSS/MDSサーバーノードと同じLNetファブリックおよびネットワークタイプへの接続を必要とします。必要に応じて、LNetルーターは複数のLNetサブネットまたはファブリックをブリッジ接続できます。</block>
+  <block id="b6df2ef001d9ba7e28f5c5f925e6400d" category="inline-link-macro">netapp-lustreリポジトリ</block>
+  <block id="5f326ef4b597e980cb188da5a716d991" category="paragraph">NetAppは、Rocky Linux 9.8およびRed Hat Enterprise Linux 9.8用のLustreサーバーRPMパッケージ（ビルド済み）を提供します。NetAppは、事前に構築されたクライアントパッケージを提供していません。<block ref="a26fe5a6450900f32fdc60abe5f6c5e6" category="inline-link-macro-rx"></block>にあるLustreソースコードから、クライアントオペレーティングシステムとカーネル用のクライアントパッケージをビルドしてください。</block>
+  <block id="f6fe383d782ca3cc78e7f5626027ddd3" category="inline-link-macro">解決策をデプロイする</block>
+  <block id="6d68186fae21c34bab6837e5625f472c" category="inline-link-macro">lustre_client ロールのドキュメント</block>
+  <block id="c524fafdc97e3e8be7ee3233f1f35afc" category="paragraph">クライアント パッケージのインストール後、<block ref="6e79803b16c52a648633d8620cb9f221" category="inline-link-macro-rx"></block> のオプションの <block ref="99fc42f6ce60cac70cab6ee0f8f2330f" prefix=" " category="inline-code"></block> ロールが、クライアント ネットワーク インターフェイスと LNet を設定し、選択されている場合はマルチレール LNet を有効にし、接続性を検証して、永続的な systemd マウント ユニットを管理します。このロールは Lustre をビルドしません。このロールは、<block ref="d5f50bdd80db018bfa3d362452fb861d" prefix=" " category="inline-code"></block> が設定されている場合にのみクライアント パッケージをインストールします。必要に応じて、クライアントを手動で設定することもできます。段階的な手順については、<block ref="8f49e9bdbd514d6a8081d8c90c9f306a" category="inline-link-macro-rx"></block> および <block ref="a0f4d068c029bf8f009ee83ddd7b9328" category="inline-link-macro-rx"></block> を参照してください。</block>
+  <block id="4f5054c7d30512a9939ddf2201d86d54" category="summary">NetApp Ansible プレイブックを使用して、Lustre HA クラスターとクライアントをデプロイします。</block>
+  <block id="33083b65cfe94a2f3ae9f4197d0c53ce" category="doc">Lustre HAクラスタとクライアントをデプロイする</block>
+  <block id="07148f1dd881fdc7dfe8f1e0688d01c8" category="paragraph">サーバーオペレーティングシステムを準備し、NVIDIA DOCA-OFEDをインストールし、Lustre HAクラスタをデプロイし、NetApp Ansibleプレイブックを使用してLustreクライアントを設定します。</block>
+  <block id="b49b203ba6d22ffb53b89f8af41db490" category="inline-link-macro">Lustre Ansibleインベントリをカスタマイズする</block>
+  <block id="840f333f0bb0cf08631b9e65cdfd9339" category="paragraph">始める前に、<block ref="48fa4fcc6ef309525d67cfc2e71da78c" category="inline-link-macro-rx"></block>に記載されているインベントリを完成させて保管してください。</block>
+  <block id="92329ab03465cefd3513d3cc78541047" category="section-title">Lustre HA クラスターをデプロイする</block>
+  <block id="f3a29486bed19a90f2da6d007818b427" category="list-title">手順</block>
+  <block id="ae500f96b6ddfd600df7c0bc6b5fa41e" category="list-text">作業コピーの<block ref="8e25afc00dfc76dcf543a4bd8b70f7d8" prefix=" " category="inline-code"></block>ディレクトリから、Lustreサーバー上のオペレーティングシステムを準備します。<block ref="64c25f7bf7bc31acd4f5cc4d7ecb73f5" prefix=" " category="inline-code"></block>をカスタマイズしたインベントリディレクトリへのパスに置き換えます。</block>
+  <block id="3673a4003851958483ff8498a769ecf3" category="inline-link-macro">NVIDIA DOCA-Hostのインストールとアップグレード</block>
+  <block id="dc5a71188a3275cc63a24b0b74655792" category="list-text">各 Lustre サーバーに NVIDIA DOCA-OFED をインストールします。前の手順でインストールしたカーネルに対して、カーネルモジュールをビルドします。カーネルの手順については、<block ref="7d78b1760b4ebb4ab1ad267c85870752" category="inline-link-macro-rx"></block> を参照してください。以下の例は、RHEL または Rocky Linux への DOCA-OFED のインストール方法を示しています。</block>
+  <block id="7dbcaaae23c6528910c2b21076a59632" category="list-text">DOCAホストリポジトリパッケージをインストールし、パッケージキャッシュを更新してください。<block ref="f0c55660120f8848748167a8b3832af1" prefix=" " category="inline-code"></block>をお使いのオペレーティングシステムとアーキテクチャに対応したDOCAホストパッケージに置き換えてください。</block>
+  <block id="e8bc4be36e4cdb37c3d25fdce0841b8d" category="list-text">実行中のカーネル向けにDOCAカーネルモジュールをビルドします。このスクリプトは、作成したパッケージのパスを出力します。</block>
+  <block id="83e3008e4cb223028ba0b7b6966de575" category="list-text">スクリプトが作成したカーネルモジュールリポジトリパッケージをインストールし、パッケージキャッシュを更新します。<block ref="aa654633a9857018c94f9b36506e1548" prefix=" " category="inline-code"></block>を前の手順のパスに置き換えます：</block>
+  <block id="4871ece702c640438eee131f662524d5" category="list-text">DOCA-OFEDのユーザー空間、カーネル、およびNVMeパッケージをインストールします。<block ref="da5c2b896a2957f1ee87942e2da7ff73" prefix=" " category="inline-code"></block>を実行中のカーネルバージョンに置き換えます：</block>
+  <block id="f9fa68ae7af314229bcdc48211c162c3" category="list-text">メインのデプロイメントプレイブックを実行します。</block>
+  <block id="8477b59b4dbd5b47a10b2b9c38042a89" category="admonition">デプロイメントの規模に応じてAnsibleが並行して設定するホスト数を制御するには、<block ref="51ded8ed2d854ee1bcb6557aaf84688f" prefix=" " category="inline-code"></block>を調整します。たとえば、大規模なクラスタの場合は<block ref="2a86fba4a938ce618ea8eefc39d65050" prefix=" " category="inline-code"></block>を追加します。</block>
+  <block id="01a16f7eaa19f99ed1cfdef329e584f2" category="paragraph">プレイブックは、Eシリーズのボリュームグループまたは DDP プールとボリュームをプロビジョニングし、NVMe-oF ホスト接続を設定し、Lustre ターゲットのフォーマットとマウントを行い、LNet を設定し、パフォーマンスチューニングを適用し、Pacemaker HA リソースを設定します。</block>
+  <block id="ff3ff2497027b0fe1b310b10a084a716" category="inline-link-macro">HA管理ユーザーガイド</block>
+  <block id="fe06485e37868a7559e7f21c10b5fb16" category="admonition">1つの構成要素からなるデプロイメントは、2ノードクラスタのPacemakerクラスタを形成します。フェイルオーバーが発生した場合、ノードAには追加の投票権が与えられます。2ノードクラスタで定足数を達成するには、qdeviceの設定を検討してください。デプロイメントに複数の構成要素が含まれる場合、各構成要素は、文書化されたクラスタの上限まで、より大きなPacemakerクラスタに2ノードのサーバーペアを提供します。フェンスとクォーラムの構成を<block ref="366b62f6dcea4b62f9ab1e6c11adfdc9" category="inline-link-macro-rx"></block>で確認し、ノード障害発生時にクラスタがターゲットを安全に復旧できるようにしてください。</block>
+  <block id="65d39f81777200093c526fc1556aad51" category="section-title">Lustreクライアントをデプロイする</block>
+  <block id="ba5289041c7fafcab23ace4ff8fd6d9b" category="paragraph">ファイルシステムへのアクセスが必要なシステムであれば、クライアント展開テンプレートをカスタマイズし、クライアントプレイブックを実行することで、Lustreクライアントをあらゆるシステムに展開できます。</block>
+  <block id="5170ac37884b96453d1e6b82a815c4d6" category="inline-link-macro">netapp-lustre</block>
+  <block id="14e4a498fd2bac1e92f8e542185e0cda" category="list-text">互換性のあるクライアントオペレーティングシステムとカーネルを<block ref="612e690bea76796aad3a16779b18be6e" category="inline-link-macro-rx"></block>から選択してください。そのカーネル用のLustreクライアントパッケージが未インストールの場合は、<block ref="be60e290dc17959a4905f75b82e3dad6" category="inline-link-macro-rx"></block>からビルドしてインストールしてください。</block>
+  <block id="3ecb3b700b08dd014a63fca3af74da77" category="list-text"><block ref="fac04ca68a48af91f0290001604a2463" prefix=" " category="inline-code"></block>テンプレートディレクトリ（共有<block ref="97a67fc90fe6d13cef22fa951de48f8d" prefix=" " category="inline-code"></block>ファイルを含む）の作業コピーを作成し、ファブリックに合ったテンプレートを選択してください。</block>
+  <block id="80f21b5d5686ebf74112f9e0f36c7569" category="inline-link-macro">IB_lustre_cluster_clients</block>
+  <block id="677221edf3da01fe7ab07685265d8062" category="list-text">*InfiniBand：* <block ref="35e4b458ad871ca1f95b4932bb7cda13" category="inline-link-macro-rx"></block></block>
+  <block id="4111ad1003028b71065d3de237a53787" category="inline-link-macro">ROCE_lustre_cluster_clients</block>
+  <block id="a20b9b6f9eda64ea2918cc6cd869bd9a" category="list-text">*RoCE：* <block ref="2a9c8d5e1726d46d316bd69280f6ba0d" category="inline-link-macro-rx"></block></block>
+  <block id="64a5c7a596b010742dcc41993dc90e60" category="list-text">クライアント用に<block ref="ca5b470e14f1597be2a41f1c443527b5" prefix=" " category="inline-code"></block>、<block ref="3342582e194d63e4c91b56623752c9c6" prefix=" " category="inline-code"></block>、および<block ref="96fa973cda8809ad84f646e3d8fbbc1c" prefix=" " category="inline-code"></block>をカスタマイズします。表中の行参照は、<block ref="a0483fb858f70ef7270ed27766b1a748" prefix=" " category="inline-code"></block><block ref="e4dcd80dd2930580c435398aa52a9b6d" prefix=" " category="inline-code"></block>タグ内のRoCEクライアントテンプレートファイルを指します。InfiniBandクライアントテンプレートは、特に明記されていない限り、同じ変数を使用します。</block>
+  <block id="6f16a5f8ff5d75ab84c018adacdfcbb7" category="cell">フィールド</block>
+  <block id="97497e4f12b766346e472319e9f36261" category="cell">Ansible変数</block>
+  <block id="697fa0809c141a51ad35505df3cc002c" category="cell">テンプレートファイル<block ref="e4dcd80dd2930580c435398aa52a9b6d" prefix="(" category="inline-code"></block>）</block>
+  <block id="5d113f2038d289f391614c39043629e8" category="cell">Scope</block>
+  <block id="f4c6f851b00d5518bf888815de279aba" category="cell">Notes</block>
+  <block id="8be1a9d1b639b001a740bd70f202f545" category="cell">クライアントホスト</block>
+  <block id="f8f0230eb9a10081a6983c55a009596c" category="cell"><block ref="7c311b499aee4363d8dfccb8e00eb65c" prefix="" category="inline-code"></block></block>
+  <block id="4319c164a7c3bc200ff559ee1f9f9012" category="inline-link-macro">lustre_client_inventory.yml#L4</block>
+  <block id="90ce4d39a17095097495da298e0d723f" category="cell"><block ref="90ce4d39a17095097495da298e0d723f" category="inline-link-macro-rx"></block></block>
+  <block id="3db64796d547827f6e1ce991769830d1" category="cell">クライアントごと</block>
+  <block id="3131d8b15b19d5601f1e7f150bfcec03" category="cell">各クライアントのホスト名を一覧表示してください。</block>
+  <block id="3b0cd6ef1ad5815f5876514623cdc732" category="cell">クライアント SSH ユーザーと become パスワード</block>
+  <block id="75183c22c6ed23f273cd33ff93cf5bfa" category="cell"><block ref="2059341c4409e15a9f13830208b77e56" prefix="" category="inline-code"></block> /<block ref="846082d5f2a5a221d387dc3719e8d096" prefix=" " category="inline-code"></block></block>
+  <block id="e672e0b08f2ae1f26424c9210007f2e7" category="inline-link-macro">passwords.yml#L2</block>
+  <block id="939b8d59ca6d09cea63e285c50fed916" category="cell"><block ref="939b8d59ca6d09cea63e285c50fed916" category="inline-link-macro-rx"></block></block>
+  <block id="a8a92c2afc6585e5fa081901419d1b6e" category="cell">クラスター全体</block>
+  <block id="eb5dc2a531453217cdd76674000cead8" category="cell">SSH ユーザーが<block ref="63a9f0ea7bb98050796b649e85481845" prefix=" " category="inline-code"></block>でない場合にのみ、become パスワードを設定してください。</block>
+  <block id="b51137da99daab4e87a07179ef60b7bb" category="cell">LNetインターフェース</block>
+  <block id="6abd80c04895fc2904236adea666f5bb" category="cell"><block ref="ef28b8b060b698f7614ae0f0773879d7" prefix="" category="inline-code"></block></block>
+  <block id="db105a090f4b3178b97050461d585230" category="inline-link-macro">group_vars/all.yml#L7</block>
+  <block id="32d2980dce4814173fdeae36bf8fb9f4" category="cell"><block ref="32d2980dce4814173fdeae36bf8fb9f4" category="inline-link-macro-rx"></block></block>
+  <block id="cb297a8d150b85cde575250ed180c09b" category="cell">クライアント側のLNetインターフェース名（L13の値）。</block>
+  <block id="7c9c93c85fa5555fb2d20e1f30ecf193" category="cell">MGS NIDsをマウント</block>
+  <block id="8035c29187a1f6b393d457b37b6e59f3" category="cell"><block ref="297aebd8865be3c5176be647ec05d8b6" prefix="" category="inline-code"></block></block>
+  <block id="87098da60fa086fd5bd5018a8dadad76" category="inline-link-macro">group_vars/all.yml#L17</block>
+  <block id="87d9b1f2ef4d1ed85fac9c490ac9e8fd" category="cell"><block ref="87d9b1f2ef4d1ed85fac9c490ac9e8fd" category="inline-link-macro-rx"></block></block>
+  <block id="3b20230a140792bd3a080f55546cc77b" category="cell">ファイルシステムをマウントするために使用されるMGS NID（L20の値）。</block>
+  <block id="443bd317da0c7f5d88ff99b0c047c7f5" category="cell">ファイルシステム名</block>
+  <block id="88f98cb728bdeec611e192b39efea1b4" category="cell"><block ref="9a37a14aef09a5e40c4b65d4ffe4f84d" prefix="" category="inline-code"></block></block>
+  <block id="5c7c2d7eb4ca78e38ece35e0cb311532" category="inline-link-macro">group_vars/all.yml#L21</block>
+  <block id="539c3a3bc51e3e53e36cd00cf3aa35d9" category="cell"><block ref="539c3a3bc51e3e53e36cd00cf3aa35d9" category="inline-link-macro-rx"></block></block>
+  <block id="84801f7e79e1f99301c9575758d60fcb" category="cell">クラスターと一致する必要があります<block ref="9948b2d72c189368aba79ff6a6f29e9f" prefix=" " category="inline-code"></block>。</block>
+  <block id="0bc0058b2b986d2f1a1c89a94d6bfda6" category="cell">マウント ポイント</block>
+  <block id="3cd86aacaf7923faca6ea2da7707ee4e" category="cell"><block ref="03b4cb723e91f1cecf0324aa97555270" prefix="" category="inline-code"></block></block>
+  <block id="031d0aa4c67fd872bd944298af012b5e" category="inline-link-macro">group_vars/all.yml#L22</block>
+  <block id="eff88b9bf540236200c5a3407412db56" category="cell"><block ref="eff88b9bf540236200c5a3407412db56" category="inline-link-macro-rx"></block></block>
+  <block id="680370327c4f3d77d7ff35c210978000" category="cell">クライアントのマウントディレクトリ。</block>
+  <block id="21c9bef152653e3fcf9d610ee543235c" category="cell">クライアント管理IP</block>
+  <block id="26b672f4cd021fb18ef56983414f134c" category="cell"><block ref="e15cba2a55d1c830968665125de5abf6" prefix="" category="inline-code"></block></block>
+  <block id="67f48ec24a12d065b454bbeac7878968" category="inline-link-macro">host_vars/client_01.yml#L4</block>
+  <block id="605bd5ebce3e987c1975bd3d0aeed280" category="cell"><block ref="605bd5ebce3e987c1975bd3d0aeed280" category="inline-link-macro-rx"></block></block>
+  <block id="7a0f487b094afb8328bef454792eb431" category="cell">クライアントごとに繰り返す</block>
+  <block id="19988a9a8dd0ce44cf0228707868bb1a" category="cell">クライアントごとに1つ<block ref="b6b61f33b6f898807880665e9e5f94de" prefix=" " category="inline-code"></block>のファイル。</block>
+  <block id="ecd174b586df36adb7803f4f17f8f8e1" category="cell">ストレージ ファブリック インターフェース</block>
+  <block id="ab462ebb7ad10b4077acdc4a2ee7e661" category="cell"><block ref="4b785157a5e72b7262c130d2302f2206" prefix="" category="inline-code"></block></block>
+  <block id="58a404858b4958b16eab97fa7c74fdf8" category="inline-link-macro">host_vars/client_01.yml#L10</block>
+  <block id="c443d457524e158ff1f4d18df7b496d3" category="cell"><block ref="c443d457524e158ff1f4d18df7b496d3" category="inline-link-macro-rx"></block></block>
+  <block id="55908942c22db1aa7358ed0c0070f047" category="cell">フロントエンドインターフェースのアドレス（L15の値）。InfiniBand テンプレートはここで<block ref="e3f0f10215cb725eaa278fec38bd76e6" prefix=" " category="inline-code"></block>を使用します。</block>
+  <block id="b2731fdd0dec92240838b47554534f06" category="paragraph">各クライアントの設定を繰り返してください。クライアントごとに<block ref="b6b61f33b6f898807880665e9e5f94de" prefix=" " category="inline-code"></block>ファイルを1つ作成し、対応するホストを<block ref="ca5b470e14f1597be2a41f1c443527b5" prefix=" " category="inline-code"></block>に追加してください。共有<block ref="81fc088f3a9391600c7af8878cb365e6" prefix=" " category="inline-code"></block>ファイルに必要な情報を入力し、クライアントプレイブックを実行する前にAnsible Vaultで暗号化してください。</block>
+  <block id="36523ec6a2cfaa5f35f4a133d166ef0b" category="list-text">クライアントテンプレートディレクトリからクライアントプレイブックを実行します。</block>
+  <block id="6e53643c8b5ab7ab3a87799e37ce5743" category="paragraph">クライアントプレイブックは、クライアントのネットワークインターフェースとLNetを設定し、Lustreファイルシステム用の永続的なsystemdマウントユニットを作成できます。</block>
+  <block id="bd965e38a0c9cf27aa1bde099308e23f" category="section-title">終了後の操作</block>
+  <block id="d4be0cd50f8113c9539912151e7021a8" category="inline-link-macro">デプロイメントを確認する</block>
+  <block id="dc3b94d1e90e58c76ff8007e6eceb45b" category="paragraph"><block ref="0bb6b88af486d04bc1cb72af611125a0" category="inline-link-macro-rx"></block>。</block>
+  <block id="09cee721f0b4e3f153330cf11723d57f" category="summary">Lustreの構成要素として、サーバー、EF80アレイ、バックエンドNVMe-oFネットワーク、およびフロントエンドLNet ファブリックをラックに取り付け、ケーブル配線を行います。</block>
+  <block id="57265f475d0b1c925f29247bf9ffd849" category="doc">Lustre ハードウェアのラックとケーブル接続</block>
+  <block id="3b2606d1286290a450fa0fbac710df97" category="paragraph">Lustre サーバーと NetApp EF80 アレイをラックに搭載し、各ビルディングブロックのバックエンド NVMe-oF ファブリックとフロントエンド LNet ファブリックをケーブル接続します。</block>
+  <block id="135b308ed83c53f1516b7c754566d1c4" category="section-title">開始する前に</block>
+  <block id="62f5efbb78bbf058114f0fe9d5e86cca" category="paragraph">HCA 数、PCIe スロット要件、パス要件、および MTU ガイダンスを <block ref="b951df04c708233bd0e6aa30024a444e" category="inline-link-macro-rx"></block> で確認してください。</block>
+  <block id="a0b0137ed670e8af15faa3b11abb8d48" category="list-text">すべての Lustre サーバーと E シリーズ ストレージ アレイを、構成要素のトポロジーに従ってラックに搭載し、ケーブルを接続します。</block>
+  <block id="786669c9f212d6c20ffc339eb2367a8e" category="inline-image-macro">ラベル付きのLustreビルディングブロックに、OSS/MDSサーバー2台とEF80アレイ2台を積み重ねた構成</block>
+  <block id="736fbba86d0a03b59b6eeee9c3d86c83" category="paragraph"><block ref="736fbba86d0a03b59b6eeee9c3d86c83" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="f9b4774d94693f6b2e8c99ab5a85b0f1" category="inline-link-macro">EF50とEF80のコントローラ間ミラーリング接続ケーブルを接続する</block>
+  <block id="f016230d9333347a56544d34190817e2" category="list-text">各EF80アレイについて、コントローラAのポート4aをコントローラBのポート4aに、およびコントローラAのポート4bをコントローラBのポート4bにケーブル接続します。これらの専用接続はコントローラ間のミラーリング機能を提供するものであり、ホストトラフィックには使用されません。を参照してください。<block ref="2167f991eb9981359d79aa07afa06edc" category="inline-link-macro-rx"></block></block>
+  <block id="0efa2e875fbcce2ca098bc7d3beffa59" category="list-text">EF80の6 HCAトポロジーに従って、サーバーとアレイ間のバックエンドNVMe-oFネットワークをケーブル接続します。</block>
+  <block id="cc0250785d0c2de26d745fcf0f2d1741" category="paragraph-title">EF80 6-HCA バックエンド ケーブル配線（RoCE または InfiniBand）</block>
+  <block id="5dc0d089dbc7f323c2b2db3adda4aceb" category="inline-image-macro">2つのOSS/MDSサーバーノードと2つのEF80アレイ間を接続する、EF80 6 HCAバックエンドNVMe-oFケーブル接続</block>
+  <block id="fa0c84ec25d5521949201d115aea8f0d" category="paragraph"><block ref="fa0c84ec25d5521949201d115aea8f0d" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="4a70c61365d613b05bf336ff2d3b6331" category="list-text">各Lustreサーバー上の4つのフロントエンドLNetインターフェース（i1およびi4 HCA）とLustreクライアントを、専用のInfiniBandまたはRoCEスイッチファブリックに接続します。</block>
+  <block id="549e900f52bc5aae5d24e560cda8f002" category="list-text">RoCEを使用する場合は、優先フロー制御（PFC）を使用してロスレス動作のためにネットワーク ファブリックを設定してください。Ansibleプレイブックは、ビルディングブロック内のすべてのインターフェースでロスレスRoCEを設定します。</block>
+  <block id="8ff63dda38394cf7e27b69e493fc02d8" category="inline-link-macro">サーバー、アレイ、およびAnsibleコントロールノードを準備します</block>
+  <block id="ac9c449909db3bbc27c2d5c6630efdea" category="paragraph"><block ref="b82e71660dcff2c4b12ae3bc9d103566" category="inline-link-macro-rx"></block>。</block>
+  <block id="7fb6b1e6bab59eccacbd98c19cc1c38c" category="summary">NetApp Ansible デプロイメント インベントリを Lustre サーバー、EF80 アレイ、ネットワーク、および HA リソース向けにカスタマイズします。</block>
+  <block id="07d5e0c6744dedd5f7049570b1ac34ae" category="doc">Lustre Ansibleインベントリをカスタマイズする</block>
+  <block id="849fa199688169bda702b938798074ee" category="paragraph">EF80 デプロイメントテンプレートの作業用コピーを作成し、サーバー、アレイ、ネットワーク、および Lustre ビルディングブロックに合わせてインベントリをカスタマイズします。</block>
+  <block id="ba5fc3a997ddadbbd02c4f2135ea89b4" category="paragraph">選択したインベントリは、それぞれのファブリックとプラットフォームのディレクトリに保存してください。共有<block ref="f48601f3d578d4005c478a296758f8af" prefix=" " category="inline-code"></block>ディレクトリと<block ref="97a67fc90fe6d13cef22fa951de48f8d" prefix=" " category="inline-code"></block>ファイルを<block ref="4c9ed35a5bd895e82f72511e6cec8913" prefix=" " category="inline-code"></block>のルートに保持してください。</block>
+  <block id="b092a0a76f85e0b51b2b5d3e06255ea3" category="section-title">デプロイメントテンプレートを選択してください</block>
+  <block id="5cde57a20fc900ae9b57f3113bffb1dc" category="paragraph">サイトのネットワーク ファブリックに一致するテンプレートから開始します：</block>
+  <block id="fc4237a05da8825b9eb433a52ba633f0" category="inline-link-macro">IB_H2_IB_DAC_A2_EF80 / lustre_building_block_cluster_1</block>
+  <block id="52b81e131e1d226662d234ac01012953" category="list-text">*InfiniBand*： <block ref="65b60e6b9c22162bb0aed549ad85be37" category="inline-link-macro-rx"></block></block>
+  <block id="698abb1eaba651b930d805eee8497d5c" category="inline-link-macro">ROCE_H2_ROCE_DAC_A2_EF80 / lustre_building_block_cluster_1</block>
+  <block id="abeb9ae212983c6ef1b3bb03e1cdf92b" category="list-text">*RoCE：* <block ref="ca7061a33e7f5cdc5aa0d0093ae53375" category="inline-link-macro-rx"></block></block>
+  <block id="c8ff17e78c3fe1abe573cba77387562f" category="section-title">サイト固有の設定を構成する</block>
+  <block id="161dddc8fd4745906dbb0976b71174eb" category="paragraph">インベントリにサイト固有の値を設定し、ローカルリポジトリとudevルール設定も併せて設定してください。表中の行参照は、<block ref="a0483fb858f70ef7270ed27766b1a748" prefix=" " category="inline-code"></block><block ref="e4dcd80dd2930580c435398aa52a9b6d" prefix=" " category="inline-code"></block>タグ内のRoCE EF80テンプレートファイルを指しています。InfiniBandテンプレートは、表に記載されているLNetインターフェース変数を除いて、同じ変数名と構造を使用します。</block>
+  <block id="dc092a27b4da7dbaa0f4aada8403dee8" category="cell"><block ref="a294d87e0bba9781edfdb76560bc0bc5" prefix="" category="inline-code"></block>、<block ref="69a0ccdb4868ac688435eca28e0c1ae8" prefix=" " category="inline-code"></block>、<block ref="70f1214c90795f0b99f3c804157a5725" prefix=" " category="inline-code"></block></block>
+  <block id="28ebdf2227e37c2cbe7b419e6f9762f3" category="inline-link-macro">ha_cluster.yml#L76</block>
+  <block id="64162db154d0237e209e51fe9ee5c480" category="inline-link-macro">#L90</block>
+  <block id="0e2366426af40b340c435457fb3eeb30" category="inline-link-macro">#L110</block>
+  <block id="e4f36cb2204e11b20cf8dc587fe2675e" category="cell"><block ref="2cc120a696591d58d931f8e1826ddd7a" category="inline-link-macro-rx"></block>、<block ref="6fe80d99302a728476e69eaf6d4a06ee" category="inline-link-macro-rx"></block>、<block ref="812c7c8e5ff1488f0fb83528a7ad1697" category="inline-link-macro-rx"></block></block>
+  <block id="c6923e59d08c52028fe18b89ea901d1e" category="cell">MGT、MDT、およびOSTマップ用の<block ref="2fcb79070f0e58d8d56aeb420f6af256" prefix=" " category="inline-code"></block>の下にネストされています。最大8文字。3箇所すべてで同じ値を使用してください。最上位の<block ref="9948b2d72c189368aba79ff6a6f29e9f" prefix=" " category="inline-code"></block>キーは効果がありません。</block>
+  <block id="2825e20c61c0fedd16ff6898b977df56" category="cell">ターゲット登録用のMGS NID</block>
+  <block id="d8c7784427dbc9854cc5b9c63a4f334f" category="cell"><block ref="a16670ebe2fc1221d321770495fd3993" prefix="" category="inline-code"></block>,<block ref="b3f34377f449167c79bd9cf61c043ff1" prefix=" " category="inline-code"></block></block>
+  <block id="dd11a332ef88fa73b21cfd1bd77575a2" category="inline-link-macro">ha_cluster.yml#L98</block>
+  <block id="ec381a353275bfd44e020062b3fd99fa" category="inline-link-macro">#L118</block>
+  <block id="729ec7d67659e14164dce49fbf4731ae" category="cell"><block ref="9584ff8ab41e94b311d547c836f1d8b7" category="inline-link-macro-rx"></block>、<block ref="66717e95762f304aba48b059b79beab0" category="inline-link-macro-rx"></block></block>
+  <block id="bceefbcfbe8a5e76a1e25b28875382f9" category="cell">MDTとOSTの下にネストされています<block ref="2fcb79070f0e58d8d56aeb420f6af256" prefix=" " category="inline-code"></block>。HAペアの両方のノードからフロントエンドのLNet NIDを含めてください。優先MGS所有者として設定されているノードのNIDを最初にリストし、次にパートナーノードのNIDをリストします。</block>
+  <block id="db0e9bbe14f69452cb025c4585a1984c" category="cell">Pacemaker クラスター名</block>
+  <block id="d4dadd76ce4715776cfcda468992e55b" category="cell"><block ref="22ef28d91e6a54cd1e917c5030de68ef" prefix="" category="inline-code"></block></block>
+  <block id="b0cfee9d061f8586a1bcd4bfdff03026" category="inline-link-macro">ha_cluster.yml#L228</block>
+  <block id="3b6ae527a7c2a4ab73d38f52aee32d31" category="cell"><block ref="3b6ae527a7c2a4ab73d38f52aee32d31" category="inline-link-macro-rx"></block></block>
+  <block id="4fcc3aba99cf6eddd67ef2dc0b3ea449" category="cell">Pacemaker CIBプロパティのオーバーライドの下にネストされています。HAクラスタの一意の名前。</block>
+  <block id="0819953d792a0e5537c5d335b34e7e50" category="cell">BMCフェンシングアドレス</block>
+  <block id="2a35365d9c941c0421715291f38de458" category="cell"><block ref="0721ac52e00ff9d39bfc7ac6ea226c19" prefix="" category="inline-code"></block></block>
+  <block id="9deffbe868d493a1cb7eeb5499782ee0" category="inline-link-macro">ha_cluster.yml#L211</block>
+  <block id="f2627bacca2db635ecfb76f8fc3ab09f" category="inline-link-macro">#L214</block>
+  <block id="7685a2c6de328ab53aa694dd72b4c7ed" category="inline-link-macro">#L217</block>
+  <block id="376cab8c66e9e46e0a6e2308b81313b3" category="inline-link-macro">#L220</block>
+  <block id="90aa2dad0631ae7e6b5e7fa249b8acf8" category="cell"><block ref="57f1866b7c6c96aede22bff74850a7a1" category="inline-link-macro-rx"></block>、<block ref="5f56188f908f185423a80af398e2647d" category="inline-link-macro-rx"></block>、<block ref="218da9a6c1fbcdb4655478b7c9d688ba" category="inline-link-macro-rx"></block>、<block ref="efe7443fe5778cfa1021ecaffa0c368b" category="inline-link-macro-rx"></block></block>
+  <block id="8fad9b2f1bb07b7137b792ab9dda3abf" category="cell">Lustreサーバーごとに繰り返す</block>
+  <block id="6f8108e5d862d3575d73f220aa5c9187" category="cell">各サーバーノードのRedfish BMC IPアドレス。</block>
+  <block id="48432554382ecd7b3a9e4a0820481377" category="cell">アラートメールの受信者</block>
+  <block id="85e3c19dd4a66bc102a0e81eb6e20c6c" category="cell"><block ref="0c41e283fc637b718002e2855c06798c" prefix="" category="inline-code"></block></block>
+  <block id="8d1fe2e28a39fa6135959b4a9183d295" category="inline-link-macro">ha_cluster.yml#L233</block>
+  <block id="5672bf78ba92c2a6e869d7580ae4ce4b" category="cell"><block ref="5672bf78ba92c2a6e869d7580ae4ce4b" category="inline-link-macro-rx"></block></block>
+  <block id="faf7f93a5bb1a4334bcc080e520a00bb" category="cell">HAリソースおよび障害通知の受信者。</block>
+  <block id="705e2aa73a8fa6d0668c74c80e9ccef2" category="cell">メールドメイン</block>
+  <block id="4eb84af5d4ab198d4c0e9fb0f1571628" category="cell"><block ref="cf0c208b30eac9839752881b2bef28d5" prefix="" category="inline-code"></block></block>
+  <block id="cd7966b537c9a656c3dffb64cd0ac869" category="inline-link-macro">ha_cluster.yml#L240</block>
+  <block id="e0dfd7110a4d5e9de24736a906ea205f" category="cell"><block ref="e0dfd7110a4d5e9de24736a906ea205f" category="inline-link-macro-rx"></block></block>
+  <block id="a7e3d851dc5c0eb2956c1f1ff000e8a8" category="cell">アラートメールの送信に使用するPostfixドメイン。</block>
+  <block id="c3a147e1ee28f6349c57421b4d5cb524" category="cell">NTP時刻ソース</block>
+  <block id="a5826cb41f6e95f2ff5f79e012f44360" category="cell"><block ref="99ad683ffc6dbf7d99fb2050c2cc0c1c" prefix="" category="inline-code"></block></block>
+  <block id="cf2c30f90edf99467126c607a878acfc" category="inline-link-macro">ha_cluster.yml#L250</block>
+  <block id="625528c84d430ec70773e4f1101cc139" category="cell"><block ref="625528c84d430ec70773e4f1101cc139" category="inline-link-macro-rx"></block></block>
+  <block id="467d09a3bfe35b45f5c3e650ece8bdf5" category="cell">クラスタノードの時刻ソース。NTPプール、または1つ以上の個別のNTPサーバーを指定します。必要な<block ref="b10a8c0bede9eb4ea771b04db3149f28" prefix=" " category="inline-code"></block>または<block ref="cf1e8c14e54505f60aa10ceb8d5d8ab3" prefix=" " category="inline-code"></block>ディレクティブと<block ref="4e78b2062a724468763b086556c73046" prefix=" " category="inline-code"></block>などのオプションを含めます。</block>
+  <block id="907b60c8cfd6057cb141020e21390ffd" category="cell">インターフェース PCI-to-name udev マップ</block>
+  <block id="d3ba215665e71ef616a9d66adc2fba1c" category="cell"><block ref="24106e17a501ccfc6e41dec4a61aab0c" prefix="" category="inline-code"></block></block>
+  <block id="32a69362da83b6aa610263b2d6738923" category="inline-link-macro">ha_cluster.yml#L172</block>
+  <block id="1369c547b38f0e5caae682fa78d337bc" category="cell"><block ref="1369c547b38f0e5caae682fa78d337bc" category="inline-link-macro-rx"></block></block>
+  <block id="4b4404ddf34ee3ed378224e664fbeb1c" category="cell">HCAスロットレイアウトごとに繰り返す</block>
+  <block id="84dab3f787eddd5f32097b8d666403cc" category="cell">各PCIスロットを永続的なインターフェイス名（L182の値）にマッピングします。<block ref="6da975c28b569d5b3195b69314ff8cd3" prefix=" " category="inline-code"></block>を使用して収集します。</block>
+  <block id="b566633973f2388105706e2db3286ef0" category="cell">ローカルパッケージリポジトリ（オプション）</block>
+  <block id="234cefeab428deb613b757e069321dbf" category="cell"><block ref="4b2bda69c5f1ab28684c4c68820bee9a" prefix="" category="inline-code"></block></block>
+  <block id="01b4efd53143b7423d9e98362a51afb5" category="inline-link-macro">ha_cluster.yml#L256</block>
+  <block id="ff92ddbbc1558dd25d95a862d8b0ab07" category="inline-link-macro">#L261</block>
+  <block id="e6a84f4548df3d6a4995d2f0141fde9b" category="cell"><block ref="8147b353047ac75b2aaa643fb1051f6c" category="inline-link-macro-rx"></block>、<block ref="90c9532fa4f9c4b777a0daf5d0fd3c56" category="inline-link-macro-rx"></block></block>
+  <block id="a2e1abbebb66ae0c88c85bf74515e8da" category="cell">エアギャップインストールの場合、ブロックのコメントを解除してリポジトリ<block ref="572d4e421e5e6b9bc11d815e8a027112" prefix=" " category="inline-code"></block>を設定します（L264）。</block>
+  <block id="54a9a3e8b66d38394d513bb788a737af" category="cell">サーバー管理IP</block>
+  <block id="636203dc4440306a14dd696c4de5931a" category="inline-link-macro">host_vars/lustre_01.yml#L10</block>
+  <block id="65802799f33fb909f185b3f75d5dde47" category="cell"><block ref="65802799f33fb909f185b3f75d5dde47" category="inline-link-macro-rx"></block></block>
+  <block id="4289d0b4a0eb9de69ee5a0eb8dac75ea" category="cell">サーバーごとに1つ<block ref="d15ffd2d191c94654e8e50c55cf273b9" prefix=" " category="inline-code"></block>のファイル。</block>
+  <block id="91ca84480d7b5ee6738d3687875165de" category="cell">NVMe-oFバックエンドインターフェイス</block>
+  <block id="ef2f483559dc6ae3841f7a2413191328" category="cell"><block ref="acd335a4d756a503bbe90f51587e6cd6" prefix="" category="inline-code"></block>（RoCE）/<block ref="f70b96976b303b11c8901e62834ddcbf" prefix=" " category="inline-code"></block>（InfiniBand）</block>
+  <block id="44670a832e8c669d616a8e5bb73ea90d" category="inline-link-macro">RoCE host_vars/lustre_01.yml#L21</block>
+  <block id="e4fe71da7ee64ff1432c605328af6949" category="inline-link-macro">InfiniBand host_vars/lustre_01.yml#L17</block>
+  <block id="043caf30caa6df90601c496a87eba920" category="cell"><block ref="d5dd1f2ccfb900d7775232d615bbd59d" category="inline-link-macro-rx"></block>、<block ref="f8506d7da0c02cce792e8f991f3efdb6" category="inline-link-macro-rx"></block></block>
+  <block id="de3294bf0a8c13aec72739c96ab358df" category="cell">NVMe-oFストレージトラフィックに使用されるバックエンドインターフェイスアドレス（Eシリーズアレイ向け）。</block>
+  <block id="d1eca90db1b5937ecf631c86492e542a" category="cell">LNetクラスタインターフェイス</block>
+  <block id="f4cfcf44d6d2bd79213a39876836b2a7" category="cell"><block ref="4b785157a5e72b7262c130d2302f2206" prefix="" category="inline-code"></block> （RoCE） /<block ref="e3f0f10215cb725eaa278fec38bd76e6" prefix=" " category="inline-code"></block> （InfiniBand）</block>
+  <block id="c88c4966964eb7fd171c670b02bea1be" category="inline-link-macro">RoCE host_vars/lustre_01.yml#L47</block>
+  <block id="3be01edee3acf1567e136111efc731a9" category="inline-link-macro">InfiniBand host_vars/lustre_01.yml#L38</block>
+  <block id="3a312ec8c30a90b41b8e95b33186f9f9" category="cell"><block ref="0bf6a33116c634b0311082d3b8b27524" category="inline-link-macro-rx"></block>、<block ref="209a601e7842c823a6d9437e13f7ac6f" category="inline-link-macro-rx"></block></block>
+  <block id="daa858dd88f813bf2abe72e05ac79104" category="cell">フロントエンド LNet インターフェイス アドレス （L56 の RoCE 値、L47 の InfiniBand 値）。</block>
+  <block id="8f275be344e18a73f50c90c98862730c" category="cell">CorosyncノードのIPアドレス</block>
+  <block id="3bcebedf92386c6d782a4fb1d9245fbe" category="cell"><block ref="b3da4c961227c7f785b5051a5f3d1ca2" prefix="" category="inline-code"></block></block>
+  <block id="d26865aecb9841f5fa8e4a2ad002653f" category="inline-link-macro">host_vars/lustre_01.yml#L58</block>
+  <block id="7674410161b2469ec2f0588d7cb0133c" category="cell"><block ref="7674410161b2469ec2f0588d7cb0133c" category="inline-link-macro-rx"></block></block>
+  <block id="499bfea2697a63f16233ea2f3b77b2c5" category="cell">HAクラスタ内のすべてのノードIPアドレスを一覧表示します（L62の値）。</block>
+  <block id="dd603111f7aedcb686a7d943e7470a9a" category="cell">Lustre ターゲットサービス NID</block>
+  <block id="84d5fb1f5c4c2a3b20e920eab695f987" category="cell"><block ref="1f853ce28851014f6eadd5c849ba3ce1" prefix="" category="inline-code"></block></block>
+  <block id="3642d5fc1bd5e1d5a2d0a0aea7f8fec5" category="inline-link-macro">host_vars/lustre_01.yml#L64</block>
+  <block id="f1680e035658b9a3e449dbce28e26600" category="cell"><block ref="f1680e035658b9a3e449dbce28e26600" category="inline-link-macro-rx"></block></block>
+  <block id="ad71d199400e65302247951bced69da2" category="cell">HA ペアの両方のノードからフロントエンド LNet NID（<block ref="c49f0c3c2926c11287cf9b9355c7aa1f" prefix="(" category="inline-code"></block>）を含めて、フェイルオーバー後もターゲット サービスにアクセスできるようにします（L67 の値）。</block>
+  <block id="ce1cdc9c6fba0be5fab535b8c6c76141" category="cell">アレイ管理IP</block>
+  <block id="e9ad5d914deda2bd4c808eeb12731073" category="inline-link-macro">host_vars/netapp_01.yml#L13</block>
+  <block id="79f1e43a9431bc629779c58d7b668a19" category="cell"><block ref="79f1e43a9431bc629779c58d7b668a19" category="inline-link-macro-rx"></block></block>
+  <block id="1ed3694d7fef8516584c13d7e425a15f" category="cell">Eシリーズアレイごとに繰り返す</block>
+  <block id="c1e52517a2b31863df6c2d898abcc01d" category="cell">コントローラー1つの管理IPアドレス。API URLはこのIPアドレスから取得されます。</block>
+  <block id="f4ef5ebc27d3b5a17305f41fb5c5db15" category="cell">構成要素グループへの参加</block>
+  <block id="8652be8ec7c0b4c93fed54d63fc4199a" category="cell"><block ref="8f0c7cb61ff113f553b01d302349363d" prefix="" category="inline-code"></block> /<block ref="4647aa62acfd3b810edc652fa314c7cb" prefix=" " category="inline-code"></block> /<block ref="bf32ff9511689bd14861dff657e44726" prefix=" " category="inline-code"></block></block>
+  <block id="d786551e185211b4a5d09185f23fb538" category="inline-link-macro">lustre_inventory.yml</block>
+  <block id="6effedf6fbec7408857e1bfb2b346819" category="cell"><block ref="6effedf6fbec7408857e1bfb2b346819" category="inline-link-macro-rx"></block></block>
+  <block id="b700b11efc5bf105f3d1d016a1898ccb" category="cell">ビルディングブロックごと</block>
+  <block id="edbb7fde506d06d0a74f410ae74ae9bd" category="cell">各インベントリホスト名は、対応する<block ref="3342582e194d63e4c91b56623752c9c6" prefix=" " category="inline-code"></block>ファイルのベース名と一致する必要があります。例えば、ホスト<block ref="fd9c79d5ba03f66eeda1a5779a2f6306" prefix=" " category="inline-code"></block>は<block ref="9fce5ea0bbc826006c4eca4c77528b7f" prefix=" " category="inline-code"></block>を使用し、<block ref="3d1a3866e5aadfdac8b0e07e6740b0fe" prefix=" " category="inline-code"></block>は<block ref="2b15be3da156715623b1ee1a391ea9a3" prefix=" " category="inline-code"></block>を使用します。MGSグループは最初の構成要素にのみ含めてください。基本構成要素および各MDT+OST拡張構成要素にはMDSグループを含め、OSTのみの拡張構成要素からはMDSグループを除外してください。既存のMGSに対して拡張ターゲットを登録するには<block ref="66a6093c519e2b125743a6852a2ec6e3" prefix=" " category="inline-code"></block>を使用してください。</block>
+  <block id="2d19cf156c50d25894c04c35fb419694" category="paragraph">各ホストおよびビルディングブロックごとに設定を繰り返してください。Lustreサーバーごとに<block ref="d15ffd2d191c94654e8e50c55cf273b9" prefix=" " category="inline-code"></block>ファイルを1つ、アレイごとに<block ref="dc2f43c391dc7b72c12fc5ae6d01e2e1" prefix=" " category="inline-code"></block>ファイルを1つ作成し、追加のビルディングブロックごとにインベントリグループを繰り返します。</block>
+  <block id="4ddffb6f5d60e20069aba18bc5a26927" category="paragraph">デプロイメント プレイブックは、共有<block ref="effd9a6216a1b8004049a82746c94314" prefix=" " category="inline-code"></block>ファイルからアレイ、Pacemaker、およびBMCの認証情報を読み込みます。デプロイ前にこのファイルにデータを入力してAnsible Vaultで暗号化するか、<block ref="eba52ae7bfe34d5eddd33dafc00e5e80" prefix=" " category="inline-code"></block>を使用して実行時に値を安全に上書きしてください。平文の認証情報をソース管理にコミットしないでください。</block>
+  <block id="4728df228c58b637c323edba3c3e2651" category="admonition">デプロイメントテンプレートにおけるIPアドレス、ホスト名、インターフェース名、ボリュームサイズなどは、その例です。プレイブックを実行する前に、環境に合わせてすべてのインベントリファイルを変更してください。</block>
+  <block id="b4c9bb8273733c93d9b34e9b8fe4bfad" category="inline-link-macro">Lustre HAクラスタとクライアントをデプロイする</block>
+  <block id="e444981416b2b56e2e032006135ac278" category="paragraph"><block ref="d63814e8d0dc8874c6eba881ba68dc47" category="inline-link-macro-rx"></block>。</block>
+  <block id="5466c0d4ffb6f769d1c408d88d1083c2" category="summary">EF80アレイ、Lustreサーバー、およびAnsibleコントロールノードをデプロイ用に準備します。</block>
+  <block id="b68d1a7653b43062b1d13b68e387e5b8" category="doc">Lustreのデプロイメント環境を準備する</block>
+  <block id="c243ac8f423a29c70eb01c1a8c1ae957" category="paragraph">各 EF80 アレイと Lustre サーバーの管理アクセスおよび基本設定を構成し、ソリューションをデプロイするための Ansible コントロールノードを準備します。</block>
+  <block id="f264ece3aaeed3db20a2b300f28e9fbe" category="section-title">Eシリーズアレイの準備</block>
+  <block id="015845bc306336e251ba0d56cc71e4f8" category="list-text">各コントローラーの管理インターフェイスを設定し、SANtricity System Manager に到達できることを確認します。</block>
+  <block id="e8cd3a67fd7e717452047c8319f2779d" category="list-text">Ansibleインベントリで使用するアレイ名と管理者認証情報を設定します。</block>
+  <block id="8f105d1078a3f1fc3858fca41ae18caa" category="list-text">アレイが最適な状態であり、すべてのドライブが存在し、正しくレポートされていることを確認してください。</block>
+  <block id="5f93f381aa8df330451fa5b834f54def" category="inline-link-macro">Eシリーズのマニュアル</block>
+  <block id="cf9c8969a8f36b71a631549cd210c8af" category="paragraph">管理接続の設定方法については、<block ref="2cc0659a11dd150e4355ca76ab859281" category="inline-link-macro-rx"></block>を参照してください。</block>
+  <block id="202d68e6f10e849c503adec016a54186" category="section-title">Lustreサーバーを準備する</block>
+  <block id="1d9ade1a525ab17b4d5a1b8d2b09a87c" category="list-text">各サーバーのベースボード管理コントローラー（BMC）を帯域外アクセス用に設定し、UEFI システム設定を最大パフォーマンスになるように設定します。</block>
+  <block id="8547ee8ccbab16fc1313ea67f7c1cbc5" category="list-text">サポートされているオペレーティングシステム（RHELまたはRocky Linux）をインストールし、ホスト名と管理ネットワークポートを設定します。</block>
+  <block id="e6b3b756a9c5d91c12715f63dabbe816" category="list-text">*E-Series Lustre* ソリューションの要件を満たすように、すべてのファームウェアおよびソフトウェアパッケージを準備します。要件については、<block ref="50dec6b1119ecf8040454f42ce24288c" category="inline-link-macro-rx"></block>を参照してください。</block>
+  <block id="c905fe3dcc47b0021bfb73ee3d615d27" category="section-title">Ansibleコントロールノードを準備する</block>
+  <block id="5452fd954c3588ac163c8a0e4d94d46f" category="paragraph">すべての Lustre サーバーと E シリーズアレイへの管理ネットワーク アクセスを持つ仮想または物理 Linux システムを、Ansible コントロールノードとして指定します。</block>
+  <block id="3db8211c26067646b30239b42a6650cf" category="inline-link-macro">Ansibleのインストールに関するドキュメント</block>
+  <block id="6624f68bd1c684f6278be9cf8e5c73ab" category="paragraph">以下の手順はUbuntu 24.04を使用します。別の Linux ディストリビューションの手順については、<block ref="75aed5bdfff6643a132a6cb6627cfa57" category="inline-link-macro-rx"></block>を参照してください。</block>
+  <block id="45d8e08cbdfb0c80051d2252faf66e2e" category="list-text">Python、pip、およびPython仮想環境パッケージをインストールします。</block>
+  <block id="85c7fc2b5251a2a1047b7bd19243340f" category="list-text">Python仮想環境を作成してアクティブ化する：</block>
+  <block id="8d61a1feedbb860ef24ffeeb121b3a8f" category="list-text">有効化された仮想環境にAnsibleと必要なPythonパッケージをインストールします：</block>
+  <block id="4b252920722abdb27a58fce5f6847b75" category="list-text">NetApp EシリーズLustre Ansibleコレクションをインストールします。コレクションのインストールでは、SANtricityおよびHostコレクションを含む依存コレクションもインストールされます：</block>
+  <block id="58d742766289ad9f8a66eae3f38d58c1" category="list-text">インストールされている Ansible、Python、およびコレクションのバージョンを確認します。</block>
+  <block id="c361abe3eb19c6b2c20c934ad698ed99" category="list-text">コントロールノードから各LustreサーバーへのパスワードなしSSH接続を設定します。<block ref="1b0e31c855bd7a5dc464ccf21906bea7" prefix=" " category="inline-code"></block>をサーバーの管理IPアドレスまたはホスト名に置き換えます。</block>
+  <block id="c52ff3210c41c4071bbf9378ddfef945" category="paragraph">各Lustreサーバーについて、同じ手順を繰り返します<block ref="d1fd123ca1c739243e073c2b1cd2ea8a" prefix=" " category="inline-code"></block>。</block>
+  <block id="cc9b0c78a14caf25a8424a58645f2ba1" category="admonition">EシリーズアレイへのパスワードレスSSHを設定しないでください。Ansibleは、インベントリで定義された認証情報を使用して、SANtricity Web Services APIを介してアレイを管理します。</block>
+  <block id="8f8e00f4ddf518b4c8df4259e2c96208" category="inline-link-macro">Ansibleインベントリをカスタマイズする</block>
+  <block id="0661c0c85897475266fb322dc1e1c329" category="paragraph"><block ref="5c3c79c91f4421395a6e039ca5ce5cf6" category="inline-link-macro-rx"></block>。</block>
+  <block id="f512fd62623fb95c7da02e83def540a0" category="summary">Lustreクラスタの健全性、マウント状態、容量を確認し、追加の構成要素を使用してファイルシステムを拡張します。</block>
+  <block id="9b1a211e28c27e7be6ab33ec7f15870e" category="doc">Lustreデプロイメントの検証と拡張</block>
+  <block id="bdc457d598b68edd5d84a1f89228d39f" category="paragraph">本番環境で使用する前に、クラスターの状態、Lustreマウント、ファイルシステムの容量を確認し、必要に応じて同じインベントリを使用して構成要素を追加してください。</block>
+  <block id="7b36e2b8da7242fb8b3aeff6be03faee" category="list-text">Lustreサーバーから、すべてのPacemakerリソースが想定されるノードで起動していることを確認します。</block>
+  <block id="56591ae2fa4dc3003f3bfbad61e9823b" category="list-text">Lustreクライアントから、Lustreファイルシステムがマウントされていることを確認します。</block>
+  <block id="72ead98bd79a33a5c23a9e1b1fd24877" category="list-text">Lustreクライアントから、ファイルシステムの容量と、MDTおよびOSTターゲットが表示されていることを確認します。</block>
+  <block id="7cb7830e5b9c67652611ea466146a806" category="paragraph">IOR、mdtest、fio を使用したパフォーマンス検証については、<block ref="fd37d50a703eb90bca5592e7cf7939cb" category="inline-link-macro-rx"></block>を参照してください。</block>
+  <block id="6c94763c7d8df828ecbe010cceec9cfb" category="paragraph">制御されたターゲット移行または HA フェイルオーバー テストについては、<block ref="366b62f6dcea4b62f9ab1e6c11adfdc9" category="inline-link-macro-rx"></block>の手順に従ってください。</block>
+  <block id="a0bbb5f8f21362b9d8f4cddff6521b69" category="section-title">ファイルシステムを拡張する</block>
+  <block id="a71551e38a5b0644628ff55a32469baf" category="paragraph">容量やメタデータのパフォーマンスを向上させるには、既存のインベントリにビルディングブロックを追加して拡張します。新しいビルディングブロック用に別のインベントリを作成しないでください。プレイブックは、固有のMDTおよびOSTインデックスを自動的に割り当て、既存のMGSに対して新しいターゲットを登録します。</block>
+  <block id="fac470f4d13ddc18a7024f7bd30076b8" category="list-text">新しいビルディングブロックホスト、アレイ、リソースグループ（MDT+OSTまたはOSTのみ）を同じインベントリに追加し、<block ref="3342582e194d63e4c91b56623752c9c6" prefix=" " category="inline-code"></block>および<block ref="96fa973cda8809ad84f646e3d8fbbc1c" prefix=" " category="inline-code"></block>ファイルは元のデプロイで使用したものを使用します。</block>
+  <block id="7d471dc171c1928c93a04c7faff513b5" category="list-text">更新されたインベントリに対して、メインのデプロイメントプレイブックを再実行します。</block>
+  <block id="1b0203b9d370708b33f381a1b31a295f" category="paragraph">スケーリングルールについては<block ref="f6c91e3cd1480b3865622c5a1b7e2c1a" category="inline-link-macro-rx"></block>を、各構成要素タイプをいつ追加するかについてのガイダンスは<block ref="fd37d50a703eb90bca5592e7cf7939cb" category="inline-link-macro-rx"></block>を参照してください。</block>
+  <block id="2e548b4b0ee367c75017120d19fdefad" category="summary">NetApp Ansible自動化を使用してNetApp EシリーズストレージでLustreをデプロイするには、ワークフローに従ってください。</block>
+  <block id="c4fa415b14936859bd30c244373b8719" category="doc">NetApp EシリーズストレージでLustreをデプロイする</block>
+  <block id="e7c5f4d355b794ab148c3e19c9065406" category="paragraph">Lustre を NetApp Eシリーズストレージとともにデプロイするには、ハードウェア、環境準備、インベントリ、Ansible デプロイ、および検証の各タスクを順番に完了してください。</block>
+  <block id="634c8a03e1c23b6e01567d5c131eda80" category="paragraph">デプロイを開始する前に、以下の点を確認してください。</block>
+  <block id="96db7f03b12a89b0ca45058db1871021" category="list-text"><block ref="fd37d50a703eb90bca5592e7cf7939cb" category="inline-link-macro-rx"></block>のサイジングとビルディングブロックのガイダンスに従い、<block ref="b951df04c708233bd0e6aa30024a444e" category="inline-link-macro-rx"></block>に一致するハードウェアを選択しました。</block>
+  <block id="9ed4a475dd3705157a9fed8811f63ce2" category="inline-link-macro">NetApp Interoperability Matrix Tool</block>
+  <block id="bdf6a8b01b09cea74e4188812c710058" category="list-text">サーバー、HCA、Eシリーズ、オペレーティングシステム、Lustre、SANtricity OS、およびDOCA-OFEDの組み合わせが、<block ref="27dc27dbb2e442190a59a9d515bed42e" category="inline-link-macro-rx"></block>の *E-Series Lustre* に記載されていることを確認しました。</block>
+  <block id="fb184c2f31e921caeb46e135904d297e" category="list-text">計画されているビルディングブロック用のすべてのOSS/MDSサーバーノードとEシリーズアレイは現場に到着しており、ラックに取り付ける準備ができています。</block>
+  <block id="19e4234fd56bba4caeddc4973c4bb493" category="list-text">サーバーBMC、アレイ管理ポート、およびAnsibleコントロールノードとして機能するホストの資格情報とネットワーク アクセスがあります。</block>
+  <block id="41991ae5fa9af370516bc6e8e7699edf" category="inline-link-macro">NetApp EシリーズLustre Ansibleコレクション</block>
+  <block id="51e937517ed052afa113ee31f25e669e" category="admonition">NetAppは、<block ref="8e2a23bd15e3969732c3c3c02b7e888d" category="inline-link-macro-rx"></block>を使用したLustre HAクラスターとLustreクライアントのデプロイをサポートします。Lustreターゲット、LNet、NVMe-oFホスト接続、またはPacemakerリソースを手動で設定しないでください。</block>
+  <block id="ab3ccb0be518e752d20f706d36d252c9" category="section-title">導入ワークフロー</block>
+  <block id="6446de4e3a4c91eb5ceee947cddbf2cd" category="paragraph">以下のタスクを順番に完了してください。</block>
+  <block id="f8d0621bfc76e98c8da3e8ec2c60a9de" category="list-text"><block ref="18bea05bda8ed8f518d518ea28b4f1ab" category="inline-link-macro-rx"></block>。</block>
+  <block id="384ec04c02303d55f04afb8625c2cd78" category="paragraph">LustreサーバーとEF80アレイをラックに設置し、バックエンドのNVMe-oFファブリックとフロントエンドのLNetファブリックをケーブルで接続します。</block>
+  <block id="05b3aade2a55147217f8d5b60d082545" category="inline-link-macro">Lustreのデプロイ環境を準備する</block>
+  <block id="5ecfb2411abb9ae2f27e3c2bc8e2a772" category="list-text"><block ref="4188895c156711220c815e9a4b2ea443" category="inline-link-macro-rx"></block>。</block>
+  <block id="7081aacf6f5e2318d2326d72a27d2a97" category="paragraph">アレイとサーバーを設定した後、コントロールノードに Ansible とその依存関係をインストールします。</block>
+  <block id="0d6f2ba2a2f5a52bdfd841cd1db512eb" category="list-text"><block ref="48fa4fcc6ef309525d67cfc2e71da78c" category="inline-link-macro-rx"></block>。</block>
+  <block id="f3b74c1b0b29400dbfc46e03b50c19fb" category="paragraph">サイトの構成に使用するテンプレートを選択し、サーバー、アレイ、ネットワーク、ビルディングブロック、および認証情報を入力します。</block>
+  <block id="a2a52db1796cdf539ddfd27ef5732c90" category="paragraph">サーバーオペレーティングシステムを準備し、NVIDIA DOCA-OFEDをインストールし、メインのデプロイメントプレイブックを実行して、Lustreクライアントを設定します。</block>
+  <block id="2b054a0aa93c332a143e0cec3ff9e061" category="inline-link-macro">Lustreのデプロイメントを検証および拡張する</block>
+  <block id="0b1521677ac3664d94ae25b3d6d4c5c2" category="list-text"><block ref="6c60201ff84ef475bbfc690252f1172f" category="inline-link-macro-rx"></block>。</block>
+  <block id="a50a203162e3224c31f5fe2ef16a4ef6" category="paragraph">本番環境で使用する前に、クラスターの状態、マウントポイント、および容量を確認してください。ファイルシステムに新たな構成要素が必要になった場合は、既存のインベントリを拡張します。</block>
+  <block id="30f60d67f457bb040dffde52197a54da" category="section-title">関連情報</block>
+  <block id="8e2a23bd15e3969732c3c3c02b7e888d" category="list-text"><block ref="8e2a23bd15e3969732c3c3c02b7e888d" category="inline-link-macro-rx"></block></block>
+  <block id="b9de6db7191a1a0d0e04fa49d4199e02" category="inline-link-macro">NetApp Lustre ソースリポジトリ</block>
+  <block id="e7ef2acb3680391a121a9687c0ebe804" category="list-text"><block ref="e7ef2acb3680391a121a9687c0ebe804" category="inline-link-macro-rx"></block></block>
+  <block id="366b62f6dcea4b62f9ab1e6c11adfdc9" category="list-text"><block ref="366b62f6dcea4b62f9ab1e6c11adfdc9" category="inline-link-macro-rx"></block></block>
+  <block id="1062a9f69fedd03cf5c196062584b354" category="inline-link-macro">パフォーマンスチューニングガイド</block>
+  <block id="9f4631b80a285f37169fdf4b4c652838" category="list-text"><block ref="9f4631b80a285f37169fdf4b4c652838" category="inline-link-macro-rx"></block></block>
+  <block id="e4af092b71f831178fefaea6eb1922ef" category="inline-link-macro">Lustreクライアント展開テンプレート</block>
+  <block id="59da7ad32ac5797f6501497f3975d0e0" category="list-text"><block ref="59da7ad32ac5797f6501497f3975d0e0" category="inline-link-macro-rx"></block></block>
+  <block id="caa95fe7ebded3747d511825fc6fcc8f" category="summary">NetApp Eシリーズ ストレージを使用したLustreのサーバー、Eシリーズ アレイ、ストレージ レイアウト、およびネットワーク要件を確認します。</block>
+  <block id="b7ea201d504ea6f080678b3c979de443" category="doc">Lustre と NetApp Eシリーズストレージ - ハードウェアコンポーネント</block>
+  <block id="81991feaf6923c4fd9b81edeb70dd9a3" category="paragraph">サーバー、NetApp Eシリーズ アレイ、ストレージ レイアウト、およびネットワークのハードウェア要件は、NetApp Eシリーズ ストレージを使用して Lustre のサイズ設定と注文を行う際にご使用ください。ソフトウェア コンポーネントについては、<block ref="50dec6b1119ecf8040454f42ce24288c" category="inline-link-macro-rx"></block>を参照してください。</block>
+  <block id="a54c13ad42512dbfec4e8a44d793a52e" category="section-title">サーバー要件</block>
+  <block id="78ed065cb3df976744e0d46f7e1f97ca" category="paragraph">このソリューションは、BYOS（Bring Your Own Server：サーバー持ち込み）モデルを採用しています。各構成要素には、以下の仕様を満たすか、それを上回る2つのOSS/MDSサーバーノードが必要です。</block>
+  <block id="e452931b6e576f590cdc2132f39b130b" category="section-title">ノード仕様</block>
+  <block id="e139714fc2ea5bd9ac8bcdd636991cf7" category="paragraph">以下の表は、OSS/MDSノードごとの最小サーバー要件を示しています。</block>
+  <block id="9b97b7bd5e0a87be7bf218224ada83cf" category="cell">要件</block>
+  <block id="b93c1e71d0cc69036373fec0dcd00014" category="cell">ビルディングブロックごとに2つのノード</block>
+  <block id="2b55387dd066c5bac646ac61543d152d" category="cell">CPU</block>
+  <block id="a049576965d96442d114a03d817a5b2d" category="cell">AMD EPYCまたはIntel Xeon、32コア以上</block>
+  <block id="9fada4ad196fc991729d77da6a8f7048" category="cell">256 GB DDR5（最小）</block>
+  <block id="3174063e7fab5fd01a8dc7e162d83800" category="cell">ネットワークHCA</block>
+  <block id="91115ee144fbc5c7db04ab01cfaae42f" category="inline-xref">HCA接続</block>
+  <block id="94f5d4bd00c39175401b53e3083fa6e7" category="cell">6つのデュアルポート200Gb HCA（<block ref="91d5ecc9eeeedc6f912504c692ce76ae" category="inline-xref-macro-rx"></block>を参照）</block>
+  <block id="ed3de05402aeebdbbd72a1163c6ef0c3" category="cell">PCIeスロット</block>
+  <block id="136f2ccfc4df7464cd2d8d3d3151a5a2" category="inline-xref">PCIeスロットの要件</block>
+  <block id="a73df56899af925e823f65941bf78d66" category="cell">2× PCIe Gen5 x16 および 4× PCIe Gen5 x8 （<block ref="9fdc123f380db06577db86c231cb801c" category="inline-xref-macro-rx"></block> を参照）</block>
+  <block id="73bd40fbfbb43e05a7d49999490cd8b5" category="cell">ブートドライブ</block>
+  <block id="a07db6ed1ccb81d8757e348f8e12761f" category="cell">RAID 1構成のドライブ2台（ソフトウェアRAIDまたはハードウェアRAIDを推奨）</block>
+  <block id="34a0cba450633565dd8edc33b276814e" category="paragraph">NetAppは、Lenovo ThinkSystem SR665 V3サーバーを使用してソリューションを検証しました。これらの要件を満たす場合、他社製の同等サーバーもサポート対象となります。</block>
+  <block id="b42ad946fa28ef06221a22e36921c258" category="paragraph">以下の表は、OSS/MDSサーバーノードごとのHCA、LNetフロントエンドポート、およびNVMe-oFパスの要件を示しています。</block>
+  <block id="04f79ca300c4ecd33c5fc70e94db8b78" category="cell">ノードあたりのHCA数</block>
+  <block id="6fe54bd087eedf5557a8a15a2b3c5581" category="cell">LustreノードあたりのLNetポート数</block>
+  <block id="bebcb9fa822ce49b099df7de2dc692df" category="cell">LustreノードあたりのNVMe-oFパス数</block>
+  <block id="36a2b5ba460d59f9fe9b9c905e14fadb" category="cell">HCAの例</block>
+  <block id="e50ec4a698a66b4fa259974f9cf281c9" category="cell">6（12ポート）</block>
+  <block id="361cc1d48f74d44920aa8753cff62bbf" category="cell">合計8個（各アレイに4個ずつ）</block>
+  <block id="6a518eec4f4f044ae9b8e1d68f7d75a5" category="cell">MCX755106AS-HEAT（デュアルポート200Gb PCIe gen5カード）</block>
+  <block id="2e5bc4227e7487d5c5f3e4c7198a7aa6" category="paragraph">NetApp は、EF80ストレージ アレイの帯域幅を最大化するために、ノードあたり6台のHCAを推奨します。</block>
+  <block id="b816d84857aedb981d87478ded2591fe" category="paragraph">EF80ビルディングブロック内の各OSS/MDSサーバーノードには、6つのデュアルポートHCAが搭載されています。内訳は、LNet用が2つ、NVMe-oF用が4つです。スロット幅は各HCAで使用可能な帯域幅を決定するため、カード単体の幅ではなく、各スロットとライザーの電気的幅を確認してください。Gen5 x8スロットにGen5 x16カードを挿入すると、x8で動作します。</block>
+  <block id="017880590506bf9828d8a6d8ed843069" category="list-text">*LNet HCAs:* フロントエンドのスループットを最大限に引き出すには、PCIe Gen5 x16 スロットにインストールしてください。</block>
+  <block id="d9b61efd07bfce373a3d6debb3e68ca1" category="list-text">*NVMe-oF HCAs:* PCIe Gen5 x8 または PCIe Gen5 x16 スロットに取り付けます。</block>
+  <block id="4b924cd64cab85a53d7c8707226caff4" category="list-text">*NUMAバランス：* HCAを2つのNUMAゾーンに均等に分割し、各ゾーンに2つのLNetインターフェースと4つのNVMe-oFインターフェースを配置します。</block>
+  <block id="e81dc46e61b8efa1caeebc8fa2cf1de2" category="paragraph">以下の表は、EF80ビルディングブロック内の各OSS/MDSサーバーノードに必要な最小スロット数を示しています。</block>
+  <block id="89652e228f31afd994aaf865c5a3cf43" category="cell">トラフィックタイプ</block>
+  <block id="59065c8586207fb91f7f3a7d2f6585ff" category="cell">最小スロット幅</block>
+  <block id="9c57a7a0125988664fa9e571e956761c" category="cell">NUMAゾーンごとのスロット数</block>
+  <block id="7adc9aaf7a709c04465b8be2b625ac55" category="cell">LNet</block>
+  <block id="4879ce833a0d9c6f3525586e5c17574f" category="cell">PCIe Gen5 x16</block>
+  <block id="6151632541dcd80356c6c76b34d69d0c" category="cell">NVMe-oF</block>
+  <block id="c8e9eae5723730c0a28c5c18050509bd" category="cell">PCIe Gen5 x8</block>
+  <block id="93e46d5be1dfcebf5a0312e47dd1a08b" category="paragraph">オプションとして、デュアルポートHCAのポートを分割し、一方のポートでLNetトラフィックを、もう一方のポートでNVMe-oFトラフィックを伝送するように設定できます。これら4つのHCAをすべてPCIe Gen5 x16スロットに取り付けて、すべてのLNetポートがフルスループットに達するようにします。その後、残りのNVMe-oFポート用に、さらに2つのHCAをGen5 x8またはGen5 x16スロットに追加します。</block>
+  <block id="e57447ad8a8d0ad93aa00fa69630452e" category="example-title">Lenovo ThinkSystem SR665 V3 のライザー構成例</block>
+  <block id="bbd4d047c88735bc852c18bf4819702e" category="paragraph">以下の2つのライザーの組み合わせはどちらも、EF80ビルディングブロックのスロット要件を満たしています。</block>
+  <block id="25bc9491897a5c4b24406688428aacdd" category="paragraph">*最小スロット幅*</block>
+  <block id="42fae264b9f290a4ad9a2fa547be6583" category="paragraph">ライザー位置1と2にBPQUライザーを取り付けてください。各BPQUライザーには、PCIe Gen5 x16スロットが1つとPCIe Gen5 x8スロットが2つ搭載されています。これらのライザーを組み合わせることで、LNet用のGen5 x16スロットが2つ、NVMe-oF用のGen5 x8スロットが4つ提供され、これらはNUMAゾーン間で均等に分配されます。</block>
+  <block id="f16e60a24a1ac25de0216c5166cf683e" category="inline-image-macro">Lenovo ThinkSystem SR665 V3の背面図。BPQUライザーが位置1と2に配置されており、NUMAゾーンごとに1つのPCIe Gen5 x16スロットと2つのPCIe Gen5 x8スロットが示されています。</block>
+  <block id="6358b3e11dc1f96b2a895c64c974eff1" category="paragraph"><block ref="6358b3e11dc1f96b2a895c64c974eff1" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="24f23035dc6e8677da9c4b9c43b6025b" category="paragraph">*すべてのGen5 x16スロット*</block>
+  <block id="068285d2f7495639d808b09bf2243a36" category="paragraph">ライザー位置1と2にはBPQVライザーを、ライザー位置3にはBLL9ライザーを取り付けてください。各BPQVライザーには、2つのPCIe Gen5 x16スロットが搭載されています。BLL9ライザーは、NUMAゾーン0にスロット7、NUMAゾーン1にスロット8（いずれもPCIe Gen5 x16）を提供します。この組み合わせにより、NUMAゾーンごとに3つずつ、合計6つのGen5 x16スロットが提供され、同じHCAのポート間でLNetとNVMe-oFのトラフィックを分割することをサポートします。</block>
+  <block id="fff0668328c6d36b56cf8e5ed7f4e84d" category="inline-image-macro">レノボ ThinkSystem SR665 V3の背面図。位置1と2にBPQVライザー、位置3にBLL9ライザーが配置され、2つのNUMAゾーンにバランスよく配置された6つのPCIe Gen5 x16スロットが確認できます。</block>
+  <block id="e441b41777f230105bc86ea39e8563ca" category="paragraph"><block ref="e441b41777f230105bc86ea39e8563ca" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="1765c02ab7d15d86df8ef8035ababf81" category="section-title">EF80標準ビルディングブロック</block>
+  <block id="099068557034096e5947c45a5a4f8ac4" category="paragraph">EF80は、このソリューションリリースにおいて検証済みの標準プラットフォームです。</block>
+  <block id="ed8b6a4496f4b1a82c54ccc9cab580f6" category="section-title">アレイ仕様</block>
+  <block id="fc020f5d89405a936b2cf9f0537596ce" category="paragraph">以下の表は、EF80アレイの構成要素（2つのアレイ）の仕様を示しています。</block>
+  <block id="875b0e30e76428bc0706b781b36b31aa" category="cell">仕様詳細</block>
+  <block id="68ecd453fb43d227d49c318213fb28a9" category="cell">NetApp EF80</block>
+  <block id="9efd743b10abbfb56a447d476d84417e" category="cell">フォーム ファクタ</block>
+  <block id="55d943f8f4869a46a33edc808c11baee" category="cell">2Uベースシャーシ、24個の内部NVMe SSDスロット</block>
+  <block id="cbfb14f470701bf93424d757c624369a" category="cell">コントローラ</block>
+  <block id="9f115c37b3c44c920f538bc7bae444e4" category="cell">デュアルコントローラー（AとB）</block>
+  <block id="63a6b9b3b5de50d32228700cfe042610" category="cell">システムの</block>
+  <block id="3316683fedafa7e596384f15ab9f7aa4" category="cell">アレイあたり24× NVMe SSD</block>
+  <block id="115d5fe153ac0eb60c5da1768094f759" category="cell">入出力接続</block>
+  <block id="8e219b200e3c81e016857500975f1dda" category="cell">検証済みのLustre設計では、アレイあたり8× 200Gb NVMe/IBまたはNVMe/RoCEホストポート</block>
+  <block id="6c5426ec4b27eee4669fb4c94b380c1b" category="paragraph">EF80プラットフォームは、各コントローラに2ポートのホストI/Oモジュールを3つ搭載した場合、アレイあたり最大12個のホストポートをサポートします。検証済みのLustre設計では、スロット1と2にホストI/Oモジュールを使用し、アレイあたり8つのホストポートを提供します。</block>
+  <block id="731ebee23e331d859e88ac080271361b" category="paragraph">各EF80アレイは、コントローラ間のミラーリングのために専用のスロット4 I/Oモジュールも使用します。コントローラAのポート4aをコントローラBのポート4aに、コントローラAのポート4bをコントローラBのポート4bに接続してください。これらの接続はキャッシュミラーリングとI/O転送を提供するものであり、ホストのNVMe-oFトラフィックには使用されません。参照してください<block ref="2167f991eb9981359d79aa07afa06edc" category="inline-link-macro-rx"></block>。</block>
+  <block id="75accf3dcef2d9c3e9dbe705113b051c" category="inline-link-macro">NetApp EFシリーズ オールフラッシュ アレイ データシート</block>
+  <block id="45a1a3c9bbfbafab9bafe87965faab9d" category="paragraph">EFシリーズの全モデルの詳細仕様については、<block ref="3763b875a199c9f3b55717ee21ea1a75" category="inline-link-macro-rx"></block>を参照してください。</block>
+  <block id="99630099f424a9c7b805230d850190ba" category="section-title">ドライブ構成（アレイあたり24台のドライブ）</block>
+  <block id="d54adc2cb5e2aaad6185dd7d1713c006" category="paragraph">基本ビルディングブロック内の各EF80アレイは、24個のNVMeドライブスロットすべてを使用します。</block>
+  <block id="48ad878bc96958eff82106474f087415" category="list-text">MGS/MDTストレージ用のRAID 1構成のドライブ4台（共有ボリュームグループまたはDDP割り当て）</block>
+  <block id="7210016fbf7fd878170c76c8afaf4eb5" category="list-text">OSTストレージ用にRAID 6構成のドライブ10台（最初のOSTプール）</block>
+  <block id="728458f10c65d1d220b2cb8a581bbbd2" category="list-text">OSTストレージ用（セカンドOSTプール）にRAID 6構成のドライブ10台を使用</block>
+  <block id="c1691d3196804b2efabd5f48c29c6d4c" category="paragraph">このストレージ レイアウトは、3.84 TB、7.68 TB、または 15.3 TB のドライブを従来のボリュームグループで使用する場合に適用されます。30.7 TB または 61.4 TB の Capacity Flash （QLC） ドライブを使用する場合は、24 台のドライブすべてにわたって単一のダイナミック ディスク プールをプロビジョニングし、プール内に MGS および MDT ボリューム用の RAID 1 ボリュームを作成し、OST にはデフォルトの RAID 6 ボリュームを使用します。</block>
+  <block id="edb5641665bc486497fd9e7920923bc2" category="admonition">1.92 TBのドライブは、現時点ではこのソリューションには推奨されていません。上記に記載されている、検証済みのドライブ容量のいずれかを使用してください。</block>
+  <block id="b419fbdf2d118176e0f6adcbb1d99bc7" category="inline-image-macro">Lustre ストレージ レイアウト（EF80 アレイあたり 24 台の NVMe ドライブ）</block>
+  <block id="55c3520d74000136762b9bb0923e6628" category="paragraph"><block ref="55c3520d74000136762b9bb0923e6628" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="17dc4581092a0978deb62717a11f5a3e" category="section-title">ボリュームとターゲットカウント（基本構成要素）</block>
+  <block id="3cbc775f08ccfdf141850e7218d0f13a" category="paragraph">以下の表は、基本構成要素ごとのMGS、MDT、およびOSTの数を示しています。</block>
+  <block id="4b5c3b58ede7a0d491ab1747a82d7023" category="cell">対象タイプ</block>
+  <block id="eb2c08111c5fdf7a89eae6bfd370ee67" category="cell">BB1個あたりのカウント</block>
+  <block id="18554b17590a7acfecccce391f155585" category="cell">RAID / プール</block>
+  <block id="b570b356e451561b543910c162ea4887" category="cell">RAID 1</block>
+  <block id="57d92c72fa5a1925944e22ec1e8b3152" category="cell">基本構成要素のみ；アレイ1</block>
+  <block id="c9b9ae1b4267024d489995d8371bbb3b" category="cell">MDT</block>
+  <block id="214543128bd54d1f5b887d33e6ed5822" category="cell">配列あたり4個</block>
+  <block id="d4f3255a163ffc89a90dcfc1275787b4" category="cell">OST</block>
+  <block id="2b116cf8287ed646770b256104ded46d" category="cell">RAID 6 (TLC) または DDP (QLC)</block>
+  <block id="d8fb23be0a5d01a77e3a1526fa67fd05" category="cell">アレイあたり16</block>
+  <block id="88169d5f5a6db17cadad8063250cac84" category="paragraph">Ansibleインベントリを作成する際の出発点として、以下のボリュームサイズ設定ガイドラインを使用してください。</block>
+  <block id="7ab06248edcf5ef00ed9c5a20078e126" category="cell">推奨サイズ</block>
+  <block id="774b7401cbec0cc0c0bf37d0ed482e68" category="cell">5～10 GiB</block>
+  <block id="2f4ef260f2a93a460aad488814320f77" category="cell">設定データのみ</block>
+  <block id="16ff1695f2688f1eb59ab2b823782d38" category="cell">RAID 1容量 ÷ MDT数</block>
+  <block id="513a2f16127f2b1cd1d4ead9d0a1d6fe" category="cell">それぞれ約1～2 TiB（標準値）</block>
+  <block id="1c1a315b0fb2350dba8a0994704e9f25" category="cell">RAID 6またはDDP容量÷プールあたりのOST数</block>
+  <block id="1a73114d8c2cae924ffbb4e56b0be00c" category="cell">ドライブ容量に応じてスケーリングします。<block ref="fd37d50a703eb90bca5592e7cf7939cb" category="inline-link-macro-rx"></block>を参照してください。</block>
+  <block id="c9e4f284ea4bc6ee4ffef88655c3ec75" category="section-title">プライマリビルディングブロックのボリューム分散</block>
+  <block id="abfa81f45567e6183dbe69416b85863f" category="paragraph">次の図は、基本EF80ビルディングブロックにおけるOSS/MDSサーバーノードおよびEシリーズアレイ全体にわたるLustreターゲットの推奨配置とNVMe-oF接続を示しています。図では、管理ターゲットを *MGT*（管理ターゲット）と表記しています。1つのMGTは、このドキュメントの別の箇所で参照されているMGS（管理サーバー）サービスをホストします。</block>
+  <block id="9dcfed954e3861ba5d3ad8eec8977a30" category="paragraph-title">基本構成要素の目標分布（EF80）</block>
+  <block id="6b63b075c2fe3eec9fadad4d1dff1934" category="inline-image-macro">OSS/MDSサーバーノードおよびEシリーズアレイ全体にわたるLustreターゲットの分散とNVMe-oFパス（基本EF80ビルディングブロック内）</block>
+  <block id="ba71f32a6a7ae638d1f32be405bdc274" category="paragraph"><block ref="ba71f32a6a7ae638d1f32be405bdc274" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="4f9d21caea706bcb18efb4c63bd62aca" category="paragraph">以下の表は、ボリュームが2つのアレイ間でどのように分散されているか、および各ターゲットがどちらのサーバーを優先するかを示しています。</block>
+  <block id="e7900a0eb431a2b052bcd3085cce0913" category="cell">アレイ1</block>
+  <block id="f908fa5126d6544f1ab00e51870f0d03" category="cell">アレイ2</block>
+  <block id="d6215740bda3784681fb145c37570b01" category="cell">サーバー1</block>
+  <block id="4c9e921e05ec66314d5aca64cd2089b0" category="cell">サーバー2</block>
+  <block id="f7462993267777388adc7b523aa91283" category="cell">基本ビルディングブロックのみ</block>
+  <block id="3c5a7a9a6658ef9ca0bc3285cedd12fd" category="cell">各サーバーは、各アレイから2つのMDTを優先的に選択します。</block>
+  <block id="7720a0a093547746fb9c28fa647bdc4a" category="cell">RAID 6プールあたり8 × アレイあたり2プール、または同等のDDP割り当て</block>
+  <block id="a4737e750a3cc072e2de0cbfed013a9f" category="cell">*総ボリューム数*</block>
+  <block id="5361a4a31f16c2727eea74663d43cfef" category="cell">*21*</block>
+  <block id="cc9c3e7ef1ccd7735f183b0f85fabbc5" category="cell">*20*</block>
+  <block id="87115ea827e568992ff6254262182fad" category="section-title">ストレージプールの選択：TLC vs QLC</block>
+  <block id="8a1a8395aadef29e919648e2370bc2e5" category="paragraph">アレイ内のNVMeドライブ容量に基づいてEシリーズのプールタイプを選択してください：</block>
+  <block id="312b3904d397e8acaf0dc33e9634b0f2" category="list-text">*3.84 TB、7.68 TB、および 15.3 TB ドライブ：* OST ボリュームには *RAID 6 ボリュームグループ* を、MGS および MDT ボリュームには *RAID 1 ボリュームグループ* を使用するか、共有ドライブプールには DDP を使用します。</block>
+  <block id="fbdc62c247ebc132cdd9a5e831996143" category="list-text">*30.7 TB および 61.4 TB 容量のフラッシュ (QLC) ドライブ：* *ダイナミック ディスク プール (DDP)* のみを使用してください。MGS および MDT ストレージ用に、DDP 内に RAID 1 ボリュームを作成します。DDP から OST ストレージ用の RAID 6 ボリュームを作成します。</block>
+  <block id="ccfefb464f5df4d6ebb06b1724291f0b" category="paragraph">ドライブのサイズとレイアウト別の構築ブロックごとの使用可能容量の見積もりについては、<block ref="fd37d50a703eb90bca5592e7cf7939cb" category="inline-link-macro-rx"></block>を参照してください。</block>
+  <block id="bdd8837c5f5666c1f37ec05326aa385f" category="section-title">ネットワーク要件</block>
+  <block id="b374c02c23c43b6770829fceebc42fac" category="section-title">バックエンド（NVMe-oF）</block>
+  <block id="b3d563e4241c1f8fa7c8d5c9fec4bdc2" category="list-text">NVMe/InfiniBandまたは各OSS/MDSノードと各EシリーズアレイとのNVMe/RoCE</block>
+  <block id="94a30a8068a5aa4b74271a8f9bc93215" category="list-text">NVMe/RoCE バックエンド インターフェイス上の MTU 9000 （通常）</block>
+  <block id="011be5d8aea7d6a0794481da8e0c780e" category="list-text">各Lustreノードからストレージアレイへの8つのパス（各アレイへ4つ）</block>
+  <block id="0f01398befdf8b3a5f7516261c268a54" category="inline-link-macro">EF80 6 HCAバックエンドケーブル接続</block>
+  <block id="82fee62126751ddf3305ff61f08a0be1" category="list-text">EF80は、ノードごとに6つのHCAを使用します（NVMe-oFの場合はi2、i3、i5、i6、LNetの場合はi1、i4）。ノードAを、ラベルの末尾が<block ref="0cc175b9c0f1b6a831c399e269772661" prefix=" " category="inline-code"></block>であるコントローラポートにケーブル接続します（例：<block ref="efaa153b0f682ae5170a3184fa0df28c" prefix=" " category="inline-code"></block>や<block ref="e36314e624d2b2ca257e1f1ecb381f93" prefix=" " category="inline-code"></block>）。ノードBを、ラベルの末尾が<block ref="92eb5ffee6ae2fec3ad71c777531578f" prefix=" " category="inline-code"></block>であるコントローラポートにケーブル接続します（例：<block ref="a35aea60fe097c885568babb48ee7d1e" prefix=" " category="inline-code"></block>や<block ref="f8bc2fbe2c937ea5b5e8839cbea69491" prefix=" " category="inline-code"></block>）。<block ref="edb65af51b5b76af78c51b3678ad8402" category="inline-link-macro-rx"></block>を参照してください。</block>
+  <block id="8a4b8798ab4caa9e54e6dcd1741f20ef" category="section-title">フロントエンド（LNet）</block>
+  <block id="86adc200b8e8c47e240f8017eb6b489d" category="list-text">LNet の IPoIB または RoCE <block ref="c49f0c3c2926c11287cf9b9355c7aa1f" prefix="(" category="inline-code"></block> ネットワークタイプ）</block>
+  <block id="2abb61ccfc9e540001c985b539006316" category="list-text">RoCEフロントエンドインターフェースのMTU 9000（標準）</block>
+  <block id="2f7a335df40dbc598eb3769a68a65bbe" category="list-text">フロントエンドポートが4つ利用可能な場合（EF80：i1およびi4 HCA、両方のポート）、マルチレールLNetの使用を推奨します。</block>
+  <block id="61c21286db2f11dbaf60ba2e64e10212" category="list-text">専用のInfiniBandまたはRoCEスイッチファブリックで、OSS/MDSサーバーノードとLustreクライアントを接続</block>
+  <block id="5ee35a82d01497dffb5640490e92fcea" category="list-text">RoCEファブリックではロスレスRoCE（PFC）を推奨します</block>
+  <block id="fe4dbcab9b910577e5035e97ac068dae" category="section-title">管理</block>
+  <block id="31e5d6897cccc36b8c5b264d6d06d17e" category="list-text">サーバーBMCおよびアレイ管理ポート用の帯域外管理ネットワーク</block>
+  <block id="f3b30a75854b3cd35b00f6633c1cb4e1" category="list-text">専用のCorosyncネットワークまたは共有フロントエンドファブリック（サイトによって異なる）</block>
+  <block id="a971692564529effd1b1270a2a6d1be7" category="summary">Lustre と NetApp Eシリーズストレージは、NetApp Eシリーズオールフラッシュアレイを使用した再現可能なビルディングブロックアーキテクチャにより、AIおよびHPCワークロード向けに検証済みのスケーラブルな並列ファイルシステムを提供します。</block>
+  <block id="888fbbb67b463874639198729553a2c5" category="doc">Lustre と NetApp Eシリーズストレージ - 概要</block>
+  <block id="551e8f9c00e2572dd220f4af7e5590a5" category="paragraph">Lustre と NetApp Eシリーズストレージは、HAサーバーペアとEシリーズオールフラッシュアレイの繰り返し可能な構成要素から構築された、AIおよびHPCワークロード向けの検証済み並列ファイルシステムソリューションです。</block>
+  <block id="721d467e631ca0b407762c8ded76ad2b" category="paragraph">Lustre と NetApp EシリーズストレージはオープンソースのLustre並列ファイルシステムと NetApp Eシリーズブロックストレージを組み合わせることで、データ集約型ワークロード向けのスケーラブルなハイパフォーマンス基盤を提供します。各ビルディングブロックは、高可用性（HA）用に構成された2つのOSS/MDSサーバーノードと2つのEシリーズ オールフラッシュアレイをペアにしています。バックエンドのNVMe-oF接続によりブロックI/Oがアレイに伝送され、別のLNetファブリックがクライアントとOSS/MDSサーバーノードを接続して並列ファイルシステムアクセスを実現します。</block>
+  <block id="90dcc7ba481f73de6e19244d8cb3faa1" category="paragraph">基本構成要素は、管理サーバー（MGS）、初期メタデータターゲット（MDT）、およびオブジェクトストレージターゲット（OST）をホストします。追加の構成要素は、ベースとなるMGSに登録され、ワークロードの需要増加に応じてメタデータ容量、データ容量、および総スループットを拡張します。</block>
+  <block id="fc867d1b66dc4bfa1fcc5398878562a3" category="paragraph">次の図は、複数のビルディングブロックとLustreクライアントがLNet経由で接続されたデプロイメントの例を示しています。</block>
+  <block id="bbaa0bd4e33c53fb27a995509baf9809" category="paragraph-title">Lustre と NetApp Eシリーズストレージソリューションの概要</block>
+  <block id="3de9beda22b5738ed507f4320ebd16d2" category="inline-image-macro">Lustre と NetApp Eシリーズストレージソリューションの概要（構成要素とクライアントを含む）</block>
+  <block id="d18cd12ca955a0d4461a8bd26b4a62b6" category="paragraph"><block ref="d18cd12ca955a0d4461a8bd26b4a62b6" category="inline-image-macro-rx" type="image"></block></block>
+  <block id="e5a4a25c986e70bef8837211beda74c5" category="summary">NetApp Eシリーズストレージを使用したLustreの関連ドキュメント、ツール、およびソフトウェアをご確認ください。</block>
+  <block id="80456a973884931f76f18e20f1b88d92" category="doc">Lustre と NetApp Eシリーズストレージ - 関連リソース</block>
+  <block id="4102f0b5b086858fa22e676362d1b795" category="paragraph">Lustre と NetApp Eシリーズストレージのデプロイメントをプランまたは拡張する際は、関連するドキュメント、ツール、ソフトウェアについて、これらのリンクを使用してください。サイジングとデプロイの手順については、<block ref="fd37d50a703eb90bca5592e7cf7939cb" category="inline-link-macro-rx"></block> および <block ref="8f49e9bdbd514d6a8081d8c90c9f306a" category="inline-link-macro-rx"></block> を参照してください。</block>
+  <block id="ed08ca4078374e76c6df3f1999af7274" category="section-title">NetAppのリソース</block>
+  <block id="e016dafca1cca24ab39f1acf3f59ca72" category="list-text"><block ref="27dc27dbb2e442190a59a9d515bed42e" category="inline-link-macro-rx"></block>。*E-Series Lustre* を検索します。</block>
+  <block id="3763b875a199c9f3b55717ee21ea1a75" category="list-text"><block ref="3763b875a199c9f3b55717ee21ea1a75" category="inline-link-macro-rx"></block></block>
+  <block id="b84be9aeeb7d442b640d3bd848f311a8" category="inline-link-macro">NetApp SANtricity System Manager ドキュメント</block>
+  <block id="c342c84ee7efec3704a54620e4065b6d" category="list-text"><block ref="c342c84ee7efec3704a54620e4065b6d" category="inline-link-macro-rx"></block></block>
+  <block id="801fb9c6d060327b67b48b4b980fba6c" category="inline-link-macro">NetApp ansible-lustreコレクション</block>
+  <block id="dc7f6a9434c69a7d96a27eaf8f6a5810" category="list-text"><block ref="de7ef047282cd8f5c2a6e192940a1ba6" category="inline-link-macro-rx"></block>。インベントリフィールドのガイダンスについては、<block ref="48fa4fcc6ef309525d67cfc2e71da78c" category="inline-link-macro-rx"></block>を参照してください。</block>
+  <block id="91a4557f9eb7d50540382e1f00258306" category="list-text"><block ref="e7ef2acb3680391a121a9687c0ebe804" category="inline-link-macro-rx"></block>。NetAppは、Rocky Linux 9.8およびRed Hat Enterprise Linux 9.8用のLustreサーバーRPMパッケージ（ビルド済み）を提供します。NetAppソースから、クライアントオペレーティングシステムとカーネル用のLustreクライアントパッケージをビルドします。</block>
+  <block id="272e2791266a1c05b53f467fd4e215fc" category="section-title">Lustreコミュニティ</block>
+  <block id="20d075262dba6c66c6b234942f75e15c" category="inline-link-macro">Lustreファイルシステム</block>
+  <block id="213e36085425d4e1da968c8691faa4ed" category="list-text"><block ref="213e36085425d4e1da968c8691faa4ed" category="inline-link-macro-rx"></block></block>
+  <block id="4c0ee2e702465cabf84aca52c40af703" category="list-text"><block ref="612e690bea76796aad3a16779b18be6e" category="inline-link-macro-rx"></block>クライアントオペレーティングシステムおよびカーネル向け</block>
+  <block id="572d7d4c247e39abc81276ad61bda94d" category="inline-link-macro">Lustre Wiki：Lustreチューニング</block>
+  <block id="f20d6276bdb17320fda3a696111a0d9c" category="list-text"><block ref="f20d6276bdb17320fda3a696111a0d9c" category="inline-link-macro-rx"></block></block>
+  <block id="49ba65b58125bde5c701c1152dbdb41d" category="section-title">関連する NetApp AI インフラストラクチャソリューション</block>
+  <block id="345d569e2c898b48aaaa804d305550c7" category="list-text"><block ref="345d569e2c898b48aaaa804d305550c7" category="inline-link-macro-rx"></block></block>
+  <block id="1db760587a86f5c1b9ab39aa8cf8cf3d" category="inline-link-macro">NetApp Eシリーズストレージを使用したIBM Spectrum Scaleのデプロイ</block>
+  <block id="f11bce155d611798d1912aa61e8901b3" category="list-text"><block ref="f11bce155d611798d1912aa61e8901b3" category="inline-link-macro-rx"></block></block>
+  <block id="9b31c43608a903b3b7af19106b8ccc40" category="list-text"><block ref="9b31c43608a903b3b7af19106b8ccc40" category="inline-link-macro-rx"></block></block>
+  <block id="7e756b7eef65f36227a7b85af8135456" category="summary">容量とメタデータのニーズに応じて NetApp EシリーズストレージのビルディングブロックでLustreのサイジングを行い、拡張のタイミングを決定し、パフォーマンスに影響を与える要因を確認します。</block>
+  <block id="59c3f54c9a0cecdea180a6456551f46d" category="doc">Lustre と NetApp Eシリーズストレージ - サイジングガイダンス</block>
+  <block id="d0251bd1f80532046cdfdcea7bc1ab03" category="paragraph">容量とメタデータのニーズに基づいて NetApp EシリーズストレージのビルディングブロックでLustreのサイズを決定し、容量を追加するタイミングを判断して、パフォーマンスに影響する要因を確認します。</block>
+  <block id="12e479a1ce559951ecb94cea66c585f3" category="section-title">容量サイジング</block>
+  <block id="74d91d3e01704d33bc05d0aee3fb1378" category="paragraph">2台のEF80アレイで構成される基本ビルディングブロックは、次のLustreターゲットレイアウトを提供します。推奨されるターゲットの配置とNVMe-oFパスについては、<block ref="b951df04c708233bd0e6aa30024a444e" category="inline-link-macro-rx"></block>の<block ref="8bc00f55bad76f62eced17332034b2aa" category="inline-link-macro-rx"></block>を参照してください。</block>
+  <block id="e93f994f01c537c4e2f7d8528c3eb5e9" category="cell">数</block>
+  <block id="a1973c341c7bad553b2bd00820b204be" category="cell">標準的なボリュームサイズ（ターゲットあたり）</block>
+  <block id="1a47456e43cf15df911f2376bbaee476" category="cell">5～10 GiB</block>
+  <block id="37da030cbd42d7475398218adf8b3f1d" category="cell">サイズはドライブ容量とRAID構成によって異なります</block>
+  <block id="a79871208c930b8bcf98799a0c2e1b03" category="paragraph">各EF80アレイは24台のNVMeドライブを使用します。対応容量は、従来のボリュームグループ（MGS/MDTの場合はRAID 1、OSTの場合はRAID 6）またはDDPを使用した場合、3.84 TB、7.68 TB、15.3 TBです。また、DDPのみを使用した場合、30.7 TBまたは61.4 TBのCapacity Flash（QLC）ドライブが対応します。1.92 TBドライブは、現時点ではこのソリューションには推奨されていません。ドライブスロットのレイアウトとプールの選択については、<block ref="b951df04c708233bd0e6aa30024a444e" category="inline-link-macro-rx"></block>を参照してください。</block>
+  <block id="9de6a58c633ced695e7f35182e4f9c63" category="paragraph">以下の表は、EF80ビルディングブロック（アレイ2基、ドライブ48台）のおおよその使用可能容量を示しています。アレイの使用可能容量は、最終的なLustreファイルシステムの使用可能容量とは異なります。MDTのinode割り当て、ジャーナル、オーバープロビジョニング、およびインベントリボリュームの割合は、アプリケーションで使用可能な容量を減少させます。</block>
+  <block id="bf4f4c18d7c050df8976c2158378f211" category="cell">ドライブ容量</block>
+  <block id="b014e19abb88d7a6895fa9a4978359c2" category="cell">レイアウト（アレイごと）</block>
+  <block id="24de389e1b80346cfc5655dde589d264" category="cell">おおよそ使用可能な量（構成要素）</block>
+  <block id="841ea7afe795b1f98fa361e5a937261b" category="cell">3.84 TB</block>
+  <block id="504badece79df74e1ca6a1943d9ea638" category="cell">RAID 1（2+2）+ RAID 6（10）+ RAID 6（10）</block>
+  <block id="a4a7870bd0f30a501a3bc37f298069e2" category="cell">138.08 TB</block>
+  <block id="f9ee319553daeb50ac9c1bd728f141cc" category="cell">DDP（24ドライブ、2予約済み）</block>
+  <block id="6bb2f6c5e4d96bf8ece28ee94d769d61" category="cell">133.63 TB</block>
+  <block id="905eb11b1164dde7de88ccc095db332a" category="cell">7.68 TB</block>
+  <block id="e3c57404bad7f03d0fad7d2667cc4d18" category="cell">276.35 TB</block>
+  <block id="8db55378b1ad856c51cbced3a802cf51" category="cell">DDP（24）</block>
+  <block id="c5ec564364fe6f3a8f4127941faf6a13" category="cell">267.47 TB</block>
+  <block id="a9773e9c4005724e36e58faf83312b93" category="cell">15.3 TB</block>
+  <block id="fff2b38f6568264c123f485d4712b2ec" category="cell">552.88 TB</block>
+  <block id="7e75112ad5c27d9638d9c377e68c1cef" category="cell">535.15 TB</block>
+  <block id="655523e8b6dc97cc5f09578f26864c6b" category="cell">30.7 TB</block>
+  <block id="f5feb804f8feca4de703cdcdb2289ade" category="cell">DDPのみ</block>
+  <block id="08de6cc45bdd714c2a30c46236813c5b" category="cell">1,070.35 TB</block>
+  <block id="c9bba9d9690235f20292e75cb68c184f" category="cell">61.4 TB</block>
+  <block id="ea54dfd3b77728997ed3f50f00001833" category="cell">2,162.70 TB</block>
+  <block id="19e92cc95f52bcadee0ac5af136e0e4d" category="paragraph">メタデータとデータのサイズを個別に設定し、その後、Ansibleインベントリでボリュームサイズを設定します。デプロイメント テンプレートは ldiskfs を使用してターゲットをフォーマットします。MDT は Lustre のデフォルトの inode 比率を使用し、OST テンプレートは<block ref="3c645790e3726dcf6be13baa9c1e56c2" prefix=" " category="inline-code"></block>を設定します。</block>
+  <block id="a06df10f2c87a60cbc7cb20ae5ce2661" category="list-text">*メタデータ（MDT）：* 予想されるファイル数に基づいてMDTのサイズを決定します。ファイル数の増加を見込んで、予想されるファイル数の約2倍のファイル数を確保してください。MDTのサイズが不足していると、OSTの容量に余裕があっても、新しいファイルの作成ができなくなる場合があります。</block>
+  <block id="935cb846bf7018be2b36205354a885cb" category="list-text">*データ（OST）：* 使用可能な容量とスループットのニーズに基づいてOSTのサイズを決定します。</block>
+  <block id="0a280617c3c5d75f5cad72b4d235544a" category="list-text">*MGS:* ファイルシステム構成のためだけに、小さな管理ターゲット（5～10 GiB）を使用します。</block>
+  <block id="d78f2c10b39a4de8134e05cbbeef88cf" category="paragraph">選択したドライブ容量に合わせて、インベントリ内のMDTおよびOSTボリュームのサイズを調整してください。<block ref="cacffef7307ad1ca469fde6b5578422a" prefix=" " category="inline-code"></block>の<block ref="11493f05b06ee0c05f68413399f7a704" prefix=" " category="inline-code"></block>または<block ref="c5d13f36ab0941dd19bdbf0e007c972b" prefix=" " category="inline-code"></block>は、サイトが異なるinode比率を必要とする場合にのみ変更してください。inode比率の背景については、<block ref="f20d6276bdb17320fda3a696111a0d9c" category="inline-link-macro-rx"></block>を参照してください。ビルディングブロックを追加するタイミングについては、<block ref="bf0eac056881e080673af3338260e54f" category="inline-xref-macro-rx"></block>を参照してください。</block>
+  <block id="bc967dc2d57e6eff184a821bf7577a80" category="section-title">スケーリング</block>
+  <block id="b5165c065ecd6f7df456195a5837649f" category="paragraph">容量やメタデータの負荷に応じて、構成要素を追加してください。</block>
+  <block id="c6016c4989752ac4ba0c1bc2d37771ea" category="list-text">*OSTのみ：* ファイル数とメタデータの読み込みは既存のMDT容量内に収まっており、より多くのデータ容量または集計スループットが必要です。OSTを32台、OSS/MDSサーバーノードを2台追加します。</block>
+  <block id="0542b35a0c887339c1b730319191a84e" category="list-text">*MDT+OST:* ファイル数またはメタデータレートがMDTの容量に近づいているか、メタデータのスループットとデータ容量の両方を増やす必要があります。MDTを8個、OSTを32個追加します。</block>
+  <block id="188e8b041d8de5566b88189f59e809fc" category="paragraph">既存のMDT上でメタデータが飽和状態にあるかどうかを確認するには、<block ref="b1a5bd8baac9f30b53cd68f65243f1b5" prefix=" " category="inline-code"></block>を使用してください。各Pacemaker/Corosyncクラスターは、5つの構成要素（10個のOSS/MDSサーバーノード）に制限してください。大規模な展開の場合は、構成要素を複数のHAクラスターに均等に分割してください。スケーリングルールについては、<block ref="f6c91e3cd1480b3865622c5a1b7e2c1a" category="inline-link-macro-rx"></block>を参照してください。</block>
+  <block id="ed50a739e29323312b31bff9a6ed12c7" category="paragraph">以下の例は、1つのHAクラスタ内に、基本構成要素とOST専用の構成要素を備えたファイルシステムを示しています。</block>
+  <block id="fdd0fa6524b4c92bc95af5176461013e" category="cell">構成要素</block>
+  <block id="ac659513b2353187192e88c5d1988228" category="cell">サーバ</block>
+  <block id="ff43b8de4f41d5103405ddb62eb8d34e" category="cell">配列</block>
+  <block id="a3781aed953e0188563e879828c56061" category="cell">BB1を使用したチャンク アップロード署名要求がサポートされるようになりました。</block>
+  <block id="32fbcabed73ba199a63dd1a684d58a39" category="cell">BB2</block>
+  <block id="96b0141273eabab320119c467cdcaf17" category="cell">合計</block>
+  <block id="48af2a85fb5e9a78b7eb6d081635f7cc" category="paragraph">BB2は、<block ref="19f18f5b36600af4ea17354c94083b4d" prefix=" " category="inline-code"></block>を使用して、BB1のMGSに対してOSTターゲットを登録します。BB2のOSTインデックスはグローバルに割り当てられます（例えば、OST0032からOST0063まで）。これにより、どのインデックスもBB1と競合しません。</block>
+  <block id="26a885a8b3e010fc6e8077dfd984fec6" category="paragraph">正式な検証では、LustreクライアントのIOR、mdtest、fioを使用して、相対的なスループット、IOPS、メタデータの動作を特性評価し、HAフェイルオーバーを検証します。これらのテストでは、性能を保証する数値は公表されていません。合成ベンチマークは最良のケースの動作を測定するものであり、実際のアプリケーションのパフォーマンスを反映していない可能性があります。</block>
+  <block id="a25fc9d39767010278f116fa1cdd1f0a" category="paragraph">パフォーマンスは、構成要素の数にほぼ比例します。実際の結果は、ドライブの種類とプールのレイアウト、NVMe-oFパス数、LNetファブリックとクライアント数、およびデータI/OとメタデータI/Oの比率によって異なります。</block>
+  <block id="7f7e308769861daef896f945c6a341be" category="paragraph">ワークロード固有のサイジングおよびパフォーマンスに関する推奨事項については、NetApp アカウントチームにお問い合わせください。</block>
+  <block id="c5c2ea62983e1e188786ad8bfa88f7fb" category="paragraph">ドライブのレイアウトとボリューム数については、<block ref="b951df04c708233bd0e6aa30024a444e" category="inline-link-macro-rx"></block>を参照してください。デプロイ手順については、<block ref="8f49e9bdbd514d6a8081d8c90c9f306a" category="inline-link-macro-rx"></block>を参照してください。現場レベルの在庫管理に関するガイダンスについては、<block ref="48fa4fcc6ef309525d67cfc2e71da78c" category="inline-link-macro-rx"></block>を参照してください。</block>
+  <block id="dae2d3f855359018480bd9e9ef676792" category="summary">Lustre と NetApp Eシリーズストレージのデプロイに使用されるソフトウェアコンポーネントと Ansible 自動化を確認します。</block>
+  <block id="2fed2b0537192296a3697912cd2d3b32" category="doc">Lustre と NetApp Eシリーズストレージ - ソフトウェアコンポーネント</block>
+  <block id="8d0e3a3ae8f0b6693431338ff101e9f3" category="paragraph">NetApp Eシリーズストレージを使用してLustreをデプロイするソフトウェアスタックとAnsibleオートメーションを確認してください。サーバー、ストレージ、およびネットワークについては、<block ref="b951df04c708233bd0e6aa30024a444e" category="inline-link-macro-rx"></block>を参照してください。</block>
+  <block id="3ddeb7b39d4e1ebdeff20c88b90f8118" category="section-title">ビルディングブロックソフトウェア</block>
+  <block id="444ad67e0ba1ebc75540bd3505333dbb" category="paragraph">以下の表は、EシリーズアレイおよびOSS/MDSサーバーノードで使用されるソフトウェアコンポーネントの一覧です。サポートされているバージョンとコンポーネントの組み合わせについては、<block ref="dea5a7fef452493e48f46a815b88571f" category="inline-link-macro-rx"></block>を信頼できる情報源として参照してください。*E-Series Lustre* を検索し、展開前にオペレーティングシステム、Lustre、SANtricity OS、DOCA-OFED、HCAファームウェア、およびHAパッケージのバージョンを確認してください。</block>
+  <block id="86408593c34af77fdd90df932f8b5261" category="cell">機能</block>
+  <block id="e791d47d690cbc6aa7c7f9434ebd2fa1" category="cell">SANtricity OS</block>
+  <block id="5ca4fd1919e76260b3d43547bad111d4" category="cell">各Eシリーズ アレイ上で動作し、SANtricity System Manager、デュアルアクティブ コントローラによる高可用性と自動I/Oパス フェイルオーバー、自動ロード バランシングとパス監視、ダイナミック ディスク プールと従来のRAID、自動ドライブ再構築、ミラーリング キャッシュ保護、データ保証、プロアクティブなドライブ正常性監視、オンラインでのソフトウェア、ファームウェア、および構成変更を提供します。</block>
+  <block id="af33584349c4303df5160e032fea6eb8" category="cell">Lustre</block>
+  <block id="7dcb13804687bff071f09fb210b81adf" category="cell">クライアントには単一のPOSIX準拠の名前空間を提供すると同時に、メタデータとファイルデータを複数のターゲットに分散させて並列アクセスを可能にします。管理サーバー（MGS）はファイルシステム構成を保存し、メタデータターゲット（MDT）は名前空間を管理し、オブジェクトストレージターゲット（OST）はEシリーズボリュームにファイルデータを保存します。この分離により、構成要素を追加することでパフォーマンスと容量を拡張できます。</block>
+  <block id="943819b5da243944c1ae08b5be94436e" category="cell">Red Hat Enterprise Linux (RHEL) または Rocky Linux</block>
+  <block id="0690c5e2cfb58ff86b8cbecd26a64a9e" category="cell">Lustreターゲットサービス、HAクラスタリング、ストレージおよびネットワーク接続のためのカーネル、システムサービス、およびパッケージフレームワークを提供します。サポートされているオペレーティングシステムのリポジトリには、Pacemaker、Corosync、フェンスエージェント、NVMe-oF、およびマルチパスのパッケージも含まれており、これらはソリューションスタックとしてまとめてテストされます。</block>
+  <block id="56c886c423386e51f9242611a3ddd86b" category="cell">高可用性クラスタサービス（Pacemaker、Corosync、およびフェンスエージェント）</block>
+  <block id="e4661564e283a6f5a615b5c108f2ee9f" category="cell">これらのサービスを組み合わせることで、OSS/MDSサーバーノード全体にわたるLustreターゲットに対して、連携のとれた高可用性が実現されます。クラスタのメンバーシップとクォーラムを維持し、リソースを監視し、順序付けられたフェイルオーバーを調整し、応答しないノードを隔離してから、他の場所で共有ターゲットをアクティブ化します。この調整により、Eシリーズボリュームへのスプリットブレインアクセスを防止し、障害発生時にファイルシステムの整合性を保護します。</block>
+  <block id="cd88c8c03aeba4f72c5636c4e1345954" category="cell">NVIDIA DOCA-OFED</block>
+  <block id="ed24c241434368c2bbaf242ddd3ab0b2" category="cell">HCAドライバ、RDMAライブラリ、およびInfiniBandとRoCEファブリック向けの管理ユーティリティを提供します。同じソフトウェアスタックが、EシリーズアレイへのバックエンドNVMe-oFの低レイテンシアクセスと、LustreクライアントとのフロントエンドLNet通信の高スループットをサポートします。</block>
+  <block id="419b231880de9252ac834d52a075d58e" category="paragraph">NetAppは、Rocky Linux 9.8およびRed Hat Enterprise Linux 9.8用のLustreサーバーRPMパッケージ（ビルド済み）を提供しています。</block>
+  <block id="f309660aa7ddccfcd74a91e5e1eba500" category="section-title">Ansibleによる自動化</block>
+  <block id="89a844364f22dcf7fdcf1bce0e4507d5" category="paragraph">Lustre と NetApp Eシリーズ ストレージは、Eシリーズ アレイおよび OSS/MDS サーバー ノードへの管理アクセスを持つコントロール ノードから Ansible オートメーションを使用して提供およびデプロイされます。Ansible インベントリは、アレイ、サーバー、ストレージ割り当て、ネットワーク インターフェイス、HA クラスタ リソースなど、目的のソリューションをモデル化します。</block>
+  <block id="2a8fd198917f5b8e5bf2c5e099545a35" category="paragraph">NetApp EシリーズLustre Ansibleコレクションは、SANtricityおよびホストコレクションを使用してエンドツーエンド展開をオーケストレーションします。これらのコレクションを組み合わせることで、Eシリーズ ストレージのプロビジョニングとマッピング、サーバーオペレーティングシステムの準備、NVMe-oFおよびLNet接続の構成、Lustreターゲットのデプロイ、およびPacemakerリソースの作成が行われます。この自動化により、設定の再現性が向上し、既存のファイルシステムに構成要素を追加する作業が簡素化されます。</block>
+  <block id="ca90e19253cf2e48ef5424e516ec986b" category="paragraph">以下の表は、Ansibleコントロールノードで使用される主要なソフトウェアパッケージをまとめたものです。現在のパッケージの依存関係については、<block ref="d1a1b24c47947abfae4f7a836682839e" category="inline-link-macro-rx"></block>を参照してください。</block>
+  <block id="209802fb858e2c83205027dbbb5d9e6c" category="cell">パッケージ</block>
+  <block id="bf45656cff8cabbcedd92fb1ca66bdd4" category="cell">依存または目的</block>
+  <block id="e697f15cbb321abdd59018a4ea71f66a" category="cell">Ansibleの実行環境と必要なPythonモジュールを提供します。</block>
+  <block id="38ffe3e951cbcb69b273ce33552fd9d1" category="cell">ansible-core</block>
+  <block id="a702c09b535302cbc6561c203cb0f4a8" category="cell">Pythonが必要で、NetApp EシリーズのAnsibleコレクションを実行します。</block>
+  <block id="d35d779fe31977939a0a72c5c962d2af" category="cell">追加のPythonパッケージ</block>
+  <block id="f22c7fea934a6eb824b3f4b041e9f534" category="cell"><block ref="e0d00b9f337d357c6faa2f8ceae4a60d" prefix="" category="inline-code"></block>、<block ref="6d14525117cc12ced056e2289c5669ab" prefix=" " category="inline-code"></block>、<block ref="6ed1630535e149ee97279a775dccb954" prefix=" " category="inline-code"></block>、<block ref="1aa69b45474a1c5cc94422f60a915609" prefix=" " category="inline-code"></block>、<block ref="bc54684915644d97a72624e17a72eef6" prefix=" " category="inline-code"></block>、<block ref="45e959010cbec742b865b68a40fdb3d7" prefix=" " category="inline-code"></block>、および<block ref="a29a14b370fd47fe2a7d1c665bcba045" prefix=" " category="inline-code"></block></block>
+  <block id="97246c2acb58fd6b8e955f919adb0923" category="cell">Lustre、LNet、NVMe-oFホスト接続、およびPacemakerリソースを設定します。</block>
+  <block id="0db654f6b4a67eb4049f1fd501c9f7be" category="cell">NetApp Eシリーズ SANtricity Ansible コレクション</block>
+  <block id="0ec973c334798e2f0a5118cb9157c765" category="cell">SANtricity Web Services API を使用して、Eシリーズ アレイ、ストレージ プール、ボリューム、およびホスト マッピングを設定します。</block>
+  <block id="23c28d851624a5f8fa634080658c4707" category="cell">NetApp Eシリーズ ホスト Ansible コレクション</block>
+  <block id="42098180c27d0c4f6030713a975ebe6b" category="cell">OSS/MDSサーバーノードをEシリーズアレイへのLNetおよびNVMe-oF接続用に準備します。</block>
+  <block id="16a82006af64f2b5bee8ebe98b80a248" category="section-title">Lustreクライアントソフトウェア</block>
+  <block id="b849bf31bf12a9824d75fbf4f2c31f7e" category="paragraph">Lustreクライアントソフトウェアを使用すると、システムはフロントエンドのLNetファブリックを介して並列ファイルシステムにアクセスできます。各クライアントは、実行中のカーネルとサーバーにデプロイされているLustreリリースの両方と互換性のあるLustreカーネルモジュールとLustreクライアントユーティリティが必要です。</block>
+  <block id="793bd0e5fbfc31c0292029e837a76450" category="paragraph"><block ref="612e690bea76796aad3a16779b18be6e" category="inline-link-macro-rx"></block>を使用して、お使いのLustreバージョンに対応するクライアントオペレーティングシステムとカーネルを見つけてください。NetAppは、事前にビルドされたLustreクライアントパッケージを提供していません。<block ref="a26fe5a6450900f32fdc60abe5f6c5e6" category="inline-link-macro-rx"></block>にあるNetApp提供のLustreソースコードから、クライアントオペレーティングシステムとカーネル用のクライアントパッケージをビルドしてください。Lustreクライアントパッケージがインストールされると、<block ref="99fc42f6ce60cac70cab6ee0f8f2330f" prefix=" " category="inline-code"></block>ロールはネットワークインターフェースとLNetを設定し、Lustreファイルシステムのためのpersistent systemdマウントユニットを作成できます。</block>
+  <block id="5bdf49c5dd95c601fd517185f5df6e15" category="paragraph">クライアントの展開手順については、<block ref="8f49e9bdbd514d6a8081d8c90c9f306a" category="inline-link-macro-rx"></block>を参照してください。</block>
+  <block id="a805c2d846a91199e3cb54800e713f68" category="summary">提案されたアーキテクチャの性能を評価するために、多数のテストが実施されました。画像分類、小物体検出、大物体検出、医用画像処理、音声認識、自然言語処理（NLP）など、6種類のワークロードがあり、オフライン、シングルストリーム、マルチストリームの3つのシナリオで実行できます。</block>
+  <block id="beca071ad49a9c68928cfdd7e5db33c2" category="inline-link"><block ref="beca071ad49a9c68928cfdd7e5db33c2" category="inline-link-rx"></block></block>
+  <block id="939097de2d6ac448a6a39221d1b90a3f" category="paragraph"><block ref="939097de2d6ac448a6a39221d1b90a3f" category="inline-link-rx"></block></block>
+  <block id="cfcb27d55de1a05460222aaae2ce5968" category="inline-link"><block ref="cfcb27d55de1a05460222aaae2ce5968" category="inline-link-rx"></block></block>
+  <block id="c87a795ad50945fa0e730c7c01ccac47" category="paragraph"><block ref="c87a795ad50945fa0e730c7c01ccac47" category="inline-link-rx"></block></block>
+  <block id="a92e88134d3accfc1d9920721715f966" category="inline-link"><block ref="a92e88134d3accfc1d9920721715f966" category="inline-link-rx"></block></block>
+  <block id="ef854b81531246a9b4dcf221a58cc76e" category="paragraph"><block ref="ef854b81531246a9b4dcf221a58cc76e" category="inline-link-rx"></block></block>
+  <block id="d0a5c98873d3d051dc52621664b65724" category="paragraph">🔗 <block ref="14d1afb05a5bd011ea59181d58fb4ae4" category="inline-link-rx"></block></block>
+  <block id="4c589e0b8589cef9be14170911c5f09b" category="paragraph">NetApp は、Apache Airflow、JupyterHub、MLflow、Kubeflow、または Kubernetes のエンタープライズ サポートを提供していません。完全にサポートされた MLOps プラットフォームにご興味がある場合は、<block ref="0dd3a80d3a14a1d362eb2892c01dba52" category="inline-link-macro-rx"></block> NetApp がパートナーと共同で提供する完全にサポートされた MLOps ソリューションについてご確認ください。</block>
+  <block id="8580f71d04f7cf5070bef20ec7f9399d" category="sidebar">Lustre並列ファイルシステムとEシリーズ</block>
+  <block id="7968dca1c563e638b3f7b4f92c64484f" category="sidebar">Lustre と NetApp Eシリーズ ストレージ</block>
+  <block id="f0b169ab419064a5528cbd15cf20888e" category="sidebar">ラックおよびケーブル用ハードウェア</block>
+  <block id="f816bb441bc6fff2071c78484140ef17" category="sidebar">デプロイ環境を準備する</block>
+  <block id="8e9935960e71710f3253321e54a9e37c" category="sidebar">HAクラスタとクライアントをデプロイする</block>
+  <block id="a6d0a294c308f6406404b87b69662279" category="sidebar">展開状況を確認し、拡張する</block>
+  <block id="ef6a7f3bd6d67f44f7bd0323fa734758" category="sidebar">関連リソース</block>
 </blocks>

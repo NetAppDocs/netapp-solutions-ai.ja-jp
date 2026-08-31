@@ -1,0 +1,103 @@
+---
+sidebar: sidebar 
+permalink: infra/ai-eseries-lustre-deploy-inventory.html 
+keywords: Lustre, NetApp E-Series, Ansible inventory, EF80, deployment 
+summary: NetApp Ansible デプロイメント インベントリを Lustre サーバー、EF80 アレイ、ネットワーク、および HA リソース向けにカスタマイズします。 
+---
+= Lustre Ansibleインベントリをカスタマイズする
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media/
+
+
+[role="lead"]
+EF80 デプロイメントテンプレートの作業用コピーを作成し、サーバー、アレイ、ネットワーク、および Lustre ビルディングブロックに合わせてインベントリをカスタマイズします。
+
+選択したインベントリは、それぞれのファブリックとプラットフォームのディレクトリに保存してください。共有 `playbooks`ディレクトリと `passwords.yml`ファイルを `building_blocks`のルートに保持してください。
+
+
+
+[[select-a-deployment-template]]
+== デプロイメントテンプレートを選択してください
+
+サイトのネットワーク ファブリックに一致するテンプレートから開始します：
+
+* *InfiniBand*： link:https://github.com/NetApp/ansible-lustre/tree/release/1.0.0/getting_started/lustre_deployment_template/building_blocks/IB_H2_IB_DAC_A2_EF80/lustre_building_block_cluster_1["IB_H2_IB_DAC_A2_EF80 / lustre_building_block_cluster_1"^]
+* *RoCE：* link:https://github.com/NetApp/ansible-lustre/tree/release/1.0.0/getting_started/lustre_deployment_template/building_blocks/ROCE_H2_ROCE_DAC_A2_EF80/lustre_building_block_cluster_1["ROCE_H2_ROCE_DAC_A2_EF80 / lustre_building_block_cluster_1"^]
+
+
+
+
+[[configure-site-specific-settings]]
+== サイト固有の設定を構成する
+
+インベントリにサイト固有の値を設定し、ローカルリポジトリとudevルール設定も併せて設定してください。表中の行参照は、 `ansible-lustre` `release/1.0.0`タグ内のRoCE EF80テンプレートファイルを指しています。InfiniBandテンプレートは、表に記載されているLNetインターフェース変数を除いて、同じ変数名と構造を使用します。
+
+[cols="2,3,4,2,4"]
+|===
+| フィールド | Ansible変数 | テンプレートファイル(`release/1.0.0`） | Scope | Notes 
+
+
+| ファイルシステム名 | `eseries_lustre_filesystem_mgt.format_options.fsname`、 `eseries_lustre_filesystem_mdt.format_options.fsname`、 `eseries_lustre_filesystem_ost.format_options.fsname` | link:https://github.com/NetApp/ansible-lustre/blob/release/1.0.0/getting_started/lustre_deployment_template/building_blocks/ROCE_H2_ROCE_DAC_A2_EF80/lustre_building_block_cluster_1/group_vars/ha_cluster.yml#L76["ha_cluster.yml#L76"^]、link:https://github.com/NetApp/ansible-lustre/blob/release/1.0.0/getting_started/lustre_deployment_template/building_blocks/ROCE_H2_ROCE_DAC_A2_EF80/lustre_building_block_cluster_1/group_vars/ha_cluster.yml#L90["#L90"^]、link:https://github.com/NetApp/ansible-lustre/blob/release/1.0.0/getting_started/lustre_deployment_template/building_blocks/ROCE_H2_ROCE_DAC_A2_EF80/lustre_building_block_cluster_1/group_vars/ha_cluster.yml#L110["#L110"^] | クラスター全体 | MGT、MDT、およびOSTマップ用の `format_options`の下にネストされています。最大8文字。3箇所すべてで同じ値を使用してください。最上位の `fsname`キーは効果がありません。 
+
+
+| ターゲット登録用のMGS NID | `eseries_lustre_filesystem_mdt.format_options.mgsnode`, `eseries_lustre_filesystem_ost.format_options.mgsnode` | link:https://github.com/NetApp/ansible-lustre/blob/release/1.0.0/getting_started/lustre_deployment_template/building_blocks/ROCE_H2_ROCE_DAC_A2_EF80/lustre_building_block_cluster_1/group_vars/ha_cluster.yml#L98["ha_cluster.yml#L98"^]、link:https://github.com/NetApp/ansible-lustre/blob/release/1.0.0/getting_started/lustre_deployment_template/building_blocks/ROCE_H2_ROCE_DAC_A2_EF80/lustre_building_block_cluster_1/group_vars/ha_cluster.yml#L118["#L118"^] | クラスター全体 | MDTとOSTの下にネストされています `format_options`。HAペアの両方のノードからフロントエンドのLNet NIDを含めてください。優先MGS所有者として設定されているノードのNIDを最初にリストし、次にパートナーノードのNIDをリストします。 
+
+
+| Pacemaker クラスター名 | `eseries_lustre_pacemaker_cib_properties_overrides.cluster_properties.cluster-name` | link:https://github.com/NetApp/ansible-lustre/blob/release/1.0.0/getting_started/lustre_deployment_template/building_blocks/ROCE_H2_ROCE_DAC_A2_EF80/lustre_building_block_cluster_1/group_vars/ha_cluster.yml#L228["ha_cluster.yml#L228"^] | クラスター全体 | Pacemaker CIBプロパティのオーバーライドの下にネストされています。HAクラスタの一意の名前。 
+
+
+| BMCフェンシングアドレス | `eseries_lustre_pacemaker_fencing_agents.fence_redfish.ip` | link:https://github.com/NetApp/ansible-lustre/blob/release/1.0.0/getting_started/lustre_deployment_template/building_blocks/ROCE_H2_ROCE_DAC_A2_EF80/lustre_building_block_cluster_1/group_vars/ha_cluster.yml#L211["ha_cluster.yml#L211"^]、link:https://github.com/NetApp/ansible-lustre/blob/release/1.0.0/getting_started/lustre_deployment_template/building_blocks/ROCE_H2_ROCE_DAC_A2_EF80/lustre_building_block_cluster_1/group_vars/ha_cluster.yml#L214["#L214"^]、link:https://github.com/NetApp/ansible-lustre/blob/release/1.0.0/getting_started/lustre_deployment_template/building_blocks/ROCE_H2_ROCE_DAC_A2_EF80/lustre_building_block_cluster_1/group_vars/ha_cluster.yml#L217["#L217"^]、link:https://github.com/NetApp/ansible-lustre/blob/release/1.0.0/getting_started/lustre_deployment_template/building_blocks/ROCE_H2_ROCE_DAC_A2_EF80/lustre_building_block_cluster_1/group_vars/ha_cluster.yml#L220["#L220"^] | Lustreサーバーごとに繰り返す | 各サーバーノードのRedfish BMC IPアドレス。 
+
+
+| アラートメールの受信者 | `eseries_lustre_alert_email_list` | link:https://github.com/NetApp/ansible-lustre/blob/release/1.0.0/getting_started/lustre_deployment_template/building_blocks/ROCE_H2_ROCE_DAC_A2_EF80/lustre_building_block_cluster_1/group_vars/ha_cluster.yml#L233["ha_cluster.yml#L233"^] | クラスター全体 | HAリソースおよび障害通知の受信者。 
+
+
+| メールドメイン | `eseries_lustre_mail_service_overrides.conf.mydomain` | link:https://github.com/NetApp/ansible-lustre/blob/release/1.0.0/getting_started/lustre_deployment_template/building_blocks/ROCE_H2_ROCE_DAC_A2_EF80/lustre_building_block_cluster_1/group_vars/ha_cluster.yml#L240["ha_cluster.yml#L240"^] | クラスター全体 | アラートメールの送信に使用するPostfixドメイン。 
+
+
+| NTP時刻ソース | `eseries_lustre_time_sync_overrides.server_pools` | link:https://github.com/NetApp/ansible-lustre/blob/release/1.0.0/getting_started/lustre_deployment_template/building_blocks/ROCE_H2_ROCE_DAC_A2_EF80/lustre_building_block_cluster_1/group_vars/ha_cluster.yml#L250["ha_cluster.yml#L250"^] | クラスター全体 | クラスタノードの時刻ソース。NTPプール、または1つ以上の個別のNTPサーバーを指定します。必要な `pool`または `server`ディレクティブと `iburst`などのオプションを含めます。 
+
+
+| インターフェース PCI-to-name udev マップ | `eseries_ip_udev_rules` | link:https://github.com/NetApp/ansible-lustre/blob/release/1.0.0/getting_started/lustre_deployment_template/building_blocks/ROCE_H2_ROCE_DAC_A2_EF80/lustre_building_block_cluster_1/group_vars/ha_cluster.yml#L172["ha_cluster.yml#L172"^] | HCAスロットレイアウトごとに繰り返す | 各PCIスロットを永続的なインターフェイス名（L182の値）にマッピングします。 `lspci -nnvmm`を使用して収集します。 
+
+
+| ローカルパッケージリポジトリ（オプション） | `eseries_common_yum_repos` | link:https://github.com/NetApp/ansible-lustre/blob/release/1.0.0/getting_started/lustre_deployment_template/building_blocks/ROCE_H2_ROCE_DAC_A2_EF80/lustre_building_block_cluster_1/group_vars/ha_cluster.yml#L256["ha_cluster.yml#L256"^]、link:https://github.com/NetApp/ansible-lustre/blob/release/1.0.0/getting_started/lustre_deployment_template/building_blocks/ROCE_H2_ROCE_DAC_A2_EF80/lustre_building_block_cluster_1/group_vars/ha_cluster.yml#L261["#L261"^] | クラスター全体 | エアギャップインストールの場合、ブロックのコメントを解除してリポジトリ `url`を設定します（L264）。 
+
+
+| サーバー管理IP | `ansible_host` | link:https://github.com/NetApp/ansible-lustre/blob/release/1.0.0/getting_started/lustre_deployment_template/building_blocks/ROCE_H2_ROCE_DAC_A2_EF80/lustre_building_block_cluster_1/host_vars/lustre_01.yml#L10["host_vars/lustre_01.yml#L10"^] | Lustreサーバーごとに繰り返す | サーバーごとに1つ `host_vars/lustre_NN.yml`のファイル。 
+
+
+| NVMe-oFバックエンドインターフェイス | `eseries_nvme_roce_interfaces`（RoCE）/ `eseries_nvme_ib_interfaces`（InfiniBand） | link:https://github.com/NetApp/ansible-lustre/blob/release/1.0.0/getting_started/lustre_deployment_template/building_blocks/ROCE_H2_ROCE_DAC_A2_EF80/lustre_building_block_cluster_1/host_vars/lustre_01.yml#L21["RoCE host_vars/lustre_01.yml#L21"^]、link:https://github.com/NetApp/ansible-lustre/blob/release/1.0.0/getting_started/lustre_deployment_template/building_blocks/IB_H2_IB_DAC_A2_EF80/lustre_building_block_cluster_1/host_vars/lustre_01.yml#L17["InfiniBand host_vars/lustre_01.yml#L17"^] | Lustreサーバーごとに繰り返す | NVMe-oFストレージトラフィックに使用されるバックエンドインターフェイスアドレス（Eシリーズアレイ向け）。 
+
+
+| LNetクラスタインターフェイス | `eseries_roce_interfaces` （RoCE） / `eseries_ipoib_interfaces` （InfiniBand） | link:https://github.com/NetApp/ansible-lustre/blob/release/1.0.0/getting_started/lustre_deployment_template/building_blocks/ROCE_H2_ROCE_DAC_A2_EF80/lustre_building_block_cluster_1/host_vars/lustre_01.yml#L47["RoCE host_vars/lustre_01.yml#L47"^]、link:https://github.com/NetApp/ansible-lustre/blob/release/1.0.0/getting_started/lustre_deployment_template/building_blocks/IB_H2_IB_DAC_A2_EF80/lustre_building_block_cluster_1/host_vars/lustre_01.yml#L38["InfiniBand host_vars/lustre_01.yml#L38"^] | Lustreサーバーごとに繰り返す | フロントエンド LNet インターフェイス アドレス （L56 の RoCE 値、L47 の InfiniBand 値）。 
+
+
+| CorosyncノードのIPアドレス | `eseries_lustre_corosync_node_ips` | link:https://github.com/NetApp/ansible-lustre/blob/release/1.0.0/getting_started/lustre_deployment_template/building_blocks/ROCE_H2_ROCE_DAC_A2_EF80/lustre_building_block_cluster_1/host_vars/lustre_01.yml#L58["host_vars/lustre_01.yml#L58"^] | Lustreサーバーごとに繰り返す | HAクラスタ内のすべてのノードIPアドレスを一覧表示します（L62の値）。 
+
+
+| Lustre ターゲットサービス NID | `lustre_target_service_nodes` | link:https://github.com/NetApp/ansible-lustre/blob/release/1.0.0/getting_started/lustre_deployment_template/building_blocks/ROCE_H2_ROCE_DAC_A2_EF80/lustre_building_block_cluster_1/host_vars/lustre_01.yml#L64["host_vars/lustre_01.yml#L64"^] | Lustreサーバーごとに繰り返す | HA ペアの両方のノードからフロントエンド LNet NID（(`@o2ib`）を含めて、フェイルオーバー後もターゲット サービスにアクセスできるようにします（L67 の値）。 
+
+
+| アレイ管理IP | `ansible_host` | link:https://github.com/NetApp/ansible-lustre/blob/release/1.0.0/getting_started/lustre_deployment_template/building_blocks/ROCE_H2_ROCE_DAC_A2_EF80/lustre_building_block_cluster_1/host_vars/netapp_01.yml#L13["host_vars/netapp_01.yml#L13"^] | Eシリーズアレイごとに繰り返す | コントローラー1つの管理IPアドレス。API URLはこのIPアドレスから取得されます。 
+
+
+| 構成要素グループへの参加 | `mgs` / `mds_NN` / `oss_NN` | link:https://github.com/NetApp/ansible-lustre/blob/release/1.0.0/getting_started/lustre_deployment_template/building_blocks/ROCE_H2_ROCE_DAC_A2_EF80/lustre_building_block_cluster_1/lustre_inventory.yml#L1["lustre_inventory.yml"^] | ビルディングブロックごと | 各インベントリホスト名は、対応する `host_vars`ファイルのベース名と一致する必要があります。例えば、ホスト `lustre_01`は `host_vars/lustre_01.yml`を使用し、 `netapp_01`は `host_vars/netapp_01.yml`を使用します。MGSグループは最初の構成要素にのみ含めてください。基本構成要素および各MDT+OST拡張構成要素にはMDSグループを含め、OSTのみの拡張構成要素からはMDSグループを除外してください。既存のMGSに対して拡張ターゲットを登録するには `mgsnode`を使用してください。 
+|===
+各ホストおよびビルディングブロックごとに設定を繰り返してください。Lustreサーバーごとに `host_vars/lustre_NN.yml`ファイルを1つ、アレイごとに `host_vars/netapp_NN.yml`ファイルを1つ作成し、追加のビルディングブロックごとにインベントリグループを繰り返します。
+
+デプロイメント プレイブックは、共有 `building_blocks/passwords.yml`ファイルからアレイ、Pacemaker、およびBMCの認証情報を読み込みます。デプロイ前にこのファイルにデータを入力してAnsible Vaultで暗号化するか、 `--extra-vars`を使用して実行時に値を安全に上書きしてください。平文の認証情報をソース管理にコミットしないでください。
+
+
+NOTE: デプロイメントテンプレートにおけるIPアドレス、ホスト名、インターフェース名、ボリュームサイズなどは、その例です。プレイブックを実行する前に、環境に合わせてすべてのインベントリファイルを変更してください。
+
+
+
+[[after-you-finish]]
+== 終了後の操作
+
+link:ai-eseries-lustre-deploy-cluster.html["Lustre HAクラスタとクライアントをデプロイする"]。

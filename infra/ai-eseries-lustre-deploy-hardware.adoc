@@ -1,0 +1,46 @@
+---
+sidebar: sidebar 
+permalink: infra/ai-eseries-lustre-deploy-hardware.html 
+keywords: Lustre, NetApp E-Series, EF80, hardware deployment, NVMe-oF, LNet 
+summary: Lustreの構成要素として、サーバー、EF80アレイ、バックエンドNVMe-oFネットワーク、およびフロントエンドLNet ファブリックをラックに取り付け、ケーブル配線を行います。 
+---
+= Lustre ハードウェアのラックとケーブル接続
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media/
+
+
+[role="lead"]
+Lustre サーバーと NetApp EF80 アレイをラックに搭載し、各ビルディングブロックのバックエンド NVMe-oF ファブリックとフロントエンド LNet ファブリックをケーブル接続します。
+
+
+
+[[before-you-begin]]
+== 開始する前に
+
+HCA 数、PCIe スロット要件、パス要件、および MTU ガイダンスを link:ai-eseries-lustre-hw.html["ハードウェア コンポーネント"] で確認してください。
+
+.手順
+. すべての Lustre サーバーと E シリーズ ストレージ アレイを、構成要素のトポロジーに従ってラックに搭載し、ケーブルを接続します。
++
+image:eseries-lustre-building-block-labeled.png["ラベル付きのLustreビルディングブロックに、OSS/MDSサーバー2台とEF80アレイ2台を積み重ねた構成"]
+
+. 各EF80アレイについて、コントローラAのポート4aをコントローラBのポート4aに、およびコントローラAのポート4bをコントローラBのポート4bにケーブル接続します。これらの専用接続はコントローラ間のミラーリング機能を提供するものであり、ホストトラフィックには使用されません。を参照してください。link:https://docs.netapp.com/us-en/e-series/install-hw-ef50-ef80/install-cable.html#step-1-cable-the-inter-controller-mirroring-connections["EF50とEF80のコントローラ間ミラーリング接続ケーブルを接続する"^]
+. EF80の6 HCAトポロジーに従って、サーバーとアレイ間のバックエンドNVMe-oFネットワークをケーブル接続します。
++
+.EF80 6-HCA バックエンド ケーブル配線（RoCE または InfiniBand）
+image:eseries-lustre-ef80-6hca-cabling.png["2つのOSS/MDSサーバーノードと2つのEF80アレイ間を接続する、EF80 6 HCAバックエンドNVMe-oFケーブル接続"]
+
+. 各Lustreサーバー上の4つのフロントエンドLNetインターフェース（i1およびi4 HCA）とLustreクライアントを、専用のInfiniBandまたはRoCEスイッチファブリックに接続します。
+. RoCEを使用する場合は、優先フロー制御（PFC）を使用してロスレス動作のためにネットワーク ファブリックを設定してください。Ansibleプレイブックは、ビルディングブロック内のすべてのインターフェースでロスレスRoCEを設定します。
+
+
+
+
+[[after-you-finish]]
+== 終了後の操作
+
+link:ai-eseries-lustre-deploy-prepare.html["サーバー、アレイ、およびAnsibleコントロールノードを準備します"]。

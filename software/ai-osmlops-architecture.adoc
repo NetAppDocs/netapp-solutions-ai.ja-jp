@@ -89,4 +89,4 @@ summary: NetAppによるオープンソース MLOps - アーキテクチャ
 [[support]]
 == サポート
 
-NetApp は、Apache Airflow、JupyterHub、MLflow、Kubeflow、Kubernetes に対するエンタープライズ サポートを提供していません。完全にサポートされたMLOpsプラットフォームにご興味がございましたら、link:https://www.netapp.com/us/contact-us/index.aspx?for_cr=us["ネットアップに連絡"^] NetApp がパートナーと共同で提供する、完全にサポートされた MLOps ソリューションについて説明します。
+NetApp は、Apache Airflow、JupyterHub、MLflow、Kubeflow、または Kubernetes のエンタープライズ サポートを提供していません。完全にサポートされた MLOps プラットフォームにご興味がある場合は、link:https://www.netapp.com/company/contact-us/["ネットアップに連絡"^] NetApp がパートナーと共同で提供する完全にサポートされた MLOps ソリューションについてご確認ください。
