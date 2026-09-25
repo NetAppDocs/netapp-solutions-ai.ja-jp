@@ -1,0 +1,125 @@
+---
+sidebar: sidebar 
+permalink: infra/ai-pipeline-data-mobility.html 
+keywords:  
+summary:  
+---
+= 6.データモビリティと NetApp XCP
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media/
+
+
+カーティケヤン ナガリンガム、NetApp
+
+NetApp XCP は、ONTAP NAS の準備済みデータ層とアクティブなトレーニング層の間で制御された転送パスを提供します。Airflow は、XCP ホストを介してプリフライトを実行し、コピー操作を呼び出します。 `xcp++_++copy++_++destination`実行ごとに ONTAP S3 または LustreFS を選択します。モデルのトレーニング、ファインチューニング、および推論では、同じ選択された保存先を使用することで、データと成果物を一貫した階層に維持します。
+
+
+
+[[6-1-why-netapp-xcp]]
+== 6.1 なぜ NetApp XCP なのか
+
+XCP は、このアーキテクチャで使用される NFS ソース、ONTAP S3、および LustreFS の転送先をサポートする並列マルチスレッドコピーエンジンです。その `-newid ++<++run++_++stamp++>++`オプションは、各転送をパイプラインの実行に関連付け、準備済みデータ、トレーニング入力、およびモデル成果物の場所全体にわたるトレーサビリティをサポートします。
+
+
+
+[[6-2-xcp-preflight-validation-flow]]
+== 6.2 XCP プリフライト検証フロー
+
+プリフライトタスクは、XCP のコピーの前に実行されます。Airflow が SSH 経由で XCP ホストに到達できること、および設定された ONTAP NAS NFS ソースパスが XCP から認識可能であることを確認します。明示的な終了条件は、接続性またはソースの可視性が正しくない場合、コピーが開始される前にパイプラインを停止します。
+
+image::ai-pipeline-xcp-preflight-validation.png[XCP プリフライト検証フロー]
+
+
+
+[[6-3-xcp-copy-to-s3-command-template]]
+== 6.3 XCP から S3 へのコピー — コマンド テンプレート
+
+このパスは `xcp++_++copy++_++destination=s3`の場合に使用します。XCP は、準備された実行スタンプ付きデータを ONTAP NAS NFS エクスポートから読み取り、設定済みの ONTAP S3 バケットとプレフィックスに書き込みます。名前付き XCP S3 プロファイルは XCP ホスト上の宛先認証情報を提供します。モデルステージは、 `xcp++_++s3++_++training++_++prefix`を通じてデータとアーティファクトの両方を検出します。
+
+[source, bash]
+----
+xcp copy -newid <run_stamp> \
+  -s3.profile <xcp_s3_profile> \
+  -s3.endpoint <xcp_s3_endpoint> \
+  <xcp_nfs_source_ip>:<xcp_nfs_source_path> \
+  s3://<xcp_s3_bucket>/<xcp_s3_dest_prefix>
+----
+*例：準備した ONTAP NAS データセットを ONTAP S3 トレーニングバケットにコピーする*
+
+[source, bash]
+----
+/usr/src/xcp/linux/xcp copy -newid 20260901_120000 \
+    -s3.profile ontaps3 \
+    -s3.endpoint http://10.63.150.161 \
+    10.63.150.159:/prepnasbucket/example_ai_pipeline \
+    s3://trainingbucket/example_ai_pipeline
+----
+この例では、 `20260901++_++120000`をXCPジョブIDとして使用します。トレーニングタスクは、設定された `xcp++_++s3++_++training++_++prefix`の下にコピーされたファイルを検出します（例： `example++_++ai++_++pipeline/formatted/20260901++_++120000/data/`）。
+
+
+
+[[6-4-xcp-copy-to-lustrefs-command-template]]
+== 6.4 XCP から LustreFS へのコピー — コマンド テンプレート
+
+このパスを使用するのは `xcp++_++copy++_++destination=lustrefs`の場合です。XCP は、マウントされた ONTAP NAS ソースから準備済みデータをマウントされた LustreFS 宛先にコピーします。両方のマウントポイントは XCP ホスト上で利用可能である必要があり、さらに LustreFS はモデルのトレーニング、ファインチューニング、および推論を実行する Airflow ワーカーにもマウントされている必要があります。
+
+[source, bash]
+----
+findmnt -T <xcp_lustrefs_source_path> -o FSTYPE,TARGET -n | grep -E '^nfs[0-9]* '  # source mount type
+findmnt -T <xcp_lustrefs_dest_path> -o FSTYPE,TARGET -n | grep -E '^lustre '   # destination mount type
+xcp copy -newid <run_stamp> \
+  file://<xcp_lustrefs_source_path> \
+  file://<xcp_lustrefs_dest_path>
+----
+*例：準備した ONTAP NAS データセットを LustreFS トレーニングマウントにコピーする*
+
+[source, bash]
+----
+findmnt -T /prepnasbucket/example_ai_pipeline -o FSTYPE,TARGET -n | grep -E '^nfs[0-9]* '
+findmnt -T /mnt/lustre/client -o FSTYPE,TARGET -n | grep -E '^lustre '
+
+/usr/src/xcp/linux/xcp copy -newid 20260901_120000 \
+    file:///prepnasbucket/example_ai_pipeline \
+    file:///mnt/lustre/client
+----
+2つの `findmnt`コマンドは、コピーを開始する前に、ソースパスがNFS経由でマウントされ、宛先パスがXCPホスト上でLustreFS経由でマウントされていることを確認します。 `xcp++_++lustrefs++_++training++_++subpath=example++_++ai++_++pipeline`を使用すると、トレーニングは `/mnt/lustre/client/example++_++ai++_++pipeline/formatted/20260901++_++120000/data/`以下の実行スタンプ付きデータを読み取ります。
+
+
+
+[[6-5-xcp-destination-decision-flow]]
+== 6.5 XCP 宛先決定フロー
+
+この決定図は、1つの実行時パラメータがコピー対象とトレーニング読み取りパスをどのように決定するかを示しています。ONTAP S3オブジェクトの宛先には `s3`を、並列ファイルシステムの宛先には `lustrefs`を選択します。下流のステージでは一致するソースを自動的に使用するため、ストレージの配置が変更された場合でもモデルコードの変更は不要です。
+
+image::ai-pipeline-xcp-destination-decision.png[XCP 宛先決定フロー]
+
+
+
+[[6-6-xcp-failure-handling-and-guardrails]]
+== 6.6 XCP障害処理とガードレール
+
+これらの安全対策により、構成やインフラストラクチャの障害を可能な限り早い段階で検知できるようになります。プリフライトエラーにより無効な転送が防止され、ファイルシステムタイプのチェックにより ONTAP NAS と LustreFS のマウントが検証され、S3 認証情報の検証は ONTAP S3 が選択された XCP 送信先である場合にのみ適用されます。
+
+[cols="50%,50%"]
+|===
+| 条件 | ガードの動作 
+
+
+| サポート対象外 `xcp++_++copy++_++destination`の値 | パイプラインは、データ移動の前に値を拒否します 
+
+
+| LustreFS マウントがありません | ファイルシステムタイプの検証に失敗しました。データ移動前にコピーが停止しました。 
+
+
+| SSHに接続できません | プリフライトはコピーが行われる前にコード 1 で終了します 
+
+
+| NFSパスが表示されません | コピー処理の前にプリフライトがコード2で終了しました 
+
+
+| XCP S3認証情報が不足しています（S3モードのみ） | `model++_++training`/artifact sync は明示的な例外を発生させます `ValueError` 
+|===

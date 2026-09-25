@@ -1,0 +1,79 @@
+---
+sidebar: sidebar 
+permalink: infra/ai-pipeline-netapp-components.html 
+keywords:  
+summary:  
+---
+= 4.NetApp、サードパーティおよびオープンソースのテクノロジーコンポーネント
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media/
+
+
+カーティケヤン ナガリンガム、NetApp
+
+[cols="50%,50%"]
+|===
+| コンポーネント | 解決策における役割 
+
+
+| NetAppStorageGRID | S3互換の生データ取り込みおよびアーカイブオブジェクトストレージ層 
+
+
+| NetApp ONTAP NAS バケット / NFS | 準備済みデータ層；NFSソースのエクスポートは、データ移動前にXCP プリフライトによって検証されます。 
+
+
+| NetApp ONTAP S3 | オプションのXCPトレーニングデータおよびモデル成果物保存先 
+
+
+| NetApp XCP | 高スループットのデータ移動エンジン；S3またはLustreFSへのコピーに対応 
+
+
+| NetApp FabricPool | ONTAP NASで準備されたデータおよびアーカイブ隣接データのコスト最適化のためのオプションの階層化 
+
+
+| LustreFS （NetApp統合型） | トレーニング層向けハイパフォーマンス並列ファイルシステム 
+
+
+| NetApp Console（オプション） | ONTAPおよびXCPリソースの監視/可観測性の拡張 
+
+
+| ONTAPスナップショット/バックアップ | ONTAP NAS 階層における準備済みデータのポイントインタイム保護（パイプラインとは独立） 
+|===
+
+
+[[4-1-netapp-xcp-core-value]]
+== 4.1 NetApp XCP — コアバリュー
+
+XCPは、データの位置とコンピューティングの位置を分離するモビリティレイヤーです。単一の構成スイッチ(`xcp++_++copy++_++destination`）は、準備されたデータとモデルアーティファクトがNetApp ONTAP S3またはLustreFSハイパフォーマンス階層のどちらに配置されるかを決定し、 `model++_++training`、 `fine++_++tuning`、および `inferencing`が同じ宛先への読み書きを自動的に行います。
+
+
+
+[[4-2-third-party-and-open-source-technology-components]]
+== 4.2 サードパーティおよびオープンソース技術コンポーネント
+
+[cols="50%,50%"]
+|===
+| コンポーネント | 目的 
+
+
+| Apacheエアフロー | DAGオーケストレーション、リトライ、XComタスク通信、スケジューリング 
+
+
+| Apache Spark | オプションの分散変換エンジン（ `data++_++prep`向け） 
+
+
+| Delta Lake / Apache Iceberg | 準備済みの表形式データ用のオプションのレイクハウステーブル形式 
+
+
+| scikit-learn | `LinearRegression`（表形式）および `SGDClassifier`（テキスト、インクリメンタル） 
+
+
+| Airbyte / Apache NiFi | オプションの取り込みコネクタ（ `data++_++prep`の前） 
+
+
+| ボト3 | AWS S3互換SDKは、StorageGRID、ONTAP NASバケット、およびONTAP S3との相互作用に使用されます 
+|===

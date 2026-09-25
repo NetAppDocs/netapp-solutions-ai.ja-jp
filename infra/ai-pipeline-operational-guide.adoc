@@ -1,0 +1,86 @@
+---
+sidebar: sidebar 
+permalink: infra/ai-pipeline-operational-guide.html 
+keywords:  
+summary:  
+---
+= 9.操作ガイド
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media/
+
+
+カーティケヤン ナガリンガム、NetApp
+
+このガイドでは、日常的な実行、監視、インシデントトリアージ、トレーニング復旧、アーカイブ検証、容量調整、およびデータ保護について説明します。セクション 8 の構成シナリオと併用して、ローカル、ONTAP S3、および LustreFS のトレーニングモードにわたって同じパイプラインを一貫して運用します。
+
+
+
+[[9-1-execution-walkthrough]]
+== 9.1 実行手順
+
+実行を `trigger++_++and++_++wait++_++ai++_++pipeline++_++sklearn.sh`でトリガーし、 `CONF++_++JSON` ペイロードを使用します。このスクリプトは、一意の名前が付けられた手動実行を1つ送信し、終了状態に達するまでポーリングを行い、失敗したタスクのローカルログの末尾が利用可能な場合はそれを出力します。各主要タスクは起動時に `effective++_++config`レコードを出力するため、オペレーターは送信されたペイロードのみに依存することなく、評価済みの設定を確認できます。
+
+
+
+[[9-2-monitoring-and-observability]]
+== 9.2 モニタリングと可観測性
+
+Airflow UI または CLI で DAG の状態を監視し、実行 ID と `run++_++stamp`に関連付けます。ガードログは grep に対応しています： `++[++data++_++prep++]++ effective++_++config`、 `++[++model++_++training++]++ effective++_++config`、 `++[++xcp++_++copy++]++ effective++_++config`、および `++[++checkpoint++]++ resume++_++summary`。これらのエントリを確認して、各実行における変換エンジン、選択された XCP 宛先、トレーニングソース、およびチェックポイント再利用の決定を検証してください。
+
+
+
+[[9-3-troubleshooting-quick-reference]]
+== 9.3 トラブルシューティングクイックリファレンス
+
+この表を使用して、よくあるタスクの失敗と最初の是正措置を関連付けてください。実行を再試行する前に、ソースの接続とマウントの問題を解決してください。無効な設定や利用できないエンドポイントを修正せずに再試行すると、同じエラーが再現されます。
+
+[cols="34%,33%,33%"]
+|===
+| 現象 | 原因の可能性 | 解決策 
+
+
+| `Could not resolve XCP S3 credentials` | 欠落/誤り `xcp++_++s3++_++profile`（ `xcp++_++s3++_++profiles`内） | プロファイル名と認証情報のマップを確認する 
+
+
+| `no readable Lustre source directory` | LustreFSがマウントされていないか、または間違っています `xcp++_++lustrefs++_++dest++_++path` | ファイルシステムの種類を確認するには `findmnt -T /mnt/lustre/client -o FSTYPE,TARGET -n`；正しいパス 
+
+
+| `Missing required text dataset files` | 生データS3プレフィックスにテキストJSONが存在しません | アップロード `text++_++base.json`、 `text++_++finetune.json`、 `text++_++infer.json` 
+
+
+| プリフライト終了コード 1 | SSHに接続できません | 接続とホスト/ユーザーを確認する `ssh++_++default` 
+
+
+| プリフライト終了コード 2 | NFSパスがエクスポート/表示されていません | エクスポートを確認する `xcp show ++<++ip++>++` 
+|===
+
+
+[[9-4-checkpoint-operations]]
+== 9.4 チェックポイント操作
+
+チェックポイントは、 `model++_++training`にのみ適用されます。 `training++_++checkpoint++_++reuse++_++mode=resume++_++if++_++exists`を設定して有効な完了済みトレーニング結果を再利用し、冗長なモデルトレーニングをスキップするか、 `verify++_++only`を使用してスキップせずにチェックポイントの適格性を検証します。初期テスト中、またはトレーニングの入力、構成、または期待される成果物が変更された場合は、再利用を無効のままにしてください（(`off`）。
+
+
+
+[[9-5-manual-archive-operations]]
+== 9.5 手動アーカイブ操作
+
+ `manual++_++archive++_++enabled=true`を設定し、 `manual++_++archive++_++stage`を意図的に選択してください。ガバナンス上、トレーニングが成功したらすぐにコアモデルのベースラインが必要な場合は `model++_++training`を使用し、アーカイブに最終予測を含める必要がある場合は `inferencing`を使用してください。 `model++_++training`が選択された実行は、アーカイブ分岐の後も微調整と推論を継続しますが、その後の出力はアーカイブされません。実行スタンプ付きの StorageGRID プレフィックス配下のアップロードを確認し、選択したステージ、検出されたファイル、およびアップロード数について `++[++manual++_++archive++]++`ログをレビューしてください。
+
+
+
+[[9-6-scaling-guidance]]
+== 9.6 スケーリングに関するガイダンス
+
+ `sample++_++count`、 `spark++_++driver++_++memory`、 `spark++_++executor++_++memory`、および `spark++_++timeout++_++secs`を入力量とサービスレベル目標に合わせて調整します。データの形状とルーティングを検証するために、まず境界付きサンプルから始め、StorageGRID、ONTAP NAS、XCP、および選択したトレーニング層に十分な容量とスループットが確保された後、全行実行には `sample++_++count=0`を使用します。
+
+
+
+[[9-7-backup-and-recovery]]
+== 9.7 バックアップとリカバリ
+
+ONTAP Snapshot とバックアップを使用して、ONTAP NAS の準備済みデータバケットを保護します。生データバケットとアーカイブバケットに StorageGRID の保護ポリシーと保持ポリシーを適用します。アーカイブバケットは、パイプラインの再実行とは無関係に履歴を保持します。これらのストレージ保護機能をトレーニングチェックポイントレコードと組み合わせることで、タスク、ホスト、またはサイトレベルでの中断後でも、実行範囲の正しいデータとベースラインアーティファクトを復元できます。

@@ -1,0 +1,106 @@
+---
+sidebar: sidebar 
+permalink: infra/ai-pipeline-solution-overview.html 
+keywords:  
+summary:  
+---
+= 2.解決策概要、ビジネス価値、顧客メリット
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media/
+
+
+カーティケヤン ナガリンガム、NetApp
+
+
+
+[[2-1-solution-description]]
+== 2.1 解決策の概要
+
+パイプラインはAirflow DAG `example++_++ai++_++pipeline++_++sklearn`として実装されており、タスク `ingestion`、 `data++_++prep`、 `xcp++_++preflight++_++source`、 `xcp++_++copy++_++prep++_++to++_++training`、 `model++_++training`、 `fine++_++tuning`、 `inferencing`、 `checkpoint++_++model++_++training`、 `route++_++manual++_++archive++_++stage`、および `manual++_++archive`で構成されています。
+
+
+
+[[2-2-use-case-and-problem-statement]]
+== 2.2 ユースケースと問題提起
+
+お客様は、StorageGRIDを生データソースとして使用した表形式回帰モデルとテキスト分類モデルのトレーニングを実施し、定期的に更新する必要があります。パイプラインはONTAP NASバケット内のデータを準備し、NetApp XCPを使用して、実行ごとの宛先選択に基づき、ONTAP S3またはLustreFSにトレーニング用データを配信します。
+
+
+
+[[2-3-target-customer-profile-and-industry-applicability]]
+== 2.3 対象顧客プロファイルと業界への適用可能性
+
+金融サービス（リスク/不正モデル）、製造業（予知保全）、ヘルスケア（分類/トリアージ）、小売業（需要予測）など、NetAppインフラストラクチャー上で統制された再現可能な機械学習トレーニングを必要とするあらゆる企業。
+
+
+
+[[2-4-solution-scope-and-boundaries]]
+== 2.4 解決策の範囲と境界
+
+*対象範囲：* 取り込みゲート、データ準備 （Python/Spark）、XCP データ移動 （S3/LustreFS）、scikit-learn トレーニングと増分微調整、推論、チェックポイント、手動アーカイブ。*対象外：* リアルタイム モデル提供 API、ストリーミング取り込み、GPU ベースの深層学習フレームワーク。
+
+
+
+[[2-5-assumptions-and-prerequisites]]
+== 2.5 前提事項と前提条件
+
+* StorageGRID の S3 互換エンドポイントは Airflow から到達可能で、生データへのアクセスとアーカイブに使用できます。
+* ONTAP NASバケットはAirflowからアクセス可能で、準備済みデータの書き込みに使用され、NFS経由でXCPホストに公開されます。
+* NetApp ONTAP S3互換エンドポイントは、トレーニング先としてONTAP S3が選択された場合に、AirflowとXCPからアクセス可能です。
+* NetApp XCPがインストールされており、SSH経由でアクセス可能です（Airflow接続 `ssh++_++default`）。
+* LustreFSが選択されている場合、XCPホスト上にLustreFSクライアントがマウントされます。
+* Airflow 2.x （ `boto3`、 `scikit-learn` 付き）；オプション PySpark &#43; Delta/Iceberg パッケージ。
+
+
+
+
+[[2-6-business-drivers]]
+== 2.6 ビジネス推進要因
+
+モデル構築にかかる時間を短縮し、段階的なトレーニングによってインフラコストを削減し、単発的なスクリプト作成のリスクを排除します。
+
+
+
+[[2-7-value-proposition-summary]]
+== 2.7 価値提案の概要
+
+StorageGRID、ONTAP NAS、ONTAP S3、LustreFS、XCPをAirflowオーケストレーションと組み合わせることで、ストレージ階層を認識し、監視可能で、回復力のあるAIパイプラインが実現します。
+
+
+
+[[2-8-stakeholder-benefits]]
+== 2.8 ステークホルダーの利益
+
+[cols="50%,50%"]
+|===
+| 利害関係者 | 利点 
+
+
+| データエンジニアリング | 宣言型、パラメータ駆動型の準備処理、自動ファイル検出、Spark/Delta/Iceberg のサポート 
+
+
+| データサイエンス／機械学習 | 段階的な微調整、ステージ全体にわたる一貫したアーティファクトソース、再現可能な分割 
+
+
+| IT運用 | 実行時ストレージの選択、ガード/有効構成ログ、チェックポイントベースのリカバリ 
+
+
+| コンプライアンス／ガバナンス | マニフェストとアーカイブ記録は監査可能な系譜を提供し、保存ステージを設定可能です 
+|===
+
+
+[[2-9-tco-considerations]]
+== 2.9 TCOに関する考慮事項
+
+段階的なファインチューニングとチェックポイントからの再開により、繰り返し発生するコンピューティングコストが削減されます。ストレージ階層の柔軟性により、すべてのワークロードに対してハイパフォーマンス ストレージを過剰にプロビジョニングすることを回避できます。
+
+
+
+[[2-10-roi-considerations]]
+== 2.10 ROI に関する考慮事項
+
+モデル更新サイクルの短縮、手動メンテナンスの削減、障害発生時の復旧時間の短縮。

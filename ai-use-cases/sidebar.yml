@@ -3,6 +3,33 @@ section: ai-use-cases
 title: AIのユースケース
 url: "/ai-use-cases/index.html"
 entries:
+- title: NetAppストレージ プラットフォーム全体におけるAIパイプラインの効率化
+  pdf-filename: NetAppストレージ プラットフォーム全体におけるAIパイプラインの効率化
+  entries:
+  - title: 概要
+    url: "/infra/ai-pipeline-overview.html"
+  - title: エグゼクティブサマリー
+    url: "/infra/ai-pipeline-executive-summary.html"
+  - title: 解決策概要、ビジネス価値、顧客メリット
+    url: "/infra/ai-pipeline-solution-overview.html"
+  - title: アーキテクチャの概要
+    url: "/infra/ai-pipeline-architecture.html"
+  - title: NetApp、サードパーティ、およびオープンソースの技術コンポーネント
+    url: "/infra/ai-pipeline-netapp-components.html"
+  - title: 解決策のデザインとストレージ アーキテクチャの詳細
+    url: "/infra/ai-pipeline-solution-design-and-storage-architecture.html"
+  - title: データモビリティとNetApp XCP
+    url: "/infra/ai-pipeline-data-mobility.html"
+  - title: デプロイメントアーキテクチャ
+    url: "/infra/ai-pipeline-deployment-architecture.html"
+  - title: 構成リファレンス
+    url: "/infra/ai-pipeline-configuration-reference.html"
+  - title: 操作ガイド
+    url: "/infra/ai-pipeline-operational-guide.html"
+  - title: セキュリティに関する考慮事項、検証およびテスト
+    url: "/infra/ai-pipeline-security-considerations-validation-testing.html"
+  - title: NetApp の差別化と競争上の位置付け、付録
+    url: "/infra/ai-pipeline-differentiation-appendices.html"
 - title: NetApp による KV キャッシュ オフロードNetApp
   pdf-filename: NetApp による KV キャッシュ オフロードNetApp
   url: "/software/ai-kv-cache-offloading-netapp.html"

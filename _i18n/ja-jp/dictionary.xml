@@ -6385,4 +6385,879 @@
   <block id="8e9935960e71710f3253321e54a9e37c" category="sidebar">HAクラスタとクライアントをデプロイする</block>
   <block id="a6d0a294c308f6406404b87b69662279" category="sidebar">展開状況を確認し、拡張する</block>
   <block id="ef6a7f3bd6d67f44f7bd0323fa734758" category="sidebar">関連リソース</block>
+  <block id="158133d0e61258a781ca3530584f50bc" category="doc">3.アーキテクチャの概要</block>
+  <block id="8d538805fd68ab903235f7bccd88d2be" category="paragraph">このセクションでは、検証済みのAIパイプラインの論理的なワークフロー、コンポーネント間の相互作用、物理的な展開、およびデータリネージについて説明します。これらの図は、Apache Airflow が StorageGRID から ONTAP NAS へのデータ移動をオーケストレーションし、オプションで NetApp XCP を使用してモデル実行用のデータを ONTAP S3 または LustreFS に配置し、統制された結果を StorageGRID のアーカイブストレージに返す方法を示しています。</block>
+  <block id="78eeca8a2ba4b9274cb36efa6d59ac6a" category="section-title">3.1 高レベルの3層AI ストレージ アーキテクチャ</block>
+  <block id="cb646951a6f20d69bbd4d8c107e01469" category="paragraph">NetApp AI ストレージ アーキテクチャは、各ライフサイクル段階に最適なストレージ層にデータを配置します。StorageGRID は、拡張性とコスト効率に優れた生データの取り込みと、管理されたアーカイブに使用されます。ONTAP NAS と ONTAP S3 は、アクティブな準備、データ移動のステージング、およびオブジェクトベースのトレーニングワークフローとして使用されます。Eシリーズと LustreFS は、高スループットの並列トレーニング I/O が必要な場合に使用されます。Apache Airflow はライフサイクルをオーケストレーションし、NetApp XCP は準備されたデータを ONTAP NAS 層から選択したアクティブなトレーニング層に移行します。</block>
+  <block id="9a839b7373492e326162d1aa61afac4f" category="image-alt">高レベルの3層AI ストレージ アーキテクチャ</block>
+  <block id="e73478fd1b199f0b72d6f664c454ae83" category="section-title">3.2 高レベル ソリューション アーキテクチャ</block>
+  <block id="8e95cf1a1222d609ec06c7334ed74e17" category="paragraph">このワークフロー図は、生の StorageGRID データから、準備、オプションの XCP モビリティ、モデル実行、チェックポイント、およびアーカイブまでの Airflow 制御のライフサイクルを示しています。<block ref="fd4d34e32e9bc5c210335d5fd6df15d7" prefix=" " category="inline-code"></block>トレーニング前に、準備されたデータが ONTAP NAS バケットから ONTAP S3 または LustreFS にコピーされるかどうかを決定します。アーカイブの各ブランチは独立しています：<block ref="5c8219c19f8a15ee0794b9138756ef33" prefix=" " category="inline-code"></block>トレーニング直後にベースラインをアーカイブし、<block ref="120019114158613cfa6cf13ef4bdf7f8" prefix=" " category="inline-code"></block>予測結果が生成された後、完全な結果をアーカイブします。</block>
+  <block id="5da449e6e3f5d803ce1171c96eac6565" category="image-alt">高レベル ソリューション アーキテクチャ</block>
+  <block id="40537ba1c2d0199268928353a283a55b" category="section-title">3.3 コンポーネント相互作用図</block>
+  <block id="63659446b0b29f6a666fbce7b4a3aece" category="paragraph">このシーケンス図は、各交換処理をどのプラットフォームコンポーネントが実行するかを示しています。Airflow は StorageGRID から生のオブジェクトを読み取り、準備されたデータを ONTAP NAS バケットに書き込み、その後 SSH 経由で XCP を呼び出します。XCP は ONTAP NAS NFS エクスポートを読み取り、設定済みのトレーニング層に書き込みます。最後の条件ブロックは、StorageGRID アーカイブコンテンツが選択された手動アーカイブ段階によって異なることを示しています。</block>
+  <block id="ffd987e8264d979550746f18ab10cab0" category="image-alt">コンポーネント相互作用図</block>
+  <block id="3af0467b350949319bcea90a74ffcfb7" category="section-title">3.4 物理/デプロイメント アーキテクチャ</block>
+  <block id="032b0e59bb804d370e7f1cb96d540730" category="paragraph">この配置図は、必要なホスト、ストレージエンドポイント、およびネットワークインターフェースを示しています。Airflow ホストは S3 API を使用して StorageGRID、ONTAP NAS バケット、および選択された ONTAP S3 宛先にアクセスし、SSH を使用して XCP ホストを制御します。XCP ホストは NFS 経由で準備済みデータソースにアクセスし、ONTAP S3 または LustreFS マウントに書き込みます。LustreFS を選択した場合、Airflow ホストもトレーニングデータを読み取り、アーティファクトを具体化するために LustreFS をマウントする必要があります。</block>
+  <block id="0e6cc2ec82643a41d9cf7bfd54062a28" category="image-alt">物理/展開アーキテクチャ</block>
+  <block id="164977a231e19fbb82fb26835b84b869" category="section-title">3.5 データフローの概要</block>
+  <block id="48c0f40b831c7ee67094c5a856088379" category="paragraph">この簡潔なフロー図は、データと成果物の由来を要約したものです。各実行には固有の<block ref="f8fa1cd8b7e66ffd748bc457b500b439" prefix=" " category="inline-code"></block>が割り当てられ、準備されたデータ、XCP 出力、モデル成果物、予測、およびアーカイブされたオブジェクトを同一の実行に追跡可能な形で保持します。XCP の宛先選択はトレーニングデータとモデル成果物の階層を制御し、<block ref="2878a1b91d2fb362479266e9dec90bdc" prefix=" " category="inline-code"></block>は StorageGRID がベースライン トレーニング パッケージを受け取るか、完全な推論パッケージを受け取るかを制御します。</block>
+  <block id="f08d03437beff1b3d497c5e454ba09d1" category="image-alt">データフローの概要</block>
+  <block id="ec0cb73b0d5abdc756bb2373d57e2853" category="doc">8.構成リファレンス</block>
+  <block id="a6e79493d5bb9bb413a1bd28efd70172" category="paragraph">構成リファレンスでは、データ取り込み、データ準備、XCP モビリティ、トレーニング、チェックポイント、およびアーカイブを制御するランタイムパラメータについて説明します。ONTAP NAS バケットは、主にサポート性と移植性を確保するための準備済みデータおよび XCP ステージングレイヤーとして使用されます。リアルタイムの実運用においては、ワークロードやレイテンシの要件により適している場合は、同じ準備済みデータを RDMA 対応の直接アクセスパスを通して利用することも可能です。</block>
+  <block id="81fc6043cd0691b150e06fdd852117b8" category="paragraph">すべてのランタイム動作は<block ref="ab705a77421e8c7b3037722d58fe2675" prefix=" " category="inline-code"></block>によって提供されます。これにより、同じDAGが、異なるソースシステム、変換エンジン、ストレージの保存先、リカバリポリシー、およびアーカイブスコープに対応できるようになります。選択したワークフローに必要なパラメータグループのみを設定し、認証情報はAirflow Connectionsまたはシークレットバックエンドに保管し、サンプルは認証情報の値としてではなく、非本番環境用のテンプレートとして使用してください。</block>
+  <block id="6fe31ae61c0bdd95f59e3615429b2773" category="section-title">8.1 取り込みパラメータ</block>
+  <block id="1aa076252468591df8b36dacd9479fd7" category="paragraph">アップストリームのインジェスト メカニズムを選択および設定するには、これらの設定を使用します。<block ref="8152603d62286c8bf3a5e38e9783e25a" prefix=" " category="inline-code"></block>は、データ準備グループで設定されたStorageGRIDの生データ オブジェクトを使用します。AirbyteおよびNiFiの設定は、それぞれのインジェスト ツールが選択されている場合にのみ必要です。</block>
+  <block id="83f499a540b1323009c200d6f8cc9396" category="cell">パラメータ</block>
+  <block id="7a1920d61156abc05a60135aefe8bc67" category="cell">デフォルト</block>
+  <block id="b651efdb98a5d6bd2b3935d0c3f4a5e2" category="cell">必須</block>
+  <block id="0a52730597fb4ffa01fc117d9e71e3a9" category="cell">例</block>
+  <block id="348a1c4e4ccecfb12590c206dbb3fc5f" category="cell"><block ref="a9ba0ac6818f785f16c4ec33a68daae2" prefix="" category="inline-code"></block></block>
+  <block id="3eff42010b88d106f8f4e949f2bea91d" category="cell"><block ref="8152603d62286c8bf3a5e38e9783e25a" prefix="" category="inline-code"></block></block>
+  <block id="ade0694229d9b7206a4c6531c029374b" category="cell">取り込みモードを選択します</block>
+  <block id="f3fbde79e5e72b6bd754b1d304b571a4" category="cell"><block ref="cf51deb83d01f9d3eb59898a891be5fa" prefix="" category="inline-code"></block></block>
+  <block id="22b433d589c54a66f66b721a05b1de90" category="cell"><block ref="a3a512d0af8a2fdd8f31bc414c0de95f" prefix="" category="inline-code"></block></block>
+  <block id="6adf97f83acf6453d4a6a4b1070f3754" category="cell">None</block>
+  <block id="0c173a5a46cd5563724bba1226b9c384" category="cell">Airbyteのみ</block>
+  <block id="8f85041d65a05fcf4aa86bac553ba06b" category="cell">Airbyte APIエンドポイント</block>
+  <block id="b504732b213a87187231baca605c29f1" category="cell"><block ref="b5ed70381f808bcc66b89342ab2e2293" prefix="" category="inline-code"></block></block>
+  <block id="c029885170856d38cb96f1deb6962e65" category="cell"><block ref="e4a2252aaabe1c06633e050a04a69f8f" prefix="" category="inline-code"></block></block>
+  <block id="4588e115490a73489db338f3abe4c6bd" category="cell">Airbyte接続ID</block>
+  <block id="d9dcd04c76a6d70dbf288e5225b0bb4f" category="cell"><block ref="e4bc78c6caa0b02bfcece185c21ee922" prefix="" category="inline-code"></block></block>
+  <block id="49b36067de2b8e7a2cafa50945920400" category="cell"><block ref="ff0c833f37cf23695b04cbf7160c6c00" prefix="" category="inline-code"></block></block>
+  <block id="ebb061953c0454b2c8ee7b0ac615ebcd" category="cell">オプション</block>
+  <block id="25d95961a44037e555767a429cb7864e" category="cell">ベアラートークン</block>
+  <block id="f7d44098a8d808a29da9e45a59b53a91" category="cell"><block ref="9ec92ad7f9e9a7435546c7eec389f19b" prefix="" category="inline-code"></block></block>
+  <block id="9b95ccc8531d009364cbe47940f84bd6" category="cell"><block ref="b4c413ca446d24992e11ac3b6d75182d" prefix="" category="inline-code"></block></block>
+  <block id="f29961598a6ef18678cd21502ad448be" category="cell"><block ref="34173cb38f07f89ddbebc2ac9128303f" prefix="" category="inline-code"></block></block>
+  <block id="624409fd5bc261b99b28044d8c26d4ac" category="cell">Airbyteタイムアウト</block>
+  <block id="3659b8b4c0a792d3f143e11a3ba64e5d" category="cell"><block ref="072b030ba126b2f4b2374f342be9ed44" prefix="" category="inline-code"></block></block>
+  <block id="89ec7fed32196b93e9a01ccaac58b005" category="cell"><block ref="2f124d3655fe6808cf036887019a3c32" prefix="" category="inline-code"></block></block>
+  <block id="272c8e289e61bb24f2c69ba19a02b482" category="cell">NiFiのみ</block>
+  <block id="202d2bc1d26456b2dcfc0336a9dc9536" category="cell">NiFi API エンドポイント</block>
+  <block id="b5dcb8135460b155a13cf3a5d7981ac3" category="cell"><block ref="ab7d663aca954c12cd496c6608da9431" prefix="" category="inline-code"></block></block>
+  <block id="07fb86dcb4d19a46f2c31fe92c4de2ff" category="cell"><block ref="b239cfc9da9c5e4d9e029958a5cd7e9d" prefix="" category="inline-code"></block></block>
+  <block id="a394e04923e4a70365f7119a44b40b2b" category="cell">NiFiプロセスグループ</block>
+  <block id="a034a722ab767ec80bd8df6b148a62dd" category="cell"><block ref="aefc0b9b3fcccdaea347b2cb3c72ea58" prefix="" category="inline-code"></block></block>
+  <block id="e01497d25c5c253261340cf7517087cd" category="cell"><block ref="243eb95fe6ada2a629ca1f0094b8df29" prefix="" category="inline-code"></block></block>
+  <block id="6f78769ea4e73895e9650319bdb00ad0" category="cell">NiFiタイムアウト</block>
+  <block id="337a7fd6980c8641e959afd0f995ca78" category="section-title">8.2 データ準備パラメータ</block>
+  <block id="6c3d44fd52b223fad61aab780b7ac7b5" category="paragraph">これらの設定は、生データへのアクセス、準備済みデータの出力、入力データの検出、および変換動作を制御します。<block ref="3223c12f695625701b873ce04fe3c432" prefix=" " category="inline-code"></block>パラメータは StorageGRID を参照し、コード互換の<block ref="9832221282433f8c95fcd8f8408caabd" prefix=" " category="inline-code"></block>パラメータは、準備済みで実行スタンプ付きのデータとマニフェストが書き込まれる ONTAP NAS バケットを識別します。</block>
+  <block id="168effe8ab542239eab7a42fbe28e887" category="paragraph">*生データStorageGRID / 準備済みデータONTAP NASバケット：*</block>
+  <block id="61aee82e27bacdc5dcfbba33461af2b2" category="paragraph">StorageGRID と ONTAP NAS バケットが異なる S3 互換サービスまたはアクセスポリシーを使用する場合は、エンドポイントと認証情報を個別に設定してください。汎用フォールバックキーは、より具体的な生データまたは準備済みデータの設定が存在しない場合にのみ適用されます。</block>
+  <block id="129c49d60e20de7f7664b36bfa43870a" category="cell"><block ref="c264f93945231acec7e85748664ee309" prefix="" category="inline-code"></block></block>
+  <block id="27f05c33bb6d80e003f95ac3a43062ff" category="cell"><block ref="0eeafd8ee4f4a7d9aeb44f71a01fcfed" prefix="" category="inline-code"></block></block>
+  <block id="167778a3c06004961771286f3e4d4d69" category="cell">StorageGRID 生の入力バケット</block>
+  <block id="a3997043d93a6429f4a5d9dd8fff03d3" category="cell"><block ref="039d508ae5fde5a28724a9d203d28521" prefix="" category="inline-code"></block></block>
+  <block id="ad1f5dca5b5b81778ebfbcb29365cb8f" category="cell"><block ref="d9073f930b78a3eb9d11fa2659a09dca" prefix="" category="inline-code"></block></block>
+  <block id="69a74a982eb2be1af429ef8f3387282f" category="cell"><block ref="fba152f2defb0a51a52b0adfc4af9fa7" prefix="" category="inline-code"></block></block>
+  <block id="8cf19178a694ca56a5b1cde39c7d91c6" category="cell">StorageGRID 生データプレフィックス</block>
+  <block id="7c8fc1d9bc8531be3c8133d7070840e4" category="cell"><block ref="2e8fde81604825f1ae809fef4ca785fc" prefix="" category="inline-code"></block></block>
+  <block id="d79555fd00bf36b3e3b0a2471779f26e" category="cell"><block ref="b23533f663d430471eaed559acbfa256" prefix="" category="inline-code"></block></block>
+  <block id="5f11531631fdca99428373c14b3ba9f6" category="cell">フォールバックチェーン</block>
+  <block id="b509a12563f65c8eaac8686246eeb99a" category="cell">StorageGRID S3エンドポイント</block>
+  <block id="f16ea29d0dcf84343e0e1fcd216582c6" category="cell"><block ref="179d2a8b2c7155e29cdf9e4c94d507bd" prefix="" category="inline-code"></block></block>
+  <block id="87de63722ed89331f253338844994b77" category="cell"><block ref="be99e7ada656f2e039f8b8cc5b1e42bd" prefix="" category="inline-code"></block></block>
+  <block id="a11f945134d654a1129d9a61fdf87923" category="cell">生のアクセスキー</block>
+  <block id="41c0431ecaad16e483b40c209f259d91" category="cell"><block ref="769f1c8003c357411a4fbda807f1388a" prefix="" category="inline-code"></block></block>
+  <block id="2427909c19df5c5a9d02803e088e5424" category="cell"><block ref="fdfbea47cae283d16b375762e13ed0e3" prefix="" category="inline-code"></block></block>
+  <block id="82dc192f877c0935e062a8d36fe6c0eb" category="cell">シークレットアクセスキー</block>
+  <block id="c9d4c1577313f35279eec25ea11a6ecd" category="cell"><block ref="c79ed3b4227b8b0f87b3bffe9324a376" prefix="" category="inline-code"></block></block>
+  <block id="30f53b66dfcfad6f0472e964f1e3aeb8" category="cell"><block ref="b6253fd93efaf30faf86ec8c9d987683" prefix="" category="inline-code"></block></block>
+  <block id="9cebc99a21f8302fda7c69dd3c83be25" category="cell"><block ref="8b1e9746aa84620f8cb6ae38de05c055" prefix="" category="inline-code"></block></block>
+  <block id="0378efc4aedfdc453ccf5c64c4918871" category="cell">Rawリージョン</block>
+  <block id="d90a6a8ba9dbc7034eb3e8cc3ce92926" category="cell"><block ref="5cddea25c1b8550d5466712e0ea921f7" prefix="" category="inline-code"></block></block>
+  <block id="735d333c64b4ffd8a6b2634a59756c29" category="cell"><block ref="83d5df48bbb01e156632c65d6dc5039e" prefix="" category="inline-code"></block></block>
+  <block id="b985ac477660efbd3ef82f8a9aed766e" category="cell"><block ref="9b4e6952cc0d064a095dc685338d7399" prefix="" category="inline-code"></block></block>
+  <block id="8fb023518b15949baa936821fb0cea9b" category="cell">ONTAP NAS 準備済みデータ出力バケット</block>
+  <block id="b0df16ec4b170822a8ed8d5fd7188f7b" category="cell"><block ref="54a7643247bb913c349ffd8ec60ef720" prefix="" category="inline-code"></block></block>
+  <block id="f669cf5de621fe4e17332316d8226241" category="cell"><block ref="f57c1f4ba2c821f0d9d15dd91699d491" prefix="" category="inline-code"></block></block>
+  <block id="72fb01835c1928f2b95c4ab8be3b4521" category="cell"><block ref="79563c6f5e6db0137d91e1c247f5d61c" prefix="" category="inline-code"></block></block>
+  <block id="d146a764f23cc82c59de0e5b2a394a90" category="cell">ONTAP NAS 準備済みデータプレフィックス</block>
+  <block id="6621fbc7bb1cbf9782916c72e03e7ebc" category="cell"><block ref="154d6a9e85892f250a404bb27c33749a" prefix="" category="inline-code"></block></block>
+  <block id="c1a8137914fafc0cb4125308e7eba8b6" category="cell"><block ref="49da7ce448447803fd22d74ce6666c9d" prefix="" category="inline-code"></block></block>
+  <block id="35472e7dd7b96b12c380fab83dd9b3ce" category="cell">ONTAP NAS バケット S3 エンドポイント</block>
+  <block id="9340498ebb03f9be30e2d49c75c6b31a" category="cell"><block ref="484c412c1990c81422c11505b4aa20f9" prefix="" category="inline-code"></block></block>
+  <block id="d234aa2c960b985c770afa7b0f753416" category="cell"><block ref="f3671ca86798d8159ebced9dcdc14111" prefix="" category="inline-code"></block></block>
+  <block id="aa12838400e9140bea618855a04fdc6d" category="cell">ONTAP NAS バケットアクセスキー</block>
+  <block id="e2f012be683672f48e365b31f927fa89" category="cell"><block ref="7b95dd21f8366508eb26b44477e6ca53" prefix="" category="inline-code"></block></block>
+  <block id="e4e78ff28b5d3c87d4dd5a291e34d977" category="cell">ONTAP NAS バケットの秘密鍵</block>
+  <block id="a7cd95cc16ae5ed2b92ba8c18a330d9d" category="paragraph">*一般的な代替手段：*<block ref="f7144cc259d5abd35eabdc2be810a4bb" prefix=" " category="inline-code"></block>、<block ref="1d17ba19b79de9ef7540308069d9fafe" prefix=" " category="inline-code"></block>、<block ref="f7c9b94eb6c33dee57f09d7e27d8861f" prefix=" " category="inline-code"></block>、<block ref="68152e22fa38ab9f483c5a6eb8716e50" prefix=" " category="inline-code"></block>、<block ref="1c7349e310bcc2928ca6667936a717ff" prefix=" " category="inline-code"></block>、<block ref="8b1e9746aa84620f8cb6ae38de05c055" prefix=" " category="inline-code"></block>、<block ref="992148d1af4adbe8f4d437848b55b2e2" prefix=" " category="inline-code"></block>、<block ref="c42ff3e88bfd9d5b40102ebda45794c8" prefix=" " category="inline-code"></block>、<block ref="8e3496add8222d59a7f1365031676a56" prefix=" " category="inline-code"></block>。</block>
+  <block id="5cf6e20eff9855dc2957c10f00cf41c0" category="paragraph">*入力選択：*</block>
+  <block id="f4e74114a6c5633aa4ede9f05ddae1d8" category="paragraph">既知のCSV入力を処理するには、明示的なオブジェクトキー設定を使用します。そうでない場合、タスクは設定されたStorageGRIDのrawプレフィックスの下にある対象の表形式オブジェクトを検出します。</block>
+  <block id="8d1eee2026e127efe193374baca79c66" category="cell"><block ref="ea8041c6af489a1a25b1a095f9ff8da1" prefix="" category="inline-code"></block></block>
+  <block id="b5fac60116712074e4581a0451a7d934" category="cell">自動検出</block>
+  <block id="7a240361bb2796eb78b47b9c88e43b0a" category="cell">CSVキーの明示的なリスト</block>
+  <block id="0344404b3b1443ab3518c9f73fdb3b7c" category="cell"><block ref="c2cde11638ea45b44f46660a0c043e27" prefix="" category="inline-code"></block></block>
+  <block id="6cadc40a5938154834e863c0ba526e2a" category="cell"><block ref="838c47ae240d20e9f5fa6df78bf53c88" prefix="" category="inline-code"></block></block>
+  <block id="6f81ad49ce3f49045ce0f2535f7fec0d" category="cell">単一の明示的なCSVキー</block>
+  <block id="a307aad40342892bdd845a060ba103d3" category="cell"><block ref="75491dc07464569ed16d0fa991c90214" prefix="" category="inline-code"></block></block>
+  <block id="fc339e14cc57c2dfd014e84eda025aa9" category="paragraph">*変換：*</block>
+  <block id="e7d8eccf5a47ff157b8a996e8c5a31f2" category="paragraph">軽量なローカル準備にはPythonパスを、分散準備にはSparkを選択してください。サンプリングとシードは、生成されたトレーニング、検証、推論の分割データに再現性よく適用されます。</block>
+  <block id="afae541444780623a6263cac126c0f98" category="cell"><block ref="b91be537caa62c99f9e78b21434bb1e7" prefix="" category="inline-code"></block></block>
+  <block id="e3ef6ab535c097f0be06489a7838949d" category="cell"><block ref="23eeeb4347bdd26bfc6b7ee9a3b755dd" prefix="" category="inline-code"></block></block>
+  <block id="fe1fc4d4aa0871665f7eb9ca05c52271" category="cell"><block ref="23eeeb4347bdd26bfc6b7ee9a3b755dd" prefix="" category="inline-code"></block> または<block ref="98f11b7a7880169c3bd62a5a507b3965" prefix=" " category="inline-code"></block></block>
+  <block id="2c8a1c688b3c55cb4a4608bae9eb2540" category="cell"><block ref="926789435e51415605e04023ab323f82" prefix="" category="inline-code"></block></block>
+  <block id="27f4029d65edf8633ec2f03d7b5de704" category="cell"><block ref="435e8af8130aca438536a2efb6286d95" prefix="" category="inline-code"></block></block>
+  <block id="249091efa412cf5e332461c484b979d0" category="cell"><block ref="68934a3e9455fa72420237eb05902327" prefix="" category="inline-code"></block></block>
+  <block id="2a5ffef480b5b2c2ead2605a053d16e8" category="cell">フォールバックではなく失敗する</block>
+  <block id="22cfef4d87bd251ba39dd92d08a6b0bb" category="cell"><block ref="b326b5062b2f0e69046810717534cb09" prefix="" category="inline-code"></block></block>
+  <block id="e56ef258ff89887d63390431c5280d40" category="cell"><block ref="45d673dbfef8c0b98875498503901c0b" prefix="" category="inline-code"></block></block>
+  <block id="56d058c51fcd79545706c62569ba5a19" category="cell"><block ref="334c4a4c42fdb79d7ebc3e73b517e6f8" prefix="" category="inline-code"></block></block>
+  <block id="47a4a02cf875a2b030053a3871a6e2b0" category="cell"><block ref="334c4a4c42fdb79d7ebc3e73b517e6f8" prefix="" category="inline-code"></block><block ref="63bcabf86a9a991864777c631c5b7617" prefix="/" category="inline-code"></block><block ref="46ebfdc1519946f436cd1081b525d98f" prefix="/" category="inline-code"></block></block>
+  <block id="ca873a54535e00d202019cc8ee2d01db" category="cell"><block ref="929ccda19514701081c152ef8fcfed07" prefix="" category="inline-code"></block></block>
+  <block id="4af996c414ae1b8e0ce0304ef14cca64" category="cell"><block ref="ecda157cf83513b7c14dcd5d41a3840d" prefix="" category="inline-code"></block></block>
+  <block id="f7897e1fe84dc355fee6f6e00268479b" category="cell">フォーマットが利用できない場合は失敗します</block>
+  <block id="c45b741a346b7cb6a31d6760a5892a67" category="cell"><block ref="e2dfdfe902add95b4f3a18f63b340ca5" prefix="" category="inline-code"></block></block>
+  <block id="ee7babec50034a7da0cc9ee8363c72b0" category="cell">すべての行</block>
+  <block id="c230cbaa834792e353f938b157bf5b42" category="cell">行数制限（≤0 = すべて）</block>
+  <block id="d9be3139547ba5ff94d298ff890faf84" category="cell"><block ref="f827b5406c7aa5b4fe10062ae06a137b" prefix="" category="inline-code"></block></block>
+  <block id="0646e7fb28021b86d9307ca2d6282852" category="cell"><block ref="fe4c0f30aa359c41d9f9a5f69c8c4192" prefix="" category="inline-code"></block></block>
+  <block id="3b696ab764c3d6e91780a4926d7d29b3" category="cell"><block ref="8f14e45fceea167a5a36dedd4bea2543" prefix="" category="inline-code"></block></block>
+  <block id="7cf9eefadfe3b77b8a38198dee5b07f9" category="cell">再現可能なシャッフルシード</block>
+  <block id="52db4c2ae3c00f9b299855de1565acc8" category="cell"><block ref="6512bd43d9caa6e02c990b0a82652dca" prefix="" category="inline-code"></block></block>
+  <block id="1a09daf2be803ccd9e9a55fdb3a1fe94" category="paragraph">*Spark：*</block>
+  <block id="30e78355bda10681a94714b99127e819" category="paragraph">これらの設定は、<block ref="17834bd5ee93c281806ceaf8327c6b86" prefix=" " category="inline-code"></block>にのみ適用されます。これらは、Sparkプロセスの配置、リソース割り当て、時間制限、およびオプションのDelta LakeまたはIcebergランタイムの依存関係を制御します。</block>
+  <block id="a1387f2c095dc4a81d8b6a41be36ad2e" category="cell"><block ref="51e57266a3dac8c47e491110f4996df6" prefix="" category="inline-code"></block></block>
+  <block id="c00decc140d919a411a4352c34c6995f" category="cell"><block ref="78d07f07ead3482e696c0c224c2a7ed5" prefix="" category="inline-code"></block></block>
+  <block id="400409aff3a5f0e2d96272b1d1254735" category="cell">Sparkバイナリ</block>
+  <block id="e647323263ad4bfd01661e8c1fba8dcd" category="cell"><block ref="db56f687a0d57f6ff15c0c304f58ebea" prefix="" category="inline-code"></block></block>
+  <block id="fde80f8d8a57c4e71bab37167bfebce3" category="cell"><block ref="66a7c0511b787df4a82d69c708850709" prefix="" category="inline-code"></block></block>
+  <block id="ab787ac1783e6ceda33aa15689004a87" category="cell"><block ref="987757c3f156154cbc6ad24cc90509c1" prefix="" category="inline-code"></block></block>
+  <block id="2abf997c87f8d9beaa7fdc7fb41fcb96" category="cell">Sparkマスター</block>
+  <block id="c809714fc5938cb0fe11668c823a078c" category="cell"><block ref="a78e9ff6c249edb158138300564e8173" prefix="" category="inline-code"></block></block>
+  <block id="42c65fece76b798acec03912e0f5dd62" category="cell"><block ref="5257ab466c539326517ed6aa66482386" prefix="" category="inline-code"></block></block>
+  <block id="410675e49ff663783dfc02324cbd7d01" category="cell"><block ref="39965b619c09bdf7eeab87e689da2529" prefix="" category="inline-code"></block></block>
+  <block id="4b4a672aaed5048dfecdb663147014d7" category="cell">ドライバメモリ</block>
+  <block id="28115e4ae83d7be87337f60e5cf00bff" category="cell"><block ref="707c743d8b121fc6ba570c238a349a7c" prefix="" category="inline-code"></block></block>
+  <block id="e5a56c9cbdeb0c84e32ca7d6bd4ac9d5" category="cell"><block ref="dfd5910097d39d53f81cb0f40aae61dc" prefix="" category="inline-code"></block></block>
+  <block id="e2d597feb2118b2678d781706a1942e1" category="cell">エグゼキュータメモリ</block>
+  <block id="77825b251eb4d13fa35d2f5e81dd3526" category="cell"><block ref="1570a0563cfe735ca4167b38ba5dd2db" prefix="" category="inline-code"></block></block>
+  <block id="4576ab6ce001e4038dde42cc67b14874" category="cell"><block ref="acf4b89d3d503d8252c9c4ba75ddbf6d" prefix="" category="inline-code"></block><block ref="2354c276f1c9156f4b97a11a7aa41254" prefix="/" category="inline-code"></block></block>
+  <block id="53b6130c2039a7f6da80533032079da0" category="cell">タイムアウト（0 = 無効）</block>
+  <block id="2911e600bbad981e24b3e2a2b3a03f82" category="cell"><block ref="cfcd208495d565ef66e7dff9f98764da" prefix="" category="inline-code"></block></block>
+  <block id="591d7bb6b814c889b5e31b4b9525806b" category="cell"><block ref="4cb87f85d2d245568a685778ebd6c83b" prefix="" category="inline-code"></block></block>
+  <block id="c3164e00570073a99dacf8222c61acfc" category="cell">Delta 3.2.0</block>
+  <block id="5463b8b630e5ec1421d12183249b8493" category="cell">Deltaランタイムパッケージ</block>
+  <block id="80087016a6f8b57b9be371127bf48e20" category="cell"><block ref="1b4fb66449c09cd0e50449824067d0fb" prefix="" category="inline-code"></block></block>
+  <block id="9c84180e29b07ed889fdad307629814d" category="cell"><block ref="5bfc5adc60879ddc4fa32e3010e17e00" prefix="" category="inline-code"></block></block>
+  <block id="fe909eef58dee906812dad114af8a2e2" category="cell">Iceberg 1.5.2</block>
+  <block id="1ddb70552868f63cda36da5ae44eaeec" category="cell">Icebergランタイムパッケージ</block>
+  <block id="ee0738e9f9d148c9c3e805c8cf7b4458" category="cell"><block ref="678c98ad75cd9e6bca8960bd5dd037d5" prefix="" category="inline-code"></block></block>
+  <block id="f5a129d0ad99f9a73ecdcbf97e0c8cbe" category="cell"><block ref="19f37e6dde1d98c4fcf927a2ad1fed02" prefix="" category="inline-code"></block></block>
+  <block id="d6bec99ccdddde168dbad2d446f3136a" category="cell"><block ref="f5ddaf0ca7929578b408c909429f68f2" prefix="" category="inline-code"></block></block>
+  <block id="a34cedc2faee98b4fa009ff9ed9d93f3" category="cell">Iceberg カタログ名</block>
+  <block id="5ad0f8029aaecb8a4e398e5d828f51b0" category="cell"><block ref="74d71383ef2ec2704f84d8b19da501ae" prefix="" category="inline-code"></block></block>
+  <block id="0d28b1b7ab15374e0af1883fd53250ca" category="section-title">8.3 XCP とトレーニング先パラメータ</block>
+  <block id="e88ade248a20201e174526b0c6182d41" category="paragraph">このグループは、<block ref="4cb7fb5c858deba7c9c4234ea87ca5ff" prefix=" " category="inline-code"></block> ONTAP NAS NFSソースを検証し、XCPホストを起動して、アクティブなトレーニング パスを選択する際に使用します。<block ref="4674a08755fd498fb7f7b950ac4069cd" prefix=" " category="inline-code"></block>は制御スイッチです。以下のONTAP S3固有またはLustreFS固有の設定を選択し、下流のモデルステージでも同じ選択されたティアが使用されます。</block>
+  <block id="9b376582892ab72487a0ffba3efe17a6" category="cell"><block ref="fd4d34e32e9bc5c210335d5fd6df15d7" prefix="" category="inline-code"></block></block>
+  <block id="8b86669a12705f10e36f4c1b59fc36fd" category="cell">XCPの場合はい</block>
+  <block id="eedc6661ff343ba476c211ccddaf3eda" category="cell">XCPブランチを有効にする</block>
+  <block id="b090d2edf2e186119116053c22232d4e" category="cell"><block ref="4674a08755fd498fb7f7b950ac4069cd" prefix="" category="inline-code"></block></block>
+  <block id="bdc082f71db11ac595b2f5bf4dd64213" category="cell"><block ref="c0828e0381730befd1f7a025057c74fb" prefix="" category="inline-code"></block></block>
+  <block id="a4ecd36db295426de6c7a8c6b5dd965c" category="cell"><block ref="c0828e0381730befd1f7a025057c74fb" prefix="" category="inline-code"></block> または<block ref="c1ab44fd888254255acf3ece33dfe88e" prefix=" " category="inline-code"></block></block>
+  <block id="1568d4912db7ddf1ce555194b7c9dc3c" category="cell"><block ref="4dfec3f2cc573299511c2c2a776dad11" prefix="" category="inline-code"></block></block>
+  <block id="9e0796f88902838461a43dce526ff2cf" category="cell"><block ref="bc1901b980c76fd3702c1677b27e6168" prefix="" category="inline-code"></block></block>
+  <block id="c576a5ebcd60477b0567e469bab15be6" category="cell"><block ref="3be7dd8550d76283dff709f47491257d" prefix="" category="inline-code"></block></block>
+  <block id="78b4ce2e4404e28ff74f674ba757cc43" category="cell">XCP preflight</block>
+  <block id="ebe149cd1d0e7286447178e8bdf3b31c" category="cell">NFSサーバIP</block>
+  <block id="11213ec9a66e988babf7813d0efd5c8d" category="cell"><block ref="16cea69ba78e414af5c2801b17ca9f90" prefix="" category="inline-code"></block></block>
+  <block id="98e14ecada163dcc1825f46fafe654ac" category="cell"><block ref="4fdcc627b79a9749af52ba5b6764d70c" prefix="" category="inline-code"></block></block>
+  <block id="ca6a10a53073d3f5d22741d258ec7618" category="cell"><block ref="9a6f567f91a1d3e0e8dbf5be620b284b" prefix="" category="inline-code"></block></block>
+  <block id="ff028153b12c7cfa74e4fe531953058c" category="cell">NFSエクスポートパス</block>
+  <block id="4caf78ac9902b9add4d49108f7182aaa" category="cell"><block ref="fe8df3baf8dc354e7538dcade2c056ee" prefix="" category="inline-code"></block></block>
+  <block id="f20aa6015da3f3412fe60c261e13ba24" category="cell"><block ref="a2d0b30c3e921543604b6305267b467e" prefix="" category="inline-code"></block></block>
+  <block id="253edb9e361b0c8b87301dff7d39a058" category="cell"><block ref="63a9f0ea7bb98050796b649e85481845" prefix="" category="inline-code"></block></block>
+  <block id="f4214febd8cfabda02545f48324f696d" category="cell">XCPホストのSSHユーザー</block>
+  <block id="ec62b19d80a377baf073d81e4f995dda" category="cell"><block ref="eb76094059feda9f811de9a47a1307ac" prefix="" category="inline-code"></block></block>
+  <block id="c12276fa7485251bb07072fbd03291c7" category="cell"><block ref="a006819e13cbc96432b8e085874dbc2c" prefix="" category="inline-code"></block></block>
+  <block id="f9bf8b2c8695427edf284f0dd43f663c" category="cell"><block ref="dfb1f2805e7737588cd20bd267e45171" prefix="" category="inline-code"></block></block>
+  <block id="c0a21952b1aec9c6a3aadeae85519566" category="cell">XCPホストアドレス</block>
+  <block id="539252aaa4bb46b0b501fa59eb088a21" category="cell"><block ref="2856dca6375834636f7b6c47aa02150e" prefix="" category="inline-code"></block></block>
+  <block id="14cf3c2a36dcd3ca122af92e9c3c356b" category="paragraph">*S3宛先（<block ref="844946f00330d539ab98657463980437" prefix=" " category="inline-code"></block>の場合に必要）：*</block>
+  <block id="9257c5edb9c09f617c5ed826500302f1" category="paragraph">これらの設定は、ONTAP S3 トレーニング パスにのみ指定してください。プロファイルまたは直接認証情報により、XCP およびモデルアーティファクト同期ロジックが、選択した ONTAP S3 バケットとプレフィックスにアクセスできます。</block>
+  <block id="92dd3e6b8597368025c32f3319f35716" category="cell"><block ref="520e5c4a40204a6d876f879e9061e6a4" prefix="" category="inline-code"></block></block>
+  <block id="c21f969b5f03d33d43e04f8f136e7682" category="cell">default</block>
+  <block id="51ece400f31f0eacb7ab2b530c0b68ce" category="cell">XCP S3エンドポイント</block>
+  <block id="7aaebcf06a23d45837fdb2eedbd2d192" category="cell"><block ref="950cc6a11a1facee6b896331385554a6" prefix="" category="inline-code"></block></block>
+  <block id="3adff7c120fce460018f4201a14efe0c" category="cell"><block ref="4bd25776c125c54aa9a5a98b3c33a34d" prefix="" category="inline-code"></block></block>
+  <block id="72afa7cbe3a3f98840e7502583acc45b" category="cell">XCP宛先バケット</block>
+  <block id="9226707718c970f88a8c7ef67ca9d9d0" category="cell"><block ref="b67c8a9384f3a214b1351d552939b1ad" prefix="" category="inline-code"></block></block>
+  <block id="4472a0b84356f16aecaa9f8c31aa709b" category="cell"><block ref="f73e3c0b5ca6804f248b1c3fd4dc9981" prefix="" category="inline-code"></block></block>
+  <block id="c3d3ca19c132b20ef944483b45c39e6b" category="cell"><block ref="16575977987ae8cd13e639dd796ab9bd" prefix="" category="inline-code"></block></block>
+  <block id="863c77cdde59b9dc631f98f0d80d2f58" category="cell">宛先プレフィックス</block>
+  <block id="bd60e9e3f15ad1ad4df817ebf5cfd9b6" category="cell"><block ref="90df1fc4a2b72745baf6f2034d4428df" prefix="" category="inline-code"></block></block>
+  <block id="f1f7644f8cd7688eb4fa6da29a68dd32" category="cell"><block ref="8c54337013d3f35fe4e958fe46784653" prefix="" category="inline-code"></block></block>
+  <block id="d289495fbf7daa1c30e91c77aa85a5bb" category="cell">トレーニング ディスカバリ プレフィックス</block>
+  <block id="309cd796c1e0c57f1693572912da0fc0" category="cell"><block ref="67920c3d3dc2fcbbb0511988f98ac5d5" prefix="" category="inline-code"></block></block>
+  <block id="7971060b959f8093b37f8bdc89baca62" category="cell"><block ref="b0f9dfefa7f37df34c1221617845151b" prefix="" category="inline-code"></block></block>
+  <block id="0d53ea1fa24653f102da58682c74a96d" category="cell">名前付き資格情報プロファイル</block>
+  <block id="fdb4e6b025b91ffb047ebfed01dd242e" category="cell"><block ref="ef8a1c575b2f95bc34e780719721ba74" prefix="" category="inline-code"></block></block>
+  <block id="b06f1cf07ca627ce2f2c73a62952bf7a" category="cell"><block ref="c0c7a5ec9a483e3ad0b879fd4fd64242" prefix="" category="inline-code"></block></block>
+  <block id="154b65e77f1823d1ce449a6c21cf0e57" category="cell">プロファイルマップ</block>
+  <block id="8c435b8b5a72b1c52118cb4745561ff7" category="cell"><block ref="883e80ff1c1fa688c7981f5e30d9f965" prefix="" category="inline-code"></block></block>
+  <block id="58322c0191ca15dd389695c5fcdf5f83" category="cell"><block ref="cd8d4507c10c19976f480853f79a2d70" prefix="" category="inline-code"></block></block>
+  <block id="68dd5423908cd88692f985d47f09e77c" category="cell">ダイレクトキーフォールバック</block>
+  <block id="0b22715afba27552a971102b2f2b8725" category="cell"><block ref="ad6678b85f0105a30b54188dd94565de" prefix="" category="inline-code"></block></block>
+  <block id="0829506f88df093599dff49bdc8d9ad8" category="cell">ダイレクトシークレットフォールバック</block>
+  <block id="786af8d90090973f61c612449e511421" category="cell"><block ref="9c80f11c95c615641412cc3a9fb8c4d3" prefix="" category="inline-code"></block></block>
+  <block id="bb17fd4e4aeaa948edae2c8223b1637d" category="cell">XCP S3 リージョン</block>
+  <block id="f6e207ea2cd4bc1184c85559e4cbea07" category="paragraph">*LustreFS 宛先 （<block ref="43aa42fc620874f288d9782d47a176ca" prefix=" " category="inline-code"></block>の場合は必須）：*</block>
+  <block id="9cc26a83d2c824c7fd0dd7a6a642d910" category="paragraph">これらの設定は LustreFS トレーニング パスにのみ指定してください。ソースとデスティネーションは、XCP ホスト上にマウントされ、アクセス可能である必要があります。また、デスティネーションは、モデルステージを実行する Airflow ワーカーからもアクセス可能である必要があります。</block>
+  <block id="474e9fb18014f8199098cd5ab07b68f1" category="cell"><block ref="e2b53e69309249547236ebc1d1a5a6ef" prefix="" category="inline-code"></block></block>
+  <block id="974d56da9ba2c4c28922898e3cf56d49" category="cell">XCP コピーソース</block>
+  <block id="455ebf85a5fd04b2df7fc28f2cb62234" category="cell"><block ref="d4baa9abe0f21e414ec3b460845aa4f2" prefix="" category="inline-code"></block></block>
+  <block id="d09e53ca6375b3101a5e6e64e1c24556" category="cell"><block ref="b40de2b2e3e07215603910854fb41ac2" prefix="" category="inline-code"></block></block>
+  <block id="5fd321331c28961b2cbd5daecd80346c" category="cell">LustreFS マウント先</block>
+  <block id="0f9d80d64aede1e50396bcd76f2b6f40" category="cell"><block ref="8934f45b17fe5ed1b173c62cb12cd0e1" prefix="" category="inline-code"></block></block>
+  <block id="c6b7ea17737a5094077fb5ae91abc425" category="cell"><block ref="5ed5394c9fafffd537105f56f47c2fb1" prefix="" category="inline-code"></block></block>
+  <block id="f92150abafb353b3f40d624c57f706e6" category="cell">マウント配下のトレーニング サブディレクトリ</block>
+  <block id="fe832155a6b3520aba6e6865506075b3" category="cell"><block ref="a685d9909b31c77360e6c550d65b7ece" prefix="" category="inline-code"></block></block>
+  <block id="f474474c7f96e1a024045c16009c071d" category="cell"><block ref="392989018ea1a795a5a4c97dcb3d88f3" prefix="" category="inline-code"></block> ランスタンプ</block>
+  <block id="50a497024a132bcc2fe6c6fa3c1193ce" category="cell">XCP ジョブ識別子</block>
+  <block id="c7edb75dce68ae497a49d23b99f7c83e" category="cell"><block ref="a2d70bb7983afca55b1ecb0f7e517045" prefix="" category="inline-code"></block></block>
+  <block id="a33f1d7f4b4c9bce707c695562376710" category="paragraph">*テキストソースの動作：*</block>
+  <block id="f6b0fa156eba979ffb8f85f0ee29fc8f" category="paragraph">これらのオプションは、XCP の移動後に3つのテキストデータセットがどのように検出されるかを制御します。明示的なキーは検出を上書きします。ローカルフォールバックを無効にすると、テキスト入力が選択された XCP 宛先から送信されることを必須にできます。</block>
+  <block id="0de671c3d1d4635fc74206c6af7e82be" category="cell"><block ref="2ad8f7e067fb574a7f31ee0922631796" prefix="" category="inline-code"></block></block>
+  <block id="636ba56b1d77196b52f71d64475e16d9" category="cell">ローカルテキストのフォールバックを許可する</block>
+  <block id="f17f761923cbb5e7e5c4cb338cc2481a" category="cell"><block ref="347dd65ae6c044ac01a5caf722f950d0" prefix="" category="inline-code"></block></block>
+  <block id="06b9281e396db002010bde1de57262eb" category="cell">Auto</block>
+  <block id="e4134d8beec54e81ea1da46113a92ba7" category="cell">明示的なベーステキストの位置</block>
+  <block id="1ad99fba25f4c94316eb0a8ba00d55ba" category="cell"><block ref="922709bd3930aaf3a2518859ed4914e2" prefix="" category="inline-code"></block></block>
+  <block id="23cc12f1b3415c52c2f1dffdf8d2a37c" category="cell"><block ref="6a1be6200eb45ebac012bddfafa2cb97" prefix="" category="inline-code"></block></block>
+  <block id="e10ccad882a84519728ba237679c5a04" category="cell">明示的な微調整テキストの位置</block>
+  <block id="39aadd00d30527a3ca819abcb543d077" category="cell"><block ref="f47ee3bfe8d61654c5917c00daebc021" prefix="" category="inline-code"></block></block>
+  <block id="f26eeb39a2c1703b4111bb646951c0dd" category="cell"><block ref="c86b3bce38cf6e1412d19fa0551a6fee" prefix="" category="inline-code"></block></block>
+  <block id="f0ea370f40bfef504de68721580509c8" category="cell">明示的な推論テキストの位置</block>
+  <block id="4439b33ee7b703ad69ea2b46da098ddd" category="cell"><block ref="cf883eb00f270b352d5fdc1e070cbbb0" prefix="" category="inline-code"></block></block>
+  <block id="b8db10ebf856309f781a64a7bfda5910" category="section-title">8.4 モデル学習パラメータ</block>
+  <block id="0e8ad2f1afc634725740d36fe32f3c67" category="paragraph">これらの設定により、ローカルまたはXCP経由で配信されるデータソースが選択され、トレーニング量が制限され、再現可能なデータ順序が維持されます。XCPが有効になっている場合、トレーニングは選択されたONTAP S3またはLustreFS層を読み取り、ベースラインアーティファクトを同じ宛先に公開します。</block>
+  <block id="d886048c38bddcc2b3d7708643395812" category="cell">XCPまたはローカルソースを選択します</block>
+  <block id="8b9009050a3dcb0c4a506c65734a95c9" category="cell">ソース階層を選択します</block>
+  <block id="1f32e4828524b687ab34ce2df8f236f6" category="cell">トレーニング サンプルの制限</block>
+  <block id="82b31e75546660294c097281d85b2c4c" category="cell">再現可能なシャッフル</block>
+  <block id="13f246b8c556be8fab0dd1101c520ba9" category="paragraph">生成物：<block ref="07c9091af56a867b94e87b12338934d3" prefix=" " category="inline-code"></block>、<block ref="4f801ad7ef04bc6937f342d5c8231669" prefix=" " category="inline-code"></block>、<block ref="6642fa1c6f2710c44f023b7377e6eeb8" prefix=" " category="inline-code"></block>、<block ref="7ea5e9049cfd7967a4e9e8a1595b8dc2" prefix=" " category="inline-code"></block>。</block>
+  <block id="670f0e52a55ebfa9a1b3c6d319a16664" category="section-title">8.5 パラメータの微調整</block>
+  <block id="34673baa4e3b749c92521feb2b981f86" category="paragraph">微調整では、選択された XCP 宛先からベースラインとなるテキスト成果物を具体化し、微調整データセットに増分学習を適用し、調整済みの分類器とその評価指標を再公開します。成果物の出所を維持するため、XCP 設定をモデルトレーニングと一貫性のあるものに保ってください。</block>
+  <block id="55561a93861b62b9e5fd848f5fbffefe" category="cell">成果物の具体化/公開を有効にする</block>
+  <block id="33ae9dc1cd0d00493d6347aba692444f" category="cell">成果物のソース/宛先を選択します</block>
+  <block id="364aed335c31cc41da4f65dcca2ce6ce" category="paragraph">消費：<block ref="4f801ad7ef04bc6937f342d5c8231669" prefix=" " category="inline-code"></block>、<block ref="6642fa1c6f2710c44f023b7377e6eeb8" prefix=" " category="inline-code"></block>、<block ref="2ca834a656a179410acd72087d3e1bd5" prefix=" " category="inline-code"></block>。生成：<block ref="ec0cc1867b2a3504e6a04ea71043e1b5" prefix=" " category="inline-code"></block>、<block ref="ff6c46df37ea393281f31f41ffe6b679" prefix=" " category="inline-code"></block>。</block>
+  <block id="8f8b8c2e9ad24a31eb9cd89ccd0baa03" category="section-title">8.6 推論パラメータ</block>
+  <block id="723ae5a894e779b34a0686f4b5f9dd20" category="paragraph">これらのフラグは、選択されたトレーニング層から調整済みモデルが具体化された後のスコアリングの範囲を制御します。検証またはビジネス要件により、デフォルトの推論分割と推論テキスト入力を超える出力が必要な場合は、いずれかのオプションを有効にしてください。</block>
+  <block id="b0e1f899692060512f6c3c9141541750" category="cell"><block ref="029659c73dbc20e4d73b3a7bdc025f83" prefix="" category="inline-code"></block></block>
+  <block id="98e480a7ad11543cec4e62ee918d1096" category="cell">スコア トレーニング/検証/推論分割</block>
+  <block id="83e3f08af9de375350adf789efe1b6d4" category="cell"><block ref="1d027d9a5fe9277a21b6974d5cc3f97e" prefix="" category="inline-code"></block></block>
+  <block id="d4ebe860c61676044aacaa8b6f5cfc39" category="cell">スコアベース/微調整/テキスト推論</block>
+  <block id="abfc445b9a7e807bb005f0b0913669c1" category="paragraph">消費：<block ref="07c9091af56a867b94e87b12338934d3" prefix=" " category="inline-code"></block>、<block ref="4f801ad7ef04bc6937f342d5c8231669" prefix=" " category="inline-code"></block>、<block ref="ec0cc1867b2a3504e6a04ea71043e1b5" prefix=" " category="inline-code"></block>。生成：<block ref="ec39d308f2a8d67cdfe4b7f36be6b684" prefix=" " category="inline-code"></block>、<block ref="a77dc6001e3622c0c0d8e54b04451ff2" prefix=" " category="inline-code"></block>。</block>
+  <block id="364836489b4b64a448f20f5f8a8f3796" category="section-title">8.7 チェックポイントパラメータ</block>
+  <block id="54b81e6a72fa4bf3d4b12f7cd7355f97" category="paragraph">チェックポイントの範囲は<block ref="b40e4f0b6e8f3138e6ccde4cb7ae520c" prefix=" " category="inline-code"></block>です。これらの設定により、トレーニング完了記録を作成するかどうか、どこに保存するか、アップロードの失敗をどのように処理するか、そして後続の実行で有効な完了済みトレーニング結果を検証するか再利用するかが決まります。</block>
+  <block id="7598a68852c012a5972fe1ea8f1c2364" category="cell"><block ref="48e617a07ab9a92bf0a704bc436ba4ef" prefix="" category="inline-code"></block></block>
+  <block id="a3789936d22fc20e0513bae3e1b01669" category="cell">チェックポイントファイルの作成を有効にします</block>
+  <block id="9f6dd050423b6c95ff2055015a66ca93" category="cell"><block ref="0eee5278000ada466b66ac6ac21d985a" prefix="" category="inline-code"></block></block>
+  <block id="ea17442a5cf68514fc3950c0aa6d5e0c" category="cell"><block ref="f5ddaf0ca7929578b408c909429f68f2" prefix="" category="inline-code"></block> または<block ref="f1d34415ef4d3a99684e289d8d6ddc74" prefix=" " category="inline-code"></block></block>
+  <block id="9f9a771d88974a6dd1025eb3943f90d9" category="cell"><block ref="005c1e078ebeedc94fe7d0a9816ddcf5" prefix="" category="inline-code"></block></block>
+  <block id="2ee9c27acf5eb962df07d5741e14ea42" category="cell"><block ref="e3bfa34e4273d172c52a62f4909efc9f" prefix="" category="inline-code"></block></block>
+  <block id="ba36badcc268d29f79760acfed5c64c4" category="cell"><block ref="1ea4c3ab05ee0c6d4de30740443769cb" prefix="" category="inline-code"></block></block>
+  <block id="7152af557c55723df548f00b0239ec7f" category="cell"><block ref="1ea4c3ab05ee0c6d4de30740443769cb" prefix="" category="inline-code"></block> または<block ref="e11185b6e35c1b767174dc988aa0f179" prefix=" " category="inline-code"></block></block>
+  <block id="3a4b9b2ac4d3530a1aba6cbc0b6a1e39" category="cell"><block ref="d947529aba82b29e6ef4547701f60c7f" prefix="" category="inline-code"></block></block>
+  <block id="4431a432b0bfda032c700b6d91fb0736" category="cell"><block ref="6db8b8ec6c4eb3ff2545de5dbe04c800" prefix="" category="inline-code"></block></block>
+  <block id="350d871ee78bfc8b1a589b7dde157b7f" category="cell"><block ref="3262d48df5d75e3452f0f16b313b7808" prefix="" category="inline-code"></block></block>
+  <block id="780452293052ea036fde42457afa18d5" category="cell"><block ref="3262d48df5d75e3452f0f16b313b7808" prefix="" category="inline-code"></block><block ref="c3ab04d6952eb6a898fd20601002eccd" prefix="/" category="inline-code"></block><block ref="457fc07af08397af0e5d5649787fcc1b" prefix="/" category="inline-code"></block></block>
+  <block id="a8523676f6c76d068b25a5215de2a97c" category="cell"><block ref="a0f1ce4e4478b451a8b3211b9dbeb878" prefix="" category="inline-code"></block></block>
+  <block id="1629d93e768a8fab7de14c8ff49a7e36" category="cell"><block ref="0fcce4b097eca788279effb70fb29c91" prefix="" category="inline-code"></block></block>
+  <block id="cfd1dbacf397fb165a0592634937335a" category="cell">後方互換性のあるエイリアス</block>
+  <block id="1000aa49cae4c86654fdc16507c0ea1e" category="cell"><block ref="90614479b94da50a20eedb59c2df9e4b" prefix="" category="inline-code"></block></block>
+  <block id="2c49f671e13c4718a15eed6d00a6b37b" category="section-title">8.8 手動アーカイブパラメータ</block>
+  <block id="4c09fc3893a971260517cab0255b86dd" category="paragraph">このグループを使用して StorageGRID アーカイブを有効化し、保存先のバケットと認証情報を指定して、アーカイブポイントを選択します。選択された<block ref="2878a1b91d2fb362479266e9dec90bdc" prefix=" " category="inline-code"></block>は、アーカイブのタイミングと、アーカイブにベースラインのトレーニング成果物のみを含めるか、完全な推論結果セットを含めるかを制御します。</block>
+  <block id="1b4f52479ea077319f573b44194a898b" category="cell"><block ref="49cab09ac0d8b0557e9ddc91ee96bf40" prefix="" category="inline-code"></block></block>
+  <block id="fb8f629d0722940de30b14ca8d0f1768" category="cell">アーカイブ機能を有効にする</block>
+  <block id="d40119a3d417c2922aa0e2bf0bbfdcdd" category="cell"><block ref="2878a1b91d2fb362479266e9dec90bdc" prefix="" category="inline-code"></block></block>
+  <block id="9d15d15d119e3ebf28e813726782c016" category="cell"><block ref="6202f2dbb43be62721979683c867ba8c" prefix="" category="inline-code"></block></block>
+  <block id="b1eedbbcbfe2064db4fc6f5bf0be7fb9" category="cell">アーカイブポイントとアーティファクトセット：<block ref="b40e4f0b6e8f3138e6ccde4cb7ae520c" prefix=" " category="inline-code"></block> コアトレーニングアーティファクトの場合、または<block ref="6202f2dbb43be62721979683c867ba8c" prefix=" " category="inline-code"></block> 結果セット全体の場合</block>
+  <block id="fe242444799bd6c10d0bf756ad5ab576" category="cell"><block ref="53da8db505f77969500701912b8c92ef" prefix="" category="inline-code"></block></block>
+  <block id="777971ee68116eb376a2a55e685859cd" category="cell"><block ref="eb03e738108b9f3ea36420ce6d6be768" prefix="" category="inline-code"></block></block>
+  <block id="85deffa19329433d0ce5cbc331ad9cc0" category="cell"><block ref="1913d1c21aaa5ded6562dd0317214f00" prefix="" category="inline-code"></block></block>
+  <block id="11e4697dd94989ae3e1c0ab8f2bbd2a9" category="cell">はい、有効にした場合</block>
+  <block id="9d4f6cd39ecab67ab674e1735d8eaa96" category="cell">アーカイブバケット</block>
+  <block id="2225977c5d4b8b2b2216c7beaa2c6a0b" category="cell"><block ref="b28e97fc250bd7c80e81c778e5a25c1a" prefix="" category="inline-code"></block></block>
+  <block id="338779550026a40c8099038146897c67" category="cell"><block ref="a63b3ccf7880bca89f9019db18fcec63" prefix="" category="inline-code"></block></block>
+  <block id="87194d25662ed1c742e21aaf07ddbe41" category="cell"><block ref="145d5154f9d1ff4f8b59d4dbd7f31409" prefix="" category="inline-code"></block></block>
+  <block id="bcfe0f0db7314a05f682060882bcd0a2" category="cell">アーカイブ接頭辞</block>
+  <block id="d56211ed38899d98b3a54f16612f86cb" category="cell"><block ref="f7e3cb7fc0b54d845f67cc1cc7d1b116" prefix="" category="inline-code"></block></block>
+  <block id="cfb733c6a05419947480a15aa5d5555d" category="cell"><block ref="29275a5c6a12523bf0a3610f63b64a9b" prefix="" category="inline-code"></block></block>
+  <block id="be59c0a1d981ff9525b7802e79bd8e8a" category="cell">カスタムのみ</block>
+  <block id="375a34bdebd972c146956a7efe5997b2" category="cell">アーカイブS3エンドポイント</block>
+  <block id="8f2411d2763b455283f5e42fb13a0de0" category="cell"><block ref="6f6fb98bde7e09298f4bdf9901d9cfa3" prefix="" category="inline-code"></block></block>
+  <block id="f67dee88e96de0db90c758a435137418" category="cell"><block ref="fc09c965940ec0e8c44fcfcc39f69086" prefix="" category="inline-code"></block></block>
+  <block id="654866693fd91ce8e9764a218f569918" category="cell">推奨</block>
+  <block id="45fe895393cd8bf1d07b8125ade9efe3" category="cell">資格情報プロファイル</block>
+  <block id="bd6053c0cfe3d4b853d29c13702a871b" category="cell"><block ref="22d3257365b6d6c1df447dfe4b02b5a8" prefix="" category="inline-code"></block></block>
+  <block id="01e2b74914a173b5090d90962fb6bc27" category="cell"><block ref="efbd19dc3bd131cbda79d80320093de3" prefix="" category="inline-code"></block></block>
+  <block id="4d9391e429092401c280fe3e7d209939" category="cell"><block ref="f79f226c63f4daf92b77f9b5076358fd" prefix="" category="inline-code"></block></block>
+  <block id="758f96bc90cbc1a7836d888e3e0e8a4d" category="cell"><block ref="ae3fdb42c848ae0ce1d1251e722dba77" prefix="" category="inline-code"></block></block>
+  <block id="bb9c47c5ef585ab432e1744e59586cc5" category="cell">アーカイブにXCP入力を含める</block>
+  <block id="bc35512e57895fc541f04bae5b7d7c70" category="cell"><block ref="12a88b097d4c2c67ca1d57fa2bda8c0e" prefix="" category="inline-code"></block></block>
+  <block id="20ef812d174367721e69af44c660455d" category="cell">アップロード後にローカルのrawフォルダを削除する</block>
+  <block id="cc637c839d664a9a9366ef9c73527c08" category="paragraph">別名：<block ref="e71de4cdd84878838e2df71cd6734092" prefix=" " category="inline-code"></block>すべての<block ref="112273225a7a6c78379547b49369d353" prefix=" " category="inline-code"></block>パラメータ。</block>
+  <block id="154c079fc4ba857090186c47595a45d6" category="section-title">8.8.1 手動アーカイブ段階の決定</block>
+  <block id="782642db06f69df15231e0377bc82940" category="paragraph">この<block ref="7322f5c6abe7430601b1ccc06306e4ca" prefix=" " category="inline-code"></block>ブランチタスクは、DAG実行ごとに1回<block ref="2878a1b91d2fb362479266e9dec90bdc" prefix=" " category="inline-code"></block>を読み取ります。選択した値によって、アーカイブの実行タイミングと、StorageGRID アーカイブバケットにアップロードされるアーティファクトの両方が決まります。アーカイブオブジェクトは<block ref="e3085aa0d18dd7a10c795a574bf94276" prefix=" " category="inline-code"></block>に保存されます。</block>
+  <block id="74f1d58e46c588a1cae64a5fcfddd05c" category="cell"><block ref="2878a1b91d2fb362479266e9dec90bdc" prefix="" category="inline-code"></block> 値</block>
+  <block id="217a1c7f66e32aed5977da3b8dc83b81" category="cell">アーカイブのタイミング</block>
+  <block id="e01de448d32bcde41ceb09be582eaa13" category="cell">アーティファクトがアーカイブされました</block>
+  <block id="baccb6d59f411e12c73c3d5cab1c15d8" category="cell">推奨される使用方法</block>
+  <block id="48eb09a89a27b30bfd2fcc686c1fadd4" category="cell"><block ref="b40e4f0b6e8f3138e6ccde4cb7ae520c" prefix="" category="inline-code"></block></block>
+  <block id="2e7a4518d90fda98fd89aa0171be890a" category="cell">直後<block ref="b40e4f0b6e8f3138e6ccde4cb7ae520c" prefix=" " category="inline-code"></block>；微調整や推論を待たない</block>
+  <block id="8d47d729e8430a243ac8f4787a5692b2" category="cell"><block ref="07c9091af56a867b94e87b12338934d3" prefix="" category="inline-code"></block>、<block ref="4f801ad7ef04bc6937f342d5c8231669" prefix=" " category="inline-code"></block>、<block ref="6642fa1c6f2710c44f023b7377e6eeb8" prefix=" " category="inline-code"></block>、<block ref="7ea5e9049cfd7967a4e9e8a1595b8dc2" prefix=" " category="inline-code"></block></block>
+  <block id="a0667922ac88bd66626ff3504860fe79" category="cell">再現可能なベースラインモデルの保存、アーカイブボリュームの最小化、または後続のステージの前のチェックポイントの保持を行います</block>
+  <block id="c73ba07fa53ace56f63dbe3642019224" category="cell"><block ref="6202f2dbb43be62721979683c867ba8c" prefix="" category="inline-code"></block>（デフォルト）</block>
+  <block id="f3897917239c00214a6fae3f73605a60" category="cell"><block ref="24cf8a9f2a179bf0692d4ab1650b014d" prefix=" " category="inline-code"></block>と<block ref="6202f2dbb43be62721979683c867ba8c" prefix=" " category="inline-code"></block>が完了したら</block>
+  <block id="5522a79b879b0584668978e038cc8813" category="cell">すべての<block ref="b40e4f0b6e8f3138e6ccde4cb7ae520c" prefix=" " category="inline-code"></block>アーティファクトと<block ref="ec0cc1867b2a3504e6a04ea71043e1b5" prefix=" " category="inline-code"></block>、<block ref="ff6c46df37ea393281f31f41ffe6b679" prefix=" " category="inline-code"></block>、<block ref="ec39d308f2a8d67cdfe4b7f36be6b684" prefix=" " category="inline-code"></block>、および<block ref="a77dc6001e3622c0c0d8e54b04451ff2" prefix=" " category="inline-code"></block></block>
+  <block id="4dc0b89ca225698f8c614afa8fdadfc3" category="cell">モデル実行に関する完全なビジネス成果と予測証拠を保持する</block>
+  <block id="33b2fad026f67f7f85f0a9b3a9733f01" category="paragraph">どちらの選択肢でも、<block ref="1fd7873c565a27648b9911e5e6bd7192" prefix=" " category="inline-code"></block>を設定して、ローカルで具体化されたXCPトレーニング入力が存在する場合にそれを追加します。<block ref="8bec105836913f26c1602f4009a01fef" prefix=" " category="inline-code"></block>を設定して、トレーニングと推論のワークフローを変更せずにアーカイブタスクをスキップします。</block>
+  <block id="a2dbb11eece45a6acb07debaa780db0b" category="section-title">8.9 完全なサンプル構成</block>
+  <block id="e7ebe4cb035e836fce33b16403419d15" category="paragraph">このカタログは、主要なデプロイメントパスとテストパスのためのベースライン構成を提供します。すべての例では、生データは StorageGRID に保存され、準備済みデータは ONTAP NAS バケットに書き込まれることを前提としています。バケット名、エンドポイントアドレス、ファイルシステムパス、プロファイル名を、対象環境の値に置き換えてください。本番環境のアクセスキーやシークレットは<block ref="99dfd056f67cd45b069217c19bb4f726" prefix=" " category="inline-code"></block>に記述せず、Airflow Connections、Variables、またはシークレットバックエンドを通じて設定してください。</block>
+  <block id="6fc7a15fde27e79edea2ffbd02b0ec85" category="section-title">8.9.1 XCP から LustreFS への Spark および Delta Lake を使用した移行</block>
+  <block id="8e2b6049096b4e7a812a3387d0d042df" category="paragraph">分散準備とハイパフォーマンスLustreFS モデルI/Oには、このフルスループットの例を使用してください。対象となるすべての表形式ファイルを<block ref="d9073f930b78a3eb9d11fa2659a09dca" prefix=" " category="inline-code"></block>以下で処理し、準備中にDeltaテーブルを書き込み、トレーニングチェックポイントをONTAP NASの準備済みデータバケットに永続化し、推論結果セット全体をアーカイブします。</block>
+  <block id="335c1e584f87fde9008e8709a1e07641" category="section-title">8.9.2 Python準備なしのXCP</block>
+  <block id="43f7b62903dbd75c3216c501b4b9ee9f" category="paragraph">このベースライン構成を軽量な機能的実行に使用します。準備段階ではローカルの Python エンジンが使用され、下流段階ではパイプラインのローカルの準備済みデータおよびアーティファクトパスが使用されます。XCP、Spark、テーブル形式、チェックポイントの再利用、およびアーカイブは無効になっています。</block>
+  <block id="e6204964cb0a77ad7d5b8a22d9ff3606" category="section-title">8.9.3 2つの明示的な入力ファイルを使用したPythonの準備</block>
+  <block id="b6aa1c2c8f685a97e9cf4bb1104afc5b" category="paragraph">既知の2つの StorageGRID CSV オブジェクトに対してパイプラインを検証する際には、この集中的なテストを使用してください。<block ref="ea8041c6af489a1a25b1a095f9ff8da1" prefix=" " category="inline-code"></block>表形式ファイルの自動検出を無効にします。テキスト入力は引き続き、生データプレフィックスの下の想定される場所を使用します。</block>
+  <block id="a85866b2b32f396a4e57ae27d2b24ada" category="section-title">8.9.4 Pythonによる全ファイル自動検出の準備</block>
+  <block id="7fa1eaa8332d49c4609d91cbdd705682" category="paragraph"><block ref="ea8041c6af489a1a25b1a095f9ff8da1" prefix=" " category="inline-code"></block>と<block ref="838c47ae240d20e9f5fa6df78bf53c88" prefix=" " category="inline-code"></block>を省略すると、StorageGRID 生データプレフィックス配下の対象となるすべての表形式オブジェクトが処理されます。この例は、Python 準備エンジンを使用した全ファイル対象の機能テストまたはスケールテストに適しています。</block>
+  <block id="de24ae65c4292b90045cfc116ccd84ed" category="paragraph"><block ref="53bbcb4b6a3c3087e1d6163cf3dab827" prefix="" category="inline-code"></block>これは、データ準備において利用可能なすべての行が使用されることを意味します。制限付きテスト実行の場合は、正の値を設定します。</block>
+  <block id="6ffef5674d7486801b1822054d724823" category="section-title">8.9.5 XCP から ONTAP S3 への Python を使用した移行の準備</block>
+  <block id="dbef453e7cec0c1353a9f9ff7a84b705" category="paragraph">準備済みデータを ONTAP NAS NFS エクスポートから ONTAP S3 トレーニングバケットにコピーする必要がある場合は、この構成を使用してください。モデルのトレーニング、ファインチューニング、および推論は、同じ ONTAP S3 宛先を通じて成果物を具体化し、公開します。</block>
+  <block id="7132243962662ca208bdb4a6f5a7a7db" category="section-title">8.9.6 XCP から ONTAP S3（Spark および Iceberg 使用）</block>
+  <block id="7980b0a9f2d1f9259b6293a421fda4e7" category="paragraph">Iceberg テーブル出力と ONTAP S3 をアクティブなトレーニング先として使用した分散準備には、この構成を使用します。Spark または Iceberg が利用できない場合に、フォールバックするのではなく実行を失敗させる必要があるときは、<block ref="435e8af8130aca438536a2efb6286d95" prefix=" " category="inline-code"></block>および<block ref="ecda157cf83513b7c14dcd5d41a3840d" prefix=" " category="inline-code"></block>を<block ref="b326b5062b2f0e69046810717534cb09" prefix=" " category="inline-code"></block>に設定してください。</block>
+  <block id="396583de090225fa44db7e6fd1f715f7" category="section-title">8.9.7 シナリオ選択の概要</block>
+  <block id="cdc106fa2c9d5bcfb98c630ea8b1f22d" category="cell">XCP宛先</block>
+  <block id="2b7b88996513ee01209ce526d830a897" category="cell">準備エンジン</block>
+  <block id="5128c40e9b4875ff6b6f9b08e8d0a03f" category="cell">表形式</block>
+  <block id="b6ae1c78c3ecd74cc882849d245963db" category="cell">入力範囲</block>
+  <block id="29ef3ccd551d4250c3f0709a128480fa" category="cell">アーカイブ段階</block>
+  <block id="a1dface8f2ff04034e7f4ac7f9851e72" category="cell">8.9.1</block>
+  <block id="b185b764e7198b32f082f5810b8717d5" category="cell">LustreFS</block>
+  <block id="db1f4ab5845def61a83d5df13e0c2397" category="cell">Delta</block>
+  <block id="38ae0f7ff8f6b9f7cdc512964dea88b8" category="cell">検出されたすべてのファイル</block>
+  <block id="15f47e431616676d678ba1fb23f5429f" category="cell">8.9.2</block>
+  <block id="b9f5c797ebbf55adccdd8539a65a0241" category="cell">Disabled</block>
+  <block id="e1fc0130f8e74c349b2bc83c1792b0f1" category="cell">8.9.3</block>
+  <block id="5127c13251cd0eb0e3ac9092161279f8" category="cell">2つの明示的なファイル</block>
+  <block id="b9bdc82c89fd20c40f348876cf4ce26a" category="cell">8.9.4</block>
+  <block id="d868211515224580cf5e75307a89d143" category="cell">8.9.5</block>
+  <block id="1716834171e243de0f898a67621b6624" category="cell">ONTAP S3</block>
+  <block id="1651662ffb9f2b893c5513ce167a67be" category="cell">8.9.6</block>
+  <block id="b9f1e40fa2e2d56e00b35f266364715a" category="cell">Iceberg</block>
+  <block id="617b0027e6b613829ed549314b607362" category="section-title">8.9.8 実行手順の解説</block>
+  <block id="a70a56a200b34683569085729e0905a8" category="paragraph">Airflowワークスペースからサンプルを実行してください。トリガースクリプトは一意の<block ref="9abb8c4da442d2a93e3e16dc447b6411" prefix=" " category="inline-code"></block>実行IDを生成し、完了を待機し、実行が失敗またはタイムアウトした場合はゼロ以外の終了コードを返します。以下の完全な構成では、操作例と同じ<block ref="9409ba488e8bfacbc3a63bd5096a8423" prefix=" " category="inline-code"></block>パターンを使用します。参照されているAirflow管理接続、XCPプロファイル、およびアーカイブプロファイルをシークレットバックエンドで構成してから実行し、<block ref="99dfd056f67cd45b069217c19bb4f726" prefix=" " category="inline-code"></block>は非機密のバケット、エンドポイント、パス、およびプロファイル識別子に限定してください。</block>
+  <block id="4763ac672b0fea60a26c858942fc0aab" category="paragraph">有効なテーブル形式名は<block ref="46ebfdc1519946f436cd1081b525d98f" prefix=" " category="inline-code"></block>です。<block ref="067610ffdeb3bfc31ebe5cdd1e8e1c90" prefix=" " category="inline-code"></block>は使用しないでください。これはサポートされていない値です。</block>
+  <block id="190ce1161a12a2dc7feb94352ad32519" category="paragraph">*すべてのファイル、Spark、Iceberg、XCP から ONTAP S3、準備済みデータ S3 へのチェックポイント、推論後のアーカイブ：*</block>
+  <block id="94b137749c9d868a7efa3d20eeade073" category="paragraph">*すべてのファイル、Spark、Iceberg、XCPからLustreFSへの転送、準備済みデータS3へのチェックポイント作成、推論後のアーカイブ：*</block>
+  <block id="62cd9c7f0c0e12e1afa47f741a239b31" category="paragraph">ONTAP S3 モードの場合は、非機密情報の<block ref="67920c3d3dc2fcbbb0511988f98ac5d5" prefix=" " category="inline-code"></block>名前のみを<block ref="99dfd056f67cd45b069217c19bb4f726" prefix=" " category="inline-code"></block>に渡し、実行前に XCP ホスト上またはAirflow が管理するシークレットストレージを通じて、対応する認証情報を定義してください。LustreFS モードの場合、トレーニングルートが ONTAP S3 の認証情報を解決しないため、<block ref="c0c7a5ec9a483e3ad0b879fd4fd64242" prefix=" " category="inline-code"></block>マップは意図的に省略されています。どちらの例でも、StorageGRID の生データ、ONTAP NAS の準備済みデータ、およびアーカイブの認証情報は、インライン JSON ではなく Airflow が管理するシークレットストレージを通じて定義してください。<block ref="ea8041c6af489a1a25b1a095f9ff8da1" prefix=" " category="inline-code"></block>を省略し、<block ref="e2dfdfe902add95b4f3a18f63b340ca5" prefix=" " category="inline-code"></block>を<block ref="cfcd208495d565ef66e7dff9f98764da" prefix=" " category="inline-code"></block>に設定することで、対象となるすべての表形式ファイルの自動検出と、利用可能なすべての行の使用が要求されます。</block>
+  <block id="2ed15e8306ef4528865929588ccc8373" category="paragraph">*Python、XCP なし、2 ファイルテスト：*</block>
+  <block id="1c184b0bdfc88b8f98e65aeba5e780df" category="paragraph">*Spark、Delta Lake、XCP から LustreFS へ：*</block>
+  <block id="7304284eb2927d6db41c443276f38ac3" category="paragraph">*Spark、Iceberg、XCP から ONTAP S3：*</block>
+  <block id="6853d92d212bb7b1c97ba8b7aae1c4cd" category="paragraph">XCP を実行する前に、XCP ホストから設定済みの ONTAP NAS NFS パスおよび宛先へのアクセス可能性を確認してください。正常に実行されたら、選択したエンジン、入力範囲、宛先、およびアーカイブ段階を確認するために、<block ref="a97739f1cca9a4ae927a6fd7173ecf69" prefix=" " category="inline-code"></block>、<block ref="ca1f0e49174d17af28c314531c2cd62f" prefix=" " category="inline-code"></block>、<block ref="00905a154705190882f65e1f06c87086" prefix=" " category="inline-code"></block>、および<block ref="1421d24f791396da38c8f28c327ad0fc" prefix=" " category="inline-code"></block>のタスクログを確認してください。</block>
+  <block id="a7c841f05d48c22a7c9afb22a391819e" category="doc">6.データモビリティと NetApp XCP</block>
+  <block id="57e6a106d8c0a8cb67ad8e6445643402" category="paragraph">NetApp XCP は、ONTAP NAS の準備済みデータ層とアクティブなトレーニング層の間で制御された転送パスを提供します。Airflow は、XCP ホストを介してプリフライトを実行し、コピー操作を呼び出します。<block ref="4674a08755fd498fb7f7b950ac4069cd" prefix=" " category="inline-code"></block>実行ごとに ONTAP S3 または LustreFS を選択します。モデルのトレーニング、ファインチューニング、および推論では、同じ選択された保存先を使用することで、データと成果物を一貫した階層に維持します。</block>
+  <block id="39af1ec8acb0a545bd310f6e512fdf7e" category="section-title">6.1 なぜ NetApp XCP なのか</block>
+  <block id="76b2331cfa1a59d29331bdcdebccf29b" category="paragraph">XCP は、このアーキテクチャで使用される NFS ソース、ONTAP S3、および LustreFS の転送先をサポートする並列マルチスレッドコピーエンジンです。その<block ref="62b85e07a9977420ba67f03d7613cb51" prefix=" " category="inline-code"></block>オプションは、各転送をパイプラインの実行に関連付け、準備済みデータ、トレーニング入力、およびモデル成果物の場所全体にわたるトレーサビリティをサポートします。</block>
+  <block id="5b0a5ac05a713155b5277c3242f1a9cc" category="section-title">6.2 XCP プリフライト検証フロー</block>
+  <block id="d52e497449b34945296b1a14eccdbb0f" category="paragraph">プリフライトタスクは、XCP のコピーの前に実行されます。Airflow が SSH 経由で XCP ホストに到達できること、および設定された ONTAP NAS NFS ソースパスが XCP から認識可能であることを確認します。明示的な終了条件は、接続性またはソースの可視性が正しくない場合、コピーが開始される前にパイプラインを停止します。</block>
+  <block id="a12fd091a82b56c83754b116da512543" category="image-alt">XCP プリフライト検証フロー</block>
+  <block id="dfe95992d5c467c63f5947ed711039c3" category="section-title">6.3 XCP から S3 へのコピー — コマンド テンプレート</block>
+  <block id="6b8c67c4e45efe75c5ff14c631e29d47" category="paragraph">このパスは<block ref="844946f00330d539ab98657463980437" prefix=" " category="inline-code"></block>の場合に使用します。XCP は、準備された実行スタンプ付きデータを ONTAP NAS NFS エクスポートから読み取り、設定済みの ONTAP S3 バケットとプレフィックスに書き込みます。名前付き XCP S3 プロファイルは XCP ホスト上の宛先認証情報を提供します。モデルステージは、<block ref="8c54337013d3f35fe4e958fe46784653" prefix=" " category="inline-code"></block>を通じてデータとアーティファクトの両方を検出します。</block>
+  <block id="c408fce5930afdd382be5f30a9e1d49f" category="paragraph">*例：準備した ONTAP NAS データセットを ONTAP S3 トレーニングバケットにコピーする*</block>
+  <block id="6609677b21963ec400d55abedde192ea" category="paragraph">この例では、<block ref="db4ccc05d12ec3f1edc562aab1abf22c" prefix=" " category="inline-code"></block>をXCPジョブIDとして使用します。トレーニングタスクは、設定された<block ref="8c54337013d3f35fe4e958fe46784653" prefix=" " category="inline-code"></block>の下にコピーされたファイルを検出します（例：<block ref="23559bba99f6d815cff6e130462f2e9e" prefix=" " category="inline-code"></block>）。</block>
+  <block id="b925bf9a838ed1c4a4650f10ba5d7326" category="section-title">6.4 XCP から LustreFS へのコピー — コマンド テンプレート</block>
+  <block id="97a8204eb713ea12e38574a9848c1e1d" category="paragraph">このパスを使用するのは<block ref="43aa42fc620874f288d9782d47a176ca" prefix=" " category="inline-code"></block>の場合です。XCP は、マウントされた ONTAP NAS ソースから準備済みデータをマウントされた LustreFS 宛先にコピーします。両方のマウントポイントは XCP ホスト上で利用可能である必要があり、さらに LustreFS はモデルのトレーニング、ファインチューニング、および推論を実行する Airflow ワーカーにもマウントされている必要があります。</block>
+  <block id="bbdeb30fb7b3b8cb0d9fd6c731c52160" category="paragraph">*例：準備した ONTAP NAS データセットを LustreFS トレーニングマウントにコピーする*</block>
+  <block id="44ec866558ee5677a57173db0e3e8691" category="paragraph">2つの<block ref="6e37764c2a5f7de937c6aa33d300e0ce" prefix=" " category="inline-code"></block>コマンドは、コピーを開始する前に、ソースパスがNFS経由でマウントされ、宛先パスがXCPホスト上でLustreFS経由でマウントされていることを確認します。<block ref="a9a386a04994c6a1f0ff5ac289617187" prefix=" " category="inline-code"></block>を使用すると、トレーニングは<block ref="beed0f76e5868456be3724f5e4f0573e" prefix=" " category="inline-code"></block>以下の実行スタンプ付きデータを読み取ります。</block>
+  <block id="bd3b9137e5038c3173de7fa5a6f9621f" category="section-title">6.5 XCP 宛先決定フロー</block>
+  <block id="218087d3abf623760d645e1eb3851ff9" category="paragraph">この決定図は、1つの実行時パラメータがコピー対象とトレーニング読み取りパスをどのように決定するかを示しています。ONTAP S3オブジェクトの宛先には<block ref="c0828e0381730befd1f7a025057c74fb" prefix=" " category="inline-code"></block>を、並列ファイルシステムの宛先には<block ref="c1ab44fd888254255acf3ece33dfe88e" prefix=" " category="inline-code"></block>を選択します。下流のステージでは一致するソースを自動的に使用するため、ストレージの配置が変更された場合でもモデルコードの変更は不要です。</block>
+  <block id="e5641195b04be4617d3fab35af50ae90" category="image-alt">XCP 宛先決定フロー</block>
+  <block id="e10f3cd6038b30895c0ce98427bef6df" category="section-title">6.6 XCP障害処理とガードレール</block>
+  <block id="e0596b9567e7b5461d17fd18b5c5cf2b" category="paragraph">これらの安全対策により、構成やインフラストラクチャの障害を可能な限り早い段階で検知できるようになります。プリフライトエラーにより無効な転送が防止され、ファイルシステムタイプのチェックにより ONTAP NAS と LustreFS のマウントが検証され、S3 認証情報の検証は ONTAP S3 が選択された XCP 送信先である場合にのみ適用されます。</block>
+  <block id="9e2941b3c81256fac10392aaca4ccfde" category="cell">条件</block>
+  <block id="cf4b40705d6bb8cc5a1be874d0e35247" category="cell">ガードの動作</block>
+  <block id="966a84b6d4314ad62ad498bb201aff28" category="cell">サポート対象外<block ref="4674a08755fd498fb7f7b950ac4069cd" prefix=" " category="inline-code"></block>の値</block>
+  <block id="2614b77f7435e38b59236cac7410dc89" category="cell">パイプラインは、データ移動の前に値を拒否します</block>
+  <block id="508100cba01a25e1c6dfadf2bde06a35" category="cell">LustreFS マウントがありません</block>
+  <block id="624a35d59584819c86b7b4491b1ba901" category="cell">ファイルシステムタイプの検証に失敗しました。データ移動前にコピーが停止しました。</block>
+  <block id="26b0f9b3e4c9f8456736c2de018ad4ec" category="cell">SSHに接続できません</block>
+  <block id="ca383f3394f78de263608592a9cb3534" category="cell">プリフライトはコピーが行われる前にコード 1 で終了します</block>
+  <block id="5622e6d1ec24fd5194f5354662f11cb6" category="cell">NFSパスが表示されません</block>
+  <block id="5f7d06b72975c6ca94580c57f58fd23e" category="cell">コピー処理の前にプリフライトがコード2で終了しました</block>
+  <block id="0c6e6c632dbe934c44f99313f522f327" category="cell">XCP S3認証情報が不足しています（S3モードのみ）</block>
+  <block id="46fd016decd7b9d620205c73c66c93ce" category="cell"><block ref="b40e4f0b6e8f3138e6ccde4cb7ae520c" prefix="" category="inline-code"></block>/artifact sync は明示的な例外を発生させます<block ref="5a2cfd89b7b171fd7b4794b08023d04f" prefix=" " category="inline-code"></block></block>
+  <block id="89fe3a46b344ee3e0e22b1d0c2f73fc2" category="doc">7.デプロイメントアーキテクチャ</block>
+  <block id="1e59c5591f2f42495217b22d881b2916" category="paragraph">このセクションでは、パイプラインを運用するために必要なインフラストラクチャの配置、ソフトウェアの依存関係、およびネットワーク接続について説明します。この展開では、Airflow オーケストレーションを XCP データモビリティホストから分離しつつ、両方のコンポーネントを StorageGRID、ONTAP NAS、および選択された ONTAP S3 または LustreFS のトレーニング先に接続します。</block>
+  <block id="bd4b4e4c747f259ba23398a43e9b0d90" category="section-title">7.1 参照インフラストラクチャ要件</block>
+  <block id="fa710a5627e108a0586304814e591a3f" category="paragraph">以下のコンポーネントは、最小限の機能的な展開フットプリントを構成します。選択した準備エンジンと同時タスク負荷に合わせて Airflow ホストのサイズを調整し、XCP ホストは ONTAP NAS NFS エクスポートおよび選択した宛先に不要なネットワークホップなしでアクセスできる場所に配置してください。LustreFS モードでは、XCP ホストと Airflow ワーカーの両方に互換性のあるマウントが必要です。</block>
+  <block id="d7ae687c0e6e6c6e9f1c71e38ff3f626" category="cell">エアフローホスト</block>
+  <block id="6d9515757cdd6a3d42c25d65c58d15ab" category="cell">SparkまたはPython変換の負荷に合わせてCPU/メモリのサイズを決定する</block>
+  <block id="3f568bb30ecc645e610790b5f53f25aa" category="cell">XCPホスト</block>
+  <block id="79b7cc9c771eda1916567c6a6f89f929" category="cell">NFS/Lustre および NetApp ONTAP S3 エンドポイントへのネットワークアクセス</block>
+  <block id="8882c378150aace466c4dfc76495c62c" category="cell">LustreFSクライアント</block>
+  <block id="b6b92d87ff69eea08449e633aab7dd1a" category="cell">宛先として選択された場合、XCP ホストと Airflow ホストにマウントされます。</block>
+  <block id="aac5b420aa9ff33a30c72f1ec230a06e" category="section-title">7.1.1 参照検証環境</block>
+  <block id="b1b1e71f57cf2ef54d58a10a1eb77308" category="paragraph">以下の環境は、代表的な単一ノード検証プロファイルとして使用されました。これは機能およびパフォーマンス評価の出発点であり、本番環境におけるサイジングの推奨事項ではありません。お客様は、データセットの量、同時実行性、保持期間、復旧、およびサービスレベルの要件に応じて、コンピューティング、ネットワーク、ストレージ容量、および保護のサイジングを行う必要があります。</block>
+  <block id="359b71e88f40029251366609358a302f" category="cell">レイヤ</block>
+  <block id="0b77244be16a9a7bd8001d373fb270c9" category="cell">参考ハードウェア／ソフトウェア</block>
+  <block id="a9f311c880151abca1af585d7f1ec056" category="cell">コンピューティングとネットワーク</block>
+  <block id="2d2b85e9679a6509de8ef6985de34b9b" category="cell">256GBのRAM、64個のCPUコア、10GbE接続を備えたサーバー1台</block>
+  <block id="a626505ce627eb62d5b2d11a89b7cd4d" category="cell">ONTAPアクティブストレージ</block>
+  <block id="9d0d591f8b2953774b1b75fab3828343" category="cell">48 x 1.8 TB SSDを搭載した1台のNetApp A800システム</block>
+  <block id="670aaecb1a526fbed439dad3ec353a96" category="cell">オブジェクト ストレージ</block>
+  <block id="5115255342d712c2618bd3488a1d1024" category="cell">1台の NetApp StorageGRID SG5864アプライアンス</block>
+  <block id="bc0e630d305cbe115d773c020ac23ed3" category="cell">高スループットトレーニングストレージ</block>
+  <block id="75ad6a7c6f908e823c70dc3dcefdb7c0" category="cell">LustreFS搭載のNetApp E2812システム1台</block>
+  <block id="d9ea842c25efd073638a8ed6685880fb" category="cell">プラットフォームソフトウェア</block>
+  <block id="3d1e0afbd94739ce0b61063b94739406" category="cell">Kubernetes、Apache Airflow、Apache Airbyte、シングルノードApache Spark、NetApp XCP、およびLustreFS</block>
+  <block id="756798c615965bf771dfd7ab76081e53" category="section-title">7.2 ソフトウェアバージョンマトリックス</block>
+  <block id="8a3a9bf9365269c8c3014ea49892f28b" category="paragraph">このマトリックスは、検証済みパイプラインで使用されるランタイムソフトウェアを示します。AirflowとPythonの環境を、デプロイ済みのプロバイダおよびパッケージと互換性のある状態に維持してください。Spark、Delta Lake、およびIcebergはオプションであり、<block ref="392989018ea1a795a5a4c97dcb3d88f3" prefix=" " category="inline-code"></block>がSparkの変換パスまたは対応するテーブル形式を使用する場合にのみ必要です。</block>
+  <block id="9197b7c75821c3ce222ed88e1c5558b9" category="cell">バージョン／注記</block>
+  <block id="684af6740abf2568ed9bcf3ea64cdb96" category="cell">2.xを使用したチャンク アップロード署名要求がサポートされるようになりました。</block>
+  <block id="592fcfe486c2a919eeca0c4c43e0a3e6" category="cell">3.11</block>
+  <block id="60fbecb7b5c9a0c35581635f887f9938" category="cell">最新の安定版</block>
+  <block id="3483ff058deda3dad41fa7925fab2dac" category="cell">scikit-learn</block>
+  <block id="9df67feff19891d0da79dad68db221ca" category="cell">PySpark（任意）</block>
+  <block id="6e1194e69973a1c5c68050c8a518a607" category="cell">Delta 3.2.0 / Iceberg 1.5.2 ランタイムパッケージと互換性があります</block>
+  <block id="080f1bcd957ee7e043aab1ff0209c6a1" category="cell">リモートホストにインストールされます。例：<block ref="13e31e15cdd957521a3a21d54ffcf51f" prefix=" " category="inline-code"></block></block>
+  <block id="00f066007400f4d7a0e79ad5171f6930" category="section-title">7.3 ネットワーク要件</block>
+  <block id="db62544b0f5b6c1af7ab276447078f1a" category="paragraph">これらのネットワークフローは、ルーティング、ファイアウォール、および名前解決ポリシーによって許可される必要があります。本番環境におけるすべての S3 互換エンドポイントには HTTPS の使用を推奨します。エンドポイントがデフォルトの HTTPS ポートを使用しない場合は、設定済みのカスタムポートを使用してください。デプロイされた LustreFS の実装に従って、Lustre クライアントの接続を確認してください。</block>
+  <block id="f1a76f66cca677c6e628d9ca58a6c8fc" category="cell">フロー</block>
+  <block id="fda78ffdb0354cd18aae912afe0fc791" category="cell">プロトコル/ポート</block>
+  <block id="c97c18878aa684f3a5431b40328c23f0" category="cell">Airflow → ONTAP S3</block>
+  <block id="ab7d248c4d5327fdcb4ec124dd3a9366" category="cell">HTTPS/HTTP（443/80またはカスタム）</block>
+  <block id="22c6d0bee717bbaab3686a66812f5d74" category="cell">Airflow → XCPホスト</block>
+  <block id="35b0dc774d85cf09afe1d96a59548c0d" category="cell">SSH（22）</block>
+  <block id="c150e23c3d42745012d01f3c649e9907" category="cell">XCPホスト → NFSソース</block>
+  <block id="1e5d0a9df4c1052c5fc26c78194c1eaf" category="cell">NFS（2049）</block>
+  <block id="51d5077b49d3cd52614fb5815eac99e1" category="cell">XCPホスト → LustreFS</block>
+  <block id="f61bbcbf5fccad96167a2e3d765fd717" category="cell">Lustreクライアントポート</block>
+  <block id="e81f5d0e8472d8a178b32b560f5ff663" category="cell">XCPホスト → ONTAP S3（S3モード）</block>
+  <block id="a5672e55195a9a1cd37e745fa3a6a45f" category="cell">HTTPS/HTTP</block>
+  <block id="3c4bfd8bd4a47d202ccb1ef01599e335" category="section-title">7.4 導入に関する注意事項</block>
+  <block id="cf8edf5ac4821f5e064856a678e14b19" category="cell">セクション／トピック</block>
+  <block id="ab56f19643401439122697216ebe5c4d" category="cell">ガイダンス／運用手順</block>
+  <block id="65871f766ad47f2695b884e14a2cbb2c" category="cell">SSH接続設定</block>
+  <block id="350b02060cb116f4af3cc7c269aedfd4" category="cell">Airflow接続を設定<block ref="70fe17e89c62ccb2692c96e9d32b9aa3" prefix=" " category="inline-code"></block>して、SSHキーのアクセス権限を制限した状態でポート22経由でXCPホストをターゲットにします<block ref="d490d7b4576290fa60eb31b5fc917ad1" prefix="(" category="inline-code"></block>）。</block>
+  <block id="02bac396bf5ee5e6780b6cf8878c3fc6" category="cell">サービスライフサイクル管理</block>
+  <block id="44b85f1c5738d16ac8fa45a3c07adeab" category="cell"><block ref="def385ebe245f46ee54caeec418e7cc1" prefix=" " category="inline-code"></block>を使用して、デプロイおよびメンテナンス中にローカルの Airflow スケジューラと Web サーバーのライフサイクルを管理します。</block>
+  <block id="be9789639f13920788e9402fe402be71" category="cell">認証情報と秘密情報の保管場所</block>
+  <block id="03f3c5804c5902f7b2e8027473aa754a" category="cell">認証情報、APIトークン、アクセスキーは、<block ref="ab705a77421e8c7b3037722d58fe2675" prefix=" " category="inline-code"></block>にインラインで記述するのではなく、Airflow Connections、Variables、またはシークレットバックエンドに保存してください。</block>
+  <block id="d83701e356911336c5b4d7cc5bf4856b" category="cell">インフラストラクチャとタスクの可観測性</block>
+  <block id="aa38b6cfee7087ee1b049c37bb7f447d" category="cell">スケジューラのハートビートとタスクの実行を個別に監視することで、オーケストレーションの可用性の問題をDAGの障害と区別します。</block>
+  <block id="1b89e3ece4049083f95528e719d4d3e9" category="section-title">7.5 インストールと前提条件</block>
+  <block id="59fe6f980aba7218c893150c8f8bb432" category="paragraph">このサブセクションでは、新しい環境でNetApp AI検証済みパイプラインをビルド、構成、および実行するために必要な基本的なインストール手順を定義します。これは、DAGを実行する前にAirflowワークスペースを設定するオペレーター、アーキテクト、およびエンジニアを対象としています。</block>
+  <block id="9926ad579a77075153bd0b1f38a4fba4" category="section-title">7.5.1 前提条件</block>
+  <block id="360d2fe8b31356e9e71d8206a571c8ce" category="paragraph">ソリューションをインストールする前に、対象ホストが以下の最小要件を満たしていることを確認してください。</block>
+  <block id="4def433eac45427ec74781bcdc55324b" category="list-text">LinuxオペレーティングシステムはできればUbuntu 22.04/24.04またはRHEL 8+が推奨されます。</block>
+  <block id="ca0ed8623183c3fa2b01aa39b289acc3" category="list-text">Python 3.11（<block ref="62ad1c2a46c5298f3e2c95d3babf8d0c" prefix=" " category="inline-code"></block>、<block ref="e124e7543d581ff8c7a6eab30ce329f4" prefix=" " category="inline-code"></block>、およびビルドツールが利用可能）</block>
+  <block id="e5b109aac006d5b97f20d6eec862a47e" category="list-text">ソースコードの取得とバージョン管理のために、ホストマシンに Git がインストールされています。</block>
+  <block id="c8dc9fb44c5c424874f8139bbed1986b" category="list-text">Apache Airflow 2.x を専用の Python 仮想環境にデプロイします。</block>
+  <block id="4015130642fa1549caff7b10afeb67db" category="list-text">AirflowホストからNetApp XCPホストへのSSHアクセス。</block>
+  <block id="ce0214e349297227a9dc24ea9871052b" category="list-text">Airflow ホストから StorageGRID、ONTAP NAS、および選択した ONTAP S3 または LustreFS 宛先へのネットワーク接続。</block>
+  <block id="3e8af18f5b845bec2a3f8b6a4c1b2cf6" category="list-text">S3互換エンドポイントアクセスによる生データ、準備済みデータのステージング、およびアーカイブストレージ。</block>
+  <block id="902382e34786ddaab8794d60b531fc2f" category="list-text">オプション：<block ref="98f11b7a7880169c3bd62a5a507b3965" prefix=" " category="inline-code"></block>準備パスが使用される場合は、Java ランタイムと Spark 3.x が必要です。</block>
+  <block id="145803295cfd2fbc0cd87c3423b9cdc5" category="list-text">オプション：Delta Lake および Iceberg ランタイムパッケージ（<block ref="53564d15d50493822f51cbb92cb8f82e" prefix=" " category="inline-code"></block>または<block ref="3a6acf324c4b197650b720250327fc51" prefix=" " category="inline-code"></block>が選択されている場合）。</block>
+  <block id="79634873e4a71a7bfe57d88f70f7b761" category="list-text">オプション：Lustre クライアントマウント（<block ref="43aa42fc620874f288d9782d47a176ca" prefix=" " category="inline-code"></block>使用時）。</block>
+  <block id="ee94d5afb2d9e17481eeeb6e251d0f42" category="section-title">7.5.2 ソフトウェアパッケージの取得とリポジトリへのアクセス</block>
+  <block id="2d7240c6d4771e073109c0a3a21f5e54" category="paragraph">このソリューションのソフトウェアパッケージ、自動化DAG、デプロイメントスクリプト、および検証アーティファクトを入手するには、NetApp AI &amp; Data Mobility エンジニアリングチーム（ng-data-mobility-in-ai-pipeline@netapp.com）までお問い合わせください。</block>
+  <block id="71ed7cb3aecb8e0a69430bedadf69d8a" category="paragraph">アクセスが許可されたら、GitHubからプロジェクトのソースをターゲット作業ディレクトリにダウンロードまたはクローンしてください：</block>
+  <block id="253bac73e4d33b7b7ac363085056cb8e" category="paragraph">既にリポジトリを<block ref="d51c1a82ac648a03ea25bb2d754b5452" prefix=" " category="inline-code"></block>の下にクローンしている場合は、別のコピーをダウンロードするのではなく、その作業ディレクトリから続行してください。</block>
+  <block id="8550239ad6f35084578ccac2065a83ca" category="section-title">7.5.3 Python環境の作成</block>
+  <block id="bc309dd80169166cc4440032b8743c41" category="paragraph">専用の仮想環境を作成し、Airflowとパイプラインの基本依存関係をインストールします。</block>
+  <block id="15f5b3708efc27ec86697d0f428d8165" category="paragraph">Sparkベースの準備とLakehouseテーブル形式の場合は、必要に応じてオプションパッケージをインストールしてください：</block>
+  <block id="ead2b559f43114dc439b06de70010869" category="paragraph">Sparkランタイムとクラスタトポロジでサポートされている正確なパッケージバージョンを使用してください。互換性のないSpark、Delta、Icebergの組み合わせを混在させないでください。</block>
+  <block id="8d961e16325e6d554212dc58348b702e" category="section-title">7.5.4 Airflowとリポジトリの設定</block>
+  <block id="f815b654ffa24519d37bdabd30c1bfb4" category="paragraph">クローンしたリポジトリのルートから、Airflowメタデータデータベースを初期化し、DAGファイルがAirflowから認識できることを確認します。</block>
+  <block id="8bf23650fac6b3a08e35c348107ba39f" category="paragraph">ワークスペースには、検証済みパイプラインに必要なAirflow構成ファイルとDAGが含まれています。リポジトリにローカルライフサイクル管理用のヘルパースクリプトが含まれている場合は、Airflowを手動で起動する代わりに、そのスクリプトを使用してスケジューラとWebサーバーを起動してください。</block>
+  <block id="ecc38608a32ebcad7da738d1bd838c90" category="section-title">7.5.5 必要な接続性とシークレット設定</block>
+  <block id="1dc674b8406769bbe81ff441f358bc8a" category="paragraph">パイプラインを実行する前に、Airflow ホストから以下のリソースにアクセスできることを確認してください。</block>
+  <block id="dab77273808b69650653222ee1681de5" category="list-text">StorageGRID 生データ S3 エンドポイント。</block>
+  <block id="e7b10eaddf06e807e0e486d05a66c4e8" category="list-text">ONTAP NAS の準備済みデータバケットエンドポイント。</block>
+  <block id="388925b5f29ee813866bf2cb01e895ed" category="list-text">ONTAP S3ターゲットエンドポイント（<block ref="844946f00330d539ab98657463980437" prefix=" " category="inline-code"></block>の場合）。</block>
+  <block id="5cf298f77f75f109146fb62ba9611d5c" category="list-text">LustreFS マウント時<block ref="43aa42fc620874f288d9782d47a176ca" prefix=" " category="inline-code"></block>。</block>
+  <block id="97512922a97ec256270d33c4ecf03e50" category="list-text"><block ref="70fe17e89c62ccb2692c96e9d32b9aa3" prefix=" " category="inline-code"></block>または設定済みのSSH接続を使用したSSH経由のXCPホスト。</block>
+  <block id="5fce72a0443cee27c135383f65bcb7b5" category="paragraph">認証情報は、シェル履歴やDAGコードに埋め込むのではなく、Airflowの接続、変数、またはシークレットバックエンドに保存してください。パイプライン実行を開始する前に、必要なアクセスキー、エンドポイント、およびプロファイルマッピングを設定してください。</block>
+  <block id="f2cfdb6aa380fd7d380e2ce56b4b02c1" category="section-title">7.5.6 インストールの確認</block>
+  <block id="fee1f62e459f4e7701fda3dbbe62c89f" category="paragraph">AirflowスケジューラとDAGが稼働しており、サンプルパイプラインが構成エラーなく一覧表示およびトリガーできる場合、インストールは正常に完了したと判断されます。</block>
+  <block id="e824527e0ea7e6ce273c5fcb7211dfda" category="paragraph">インストールが正しければ、DAGはAirflowに存在し、リポジトリのルートにあるトリガースクリプトを使用した<block ref="99dfd056f67cd45b069217c19bb4f726" prefix=" " category="inline-code"></block>主導の実行に対応できる状態になっているはずです。</block>
+  <block id="7b224eab549f7426fa7f2717c96f8358" category="paragraph">この時点で、環境はセクション8の構成例と運用ガイドに記載されている展開シナリオに対応できる準備が整っています。</block>
+  <block id="448d2b7ac77f10d95528acb41da7c498" category="doc">11.NetApp 差別化と競争上の位置付け、付録</block>
+  <block id="ca919d4c72ebed65cedbd1c2a649b092" category="paragraph">この統合セクションでは、当該アーキテクチャを一般的な代替案と比較し、運用者とレビュー担当者が使用する共通の参考資料を提供します。差別化要因は単一のストレージエンドポイントではなく、StorageGRID、ONTAP NAS、ONTAP S3、LustreFS、XCP、および Airflow のポリシー制御された組み合わせであり、ワークフローを再構築することなく、AI ライフサイクルの各フェーズで適切なティアを使用できます。</block>
+  <block id="e1eba5eadc1c4b949361e6a22fb12073" category="section-title">11.1 NetApp 差別化と競争上のポジショニング</block>
+  <block id="03deb1e85334e9662145170290f64959" category="paragraph">この比較により、このアーキテクチャは一般的な代替案と対比されます。その差別化要因は単一のストレージエンドポイントではなく、ポリシー制御された StorageGRID、ONTAP NAS、ONTAP S3、LustreFS、XCP、および Airflow の組み合わせにあります。これにより、ワークフローを再構築することなく、AI ライフサイクルの各フェーズで適切なティアを使用できます。</block>
+  <block id="9f5c844584f35fd1d66d2025b43e01d6" category="cell">代替アプローチ</block>
+  <block id="f3d9abb903127694db460aa9c7f4d7be" category="cell">制限</block>
+  <block id="3daba42f73c76b76f7e8208531fe7958" category="cell">NetApp 解決策アドバンテージ</block>
+  <block id="b8d83b7b234d610148a2deca29afc8dc" category="cell">クラウドネイティブ専用のパイプライン</block>
+  <block id="138039f816b5d254d43f788db8661e29" category="cell">1つのストレージパラダイムに縛られる</block>
+  <block id="bbc0f5efb20190911896b8d77ea645c7" category="cell">設定によりS3/LustreFSを相互に交換可能</block>
+  <block id="d8e5f2b5eb986fb77b54cfc71a9a176f" category="cell">DIYスクリプトベースのパイプライン</block>
+  <block id="0a18a4dc763424d4a27546818f5f49b1" category="cell">再試行、チェックポイント、系統図はなし</block>
+  <block id="f6673e2b0413550ea31f16c65d05532f" category="cell">Airflow オーケストレーション{plus}チェックポイント/レジュームをネイティブにサポート</block>
+  <block id="bb6b1c1345a8c232e94352fe59abb8ae" category="cell">シングルティアストレージアーキテクチャ</block>
+  <block id="6b8a5407e77a1d5f44ea61d62b335ac8" category="cell">すべてのワークロードに対して単一のパフォーマンス/コストプロファイル</block>
+  <block id="cc298ad1796c98ec3eed7554865eb0ae" category="cell">実行ごとのティア選択（<block ref="4674a08755fd498fb7f7b950ac4069cd" prefix=" " category="inline-code"></block>経由）</block>
+  <block id="24a37a5f055b0a996a26574efd7e86a4" category="cell">アップデートごとに完全な再トレーニングを実施</block>
+  <block id="f3846151fcbf633e53aee108c1f70ecf" category="cell">高い継続的なコンピューティングコスト</block>
+  <block id="4d008f56c7bc2b132a79bed44fbfc36a" category="cell">以下による段階的な微調整：<block ref="166675adabd3faa5d0d69a56aa736d81" prefix=" " category="inline-code"></block></block>
+  <block id="3a40581436d23ab74f583374ac44bd11" category="section-title">11.2 付録</block>
+  <block id="d38efa328b05b163e7bb469dbcbf5aff" category="paragraph">付録には、このNVAを運用、レビュー、または改変する読者向けに、共通の用語と文書管理に関する背景情報が記載されています。文書化された動作、パラメータ、ストレージレイアウト、または検証証拠を変更する場合は、改訂履歴を常に最新の状態に保ってください。</block>
+  <block id="736a31786d16840f67c359834f5a9fff" category="section-title">11.2.1 用語集</block>
+  <block id="1d35b3fc13c8a51866a3d1491dc239ea" category="paragraph">これらの定義は、アーキテクチャにおけるストレージ、オーケストレーション、およびリネージに関する用語の一貫した意味を確立するものです。</block>
+  <block id="cf5f3091e30dee6597885d8c0e0c357f" category="cell">期間</block>
+  <block id="0b890b1926b90387673882e6ccae7fdc" category="cell">定義</block>
+  <block id="0395eb585fc2fd28ca3da7846bd8fe23" category="cell">NetAppの高速並列データコピー/移行ツール</block>
+  <block id="0247481dc0f72853a0af51e5a0b32149" category="cell">NetAppのONTAP上のS3互換オブジェクトストレージサービス</block>
+  <block id="53043b3f87fe7e7b24eecc60f56db6e3" category="cell">高性能並列分散ファイルシステム</block>
+  <block id="b575eaf24ee5b18896d24741d1581417" category="cell">DAG</block>
+  <block id="dda65d4b2bc353e63d40f89de1a51821" category="cell">有向非巡回グラフ — Airflowのワークフロー定義</block>
+  <block id="0f75a7ffb3a339a7862a2f76bacd0817" category="cell">XCom</block>
+  <block id="b2a2e18aad4888c41d7d2883e24a62d0" category="cell">Airflowにおけるタスク間でデータを渡すための仕組み</block>
+  <block id="f8fa1cd8b7e66ffd748bc457b500b439" category="cell">run++_++stamp</block>
+  <block id="63dc63d73654f384355ac419bc9c1cad" category="cell">系統追跡に使用される、実行ごとの一意のタイムスタンプ識別子</block>
+  <block id="d163fde01af1e5fb194790ca956adc9e" category="cell">ステージの入力、出力、および構成を記述するJSONレコード</block>
+  <block id="9030b20cc44d15c823d7d9055d9256cf" category="section-title">11.2.2 改訂履歴</block>
+  <block id="827c10f02368408b7a6dda4d4215b95b" category="paragraph">文書のレビューおよび承認履歴を保存するため、公開された変更はすべて記録してください。</block>
+  <block id="a517747c3d12f99244ae598910d979c5" category="cell">作成者</block>
+  <block id="f4ec5f57bd4d31b803312d873be40da9" category="cell">変更</block>
+  <block id="e4c2e8edac362acab7123654b9e73432" category="cell">1.0</block>
+  <block id="26a5abe47da5900b0ae882a6aec4b9be" category="cell">2026/09/25</block>
+  <block id="b2a3f35d93df1b18e481b0c6da439d7c" category="cell">ソリューション アーキテクチャ チーム</block>
+  <block id="653f3695c816fe917bd71efebc29678c" category="cell">パラメータ表と図を含む、出版準備完了の初期NVA</block>
+  <block id="5015789bd01aedf136308121439d926f" category="section-title">11.2.3 お問い合わせとソフトウェアのリクエスト</block>
+  <block id="c13a866a5512684b05501b3e102cc84a" category="paragraph">このアーキテクチャをデプロイおよび検証するためのソフトウェアパッケージ、自動化DAG、デプロイスクリプト、または検証アーティファクトをリクエストする場合、またはフィードバックや技術的なお問い合わせを行う場合は、NetApp AI＆データモビリティチームにお問い合わせください：</block>
+  <block id="11b3a03965c68af1757646bf1af31b1d" category="list-text">*メール：* ng-data-mobility-in-ai-pipeline@netapp.com</block>
+  <block id="b54e191897b2eac1de59d7165a5771b7" category="list-text">*目的：* ソフトウェアパッケージの要求、導入に関するガイダンス、アーキテクチャ検証のサポート、および技術的なフィードバック。</block>
+  <block id="f3b9f47f074747e8a4a1154f76009a6e" category="doc">1.概要</block>
+  <block id="7a94bf07268d596b944e517eb50fffdd" category="section-title">1.1 本文書の目的</block>
+  <block id="6738cbe80e17f3b6ce0482b4c50a856b" category="paragraph">この NetApp 検証済みアーキテクチャ（NVA）は、本番環境レベルの AI データパイプラインを文書化しており、生データを取り込み、機械学習用に準備し、NetApp XCP を使用してストレージ層間で高速に移動させ、モデルのトレーニングと段階的なファインチューニングを行い、予測を生成し、ガバナンスと再現性のために結果をアーカイブします。本書は、設計の根拠、デプロイ、構成、および運用について、アーキテクトおよびインフラストラクチャチームを支援することを目的としています。</block>
+  <block id="56e5af41916c6098c7274117c78bd1f3" category="section-title">1.2 対象者</block>
+  <block id="14df1d74069d65b14f1a48a87ab264a1" category="paragraph">AI/MLワークロード向けにNetAppのストレージおよびデータ モビリティ テクノロジーを評価する、ソリューション アーキテクト、ストレージ/インフラ エンジニア、データ プラットフォーム エンジニア、MLエンジニア、およびIT意思決定者。</block>
+  <block id="a0eae26428eb3a4acff5f47f109793ae" category="section-title">1.3 ビジネス上の課題の概要</block>
+  <block id="af5e0f591a90785c0f80bdf8a886941a" category="paragraph">AI チームは、オブジェクト ストレージに格納されたデータを確実に変換し、トレーニングに最適なコンピューティング ストレージ ティアに配信する必要があります。一般的なワークロードにはエラスティック S3、I/O 負荷の高いトレーニング向けにはハイパフォーマンス並列ファイルシステム（LustreFS）を使用します。統制されたデータ移動およびオーケストレーション レイヤーがない場合、チームは再試行、チェックポイント、ストレージの柔軟性、監査証跡を欠いた、脆弱で単一目的のスクリプトに頼らざるを得ません。</block>
+  <block id="21f462f955fc26555e09692ed79f561d" category="paragraph">企業向けAIプログラムが停滞しているのは、モデルや計算能力の限界が原因ではなく、従来のストレージがAI向けに設計されていなかったためです。膨大なデータセットの移動、トレーニング中のGPUへのデータ供給、チェックポイントのオーバーヘッド管理、ストレージコストの抑制などは、AI作業そのものよりも多くの労力を要します。単層アーキテクチャでは、パフォーマンスとコストのトレードオフが生じ、モデルやデータセットが大きくなるにつれてそのトレードオフはさらに深刻化します。</block>
+  <block id="43b82cd3d08cce7f76802ada19d8b044" category="section-title">1.4 NetApp 解決策まとめ</block>
+  <block id="69aae5796def40750185912c52643d34" category="paragraph">この解決策は、Apache Airflow DAG（有向非巡回グラフ）として、データの取り込み、準備、データ移動、トレーニング、微調整、推論、およびアーカイブを統括します。StorageGRIDは、生データ層と長期保存用オブジェクト層を固定します。データ準備では、実行スタンプ付きデータセットとマニフェストを、NFSによってXCPソースとして公開されたONTAP NASバケットに書き込みます。NetApp XCPは、準備されたデータを実行時に選択可能なトレーニング先（NetApp ONTAP S3またはLustreFS）へ移動します。ティアを切り替える際にコードの変更は一切不要です。</block>
+  <block id="5e97bb9bb6e6a6ae9a295691d8d6abde" category="paragraph">このデザインでは、ONTAP NAS バケットは、主に XCP のサポート性および検証の観点から使用されます。これは、モビリティワークフローに対して一貫した NFS ソースを提供するためです。実際の運用環境では、同じアクティブデータをハイパフォーマンスの RDMA 対応パス経由で直接提供することもできるため、ONTAP NAS レイヤーは、唯一の実行時アクセス方法としてではなく、運用上便利でサポートしやすいステージングパターンとして捉えるべきです。</block>
+  <block id="4c0608a49c2eafce0fed9ffbe200e93f" category="paragraph">このパイプラインは、より広範な *NetApp AI ストレージ アーキテクチャ* の具体的な実装です。これは、AIワークロードの各フェーズに合わせてパフォーマンスとコストを調整する、目的に即した3層ストレージフレームワークです：</block>
+  <block id="94547adbe96f7be060162c22ccce1ddf" category="list-text">*Eシリーズ（LustreFS）：* GPU を多用するモデルのトレーニングとチェックポイントのための超高スループット並列ストレージ。</block>
+  <block id="0ccb375bd0588c5bccf13aaad343e561" category="list-text">*ONTAP（AFF/AFX）：* トレーニング、ファインチューニング、推論、ベクトル/RAGワークロード、および選択されたデータ準備ユースケース向けのハイパフォーマンスアクティブストレージ。FASおよびNASバケットのサポート。</block>
+  <block id="86a7b6a4dbb789d1e2230407cffe9822" category="list-text">*StorageGRID:* データ取り込み、ガバナンス、および長期保存のための、拡張性の高いS3互換オブジェクトストレージ。</block>
+  <block id="ef164aacd5f3100f53beac96ecb92756" category="paragraph">階層間のデータ移動は、Apache Airflow と NetApp XCP によって完全に自動化されており、クリティカルパスから手動操作を完全に排除します。</block>
+  <block id="7fb47d6e794a031d86cb3afa8781ea1b" category="paragraph">NetApp のストレージ アーキテクチャは、すべてのデータを単一の中央集権的なデータレイクに強制的に集約することなく、分散データ準備、モデルトレーニング、ファインチューニング、推論、ライフサイクルガバナンスをサポートできるよう企業を支援します。不要なデータ移動を削減することで、ハイブリッドAIワークフローに自然に適合します。</block>
+  <block id="ab9d14424c77fdc8c540f37dbdce309b" category="section-title">1.5 なぜNetAppなのか</block>
+  <block id="9e0e31246b7b078403969b265870b3f4" category="cell">寸法</block>
+  <block id="aa0fe8321fb7b67c678844b04510fd65" category="cell">従来のアプローチ</block>
+  <block id="055dd1147b0cb838e7e97d3810fe9c68" category="cell">NetApp AI ストレージ アーキテクチャ</block>
+  <block id="2ba1ff45e8ac056ea48b1d67639f6c13" category="cell">GPU生産性</block>
+  <block id="17c42b26fd20bed138c1aab504d3fa14" category="cell">ストレージのボトルネックにより、高価なコンピューティングがアイドル状態になる</block>
+  <block id="6c574a07d371e34675db3f754201e3f8" category="cell">GPUDirect Storage over RDMAは、GPUクラスタのフル活用に役立ちます</block>
+  <block id="0153a2c1523bbcedd3803c3975292c8e" category="cell">データモビリティ</block>
+  <block id="cb9ade801353e207b141c9b6c07038be" category="cell">手動スクリプトはパイプラインを遅延させる</block>
+  <block id="fa038f3376a59a18197dfe33f9e8e640" category="cell">Airflowによる階層間の自動移動{plus}XCP</block>
+  <block id="ede30146d94bbef36e06ab4239294fae" category="cell">コスト管理</block>
+  <block id="9b27f3669a4ae5e915f58c1727fb01e5" category="cell">高コストのフラッシュメモリ上のすべてのデータ</block>
+  <block id="a281117ba4499a01fd0ade32f8979949" category="cell">FabricPool はコールドデータを低コストのオブジェクトストレージに自動的に移行します</block>
+  <block id="2848c163a6043ea1f00bf7edc976aa87" category="cell">マルチテナンシー</block>
+  <block id="ba741ee53f4b296f2df026dd5fe8a7ac" category="cell">共有ネームスペースはデータ漏洩のリスクがある</block>
+  <block id="feee486524ac4a5679235839bbacb721" category="cell">専用のONTAP SVMによる厳格なテナント分離の実施</block>
+  <block id="4c944d3babf0c11e0a8ef5a00cb956e1" category="cell">ワークロードの幅</block>
+  <block id="8ac564388b83db531519389b2b642251" category="cell">トレーニング用と推論用でスタックを分ける</block>
+  <block id="f937c49bea8fff69ac4b5ed60b58b058" category="cell">AIライフサイクル全体を網羅する単一の統合アーキテクチャ</block>
+  <block id="e56652c10344842fa403276a0de9a045" category="section-title">1.6 ビジネスケース</block>
+  <block id="f72249920c2224a16f44d80ac0d5fc08" category="paragraph">AIインフラ予算において、GPUコンピューティングは通常、最大の設備投資項目となります。クラスターがデータ待ちでアイドル状態になっている時間は、1時間ごとに直接的かつ測定可能な経済的損失となります。NetAppは、適切なデータが適切なタイミングで適切な階層に自動的に配置されることを保証し、AIのスループット向上、TCOの削減、そして再設計なしで概念実証からエンタープライズレベルの本番環境まで拡張可能なアーキテクチャを実現します。</block>
+  <block id="fa30115fda1775ba88ac241fd93f6e65" category="section-title">1.7 主なメリットの概要</block>
+  <block id="d0b37cb641df70f32a642387802f2cee" category="cell">利点</block>
+  <block id="94be02d643758bfa7b4b21a510d1a6a6" category="cell">統合オーケストレーション</block>
+  <block id="a1fbdd89820ff621e23b915af1e53f96" category="cell">単一のDAGが取り込み→アーカイブにまたがる</block>
+  <block id="58a12568a29455f1e6c4c671128ca96c" category="cell">ストレージ階層の柔軟性</block>
+  <block id="c10fd389708ade1822685f5fe937ef49" category="cell">設定により実行ごとにS3またはLustreFSが選択される</block>
+  <block id="23828ef6b1a77c9d31b240e4513a8e41" category="cell">再訓練コストの削減</block>
+  <block id="5aa161db33f428b8e37509b5db8a9cf4" category="cell">より速い回復</block>
+  <block id="ffbc9ea1d26376e142ceb18b61829a7f" category="cell">チェックポイントベースのトレーニング再開</block>
+  <block id="ba4ceb83f1556ce344adb490200c7dbd" category="cell">完全な系譜</block>
+  <block id="3c97cc6669c4bdd49a02b70f177edb53" category="cell">マニフェスト、有効設定ログ、アーカイブ記録</block>
+  <block id="95222ee03ecb550b4f0eec38d6d64a62" category="cell">ストレージのロックインなし</block>
+  <block id="b2e35ad59b4bb70eed61139aac911c4c" category="cell">マルチプロトコル：NFS、S3、Lustre</block>
+  <block id="5205ee5c3cf4ceb45857fbf87d683007" category="cell">GPU利用率</block>
+  <block id="120c2ba53c02a73d0c091c25ebdd398d" category="cell">階層型ストレージによりコンピューティングリソースが供給され、アイドル状態のGPUコストを回避できます。</block>
+  <block id="861aec82df0b2a13926d296e7b029f3a" category="cell">コスト最適化された保持</block>
+  <block id="290ac09971ce1b8a6839f8da5b5f05fd" category="cell">FabricPool はコールドデータをオブジェクトストレージに自動階層化します</block>
+  <block id="3f19c11eae3d13d04b540722f85582a0" category="doc">4.NetApp、サードパーティおよびオープンソースのテクノロジーコンポーネント</block>
+  <block id="b6dcf455b9fa42f399a66f285e7b688f" category="cell">解決策における役割</block>
+  <block id="9358ca4c012b59a024ddbb5b722f35a0" category="cell">S3互換の生データ取り込みおよびアーカイブオブジェクトストレージ層</block>
+  <block id="ee2abebc0a5895ff78961b897c3ef778" category="cell">NetApp ONTAP NAS バケット / NFS</block>
+  <block id="51128678215bc5d324d4824ef7148e3f" category="cell">準備済みデータ層；NFSソースのエクスポートは、データ移動前にXCP プリフライトによって検証されます。</block>
+  <block id="df2c24964ca3e99761acc48b2c8a75c9" category="cell">NetApp ONTAP S3</block>
+  <block id="e3c349dc1703c11cb0c6f097cea36ea2" category="cell">オプションのXCPトレーニングデータおよびモデル成果物保存先</block>
+  <block id="9c99b7e4f17faaddd382536cc33831fa" category="cell">高スループットのデータ移動エンジン；S3またはLustreFSへのコピーに対応</block>
+  <block id="2e985af49c448d15c7b99987586e6b15" category="cell">NetApp FabricPool</block>
+  <block id="2ebded1238cad7357683cd6182401933" category="cell">ONTAP NASで準備されたデータおよびアーカイブ隣接データのコスト最適化のためのオプションの階層化</block>
+  <block id="251ccba882c38c898898d034e841e822" category="cell">LustreFS （NetApp統合型）</block>
+  <block id="8016f6749c8b283bc54089843fca052b" category="cell">トレーニング層向けハイパフォーマンス並列ファイルシステム</block>
+  <block id="3de5adf532651c47316fb407c325149a" category="cell">NetApp Console（オプション）</block>
+  <block id="95e92f499ec473a09086b45df56b5849" category="cell">ONTAPおよびXCPリソースの監視/可観測性の拡張</block>
+  <block id="6fde748d0b0960b0f95344dfecc8def0" category="cell">ONTAPスナップショット/バックアップ</block>
+  <block id="4e3da5fe1a47960251b7d12f30074177" category="cell">ONTAP NAS 階層における準備済みデータのポイントインタイム保護（パイプラインとは独立）</block>
+  <block id="c28f738adc899ace2d4f137e4267ba3a" category="section-title">4.1 NetApp XCP — コアバリュー</block>
+  <block id="921f8925d86c00ec607dc42645c02335" category="paragraph">XCPは、データの位置とコンピューティングの位置を分離するモビリティレイヤーです。単一の構成スイッチ<block ref="4674a08755fd498fb7f7b950ac4069cd" prefix="(" category="inline-code"></block>）は、準備されたデータとモデルアーティファクトがNetApp ONTAP S3またはLustreFSハイパフォーマンス階層のどちらに配置されるかを決定し、<block ref="b40e4f0b6e8f3138e6ccde4cb7ae520c" prefix=" " category="inline-code"></block>、<block ref="24cf8a9f2a179bf0692d4ab1650b014d" prefix=" " category="inline-code"></block>、および<block ref="6202f2dbb43be62721979683c867ba8c" prefix=" " category="inline-code"></block>が同じ宛先への読み書きを自動的に行います。</block>
+  <block id="a04d903d0d35d58a911d18b2b162881b" category="section-title">4.2 サードパーティおよびオープンソース技術コンポーネント</block>
+  <block id="261addf78c7b2c961032b3dd08ba0b1f" category="cell">目的</block>
+  <block id="8a477c8e4b272f08be11fa159afd8f72" category="cell">DAGオーケストレーション、リトライ、XComタスク通信、スケジューリング</block>
+  <block id="2a867b5e713285837efabc1785438e91" category="cell">Apache Spark</block>
+  <block id="369c300b9e56dca1b93beb2fbfd4f1f9" category="cell">オプションの分散変換エンジン（<block ref="392989018ea1a795a5a4c97dcb3d88f3" prefix=" " category="inline-code"></block>向け）</block>
+  <block id="9cf0a38dd90d8485b2e4d6ab84028392" category="cell">Delta Lake / Apache Iceberg</block>
+  <block id="e1e688630f4ecefd63fbca5069abfb73" category="cell">準備済みの表形式データ用のオプションのレイクハウステーブル形式</block>
+  <block id="71959c0ad74ee7d36352e285ca94781c" category="cell"><block ref="b7b62baea58e5fea5468057ec3993b06" prefix="" category="inline-code"></block>（表形式）および<block ref="a68d7492b61d2cfc21ad2d9da3ba249a" prefix=" " category="inline-code"></block>（テキスト、インクリメンタル）</block>
+  <block id="48755b0fca2aa85d928ab5590eebf472" category="cell">Airbyte / Apache NiFi</block>
+  <block id="f81fe8adbe54a41de76dc77a1dbe703d" category="cell">オプションの取り込みコネクタ（<block ref="392989018ea1a795a5a4c97dcb3d88f3" prefix=" " category="inline-code"></block>の前）</block>
+  <block id="011f2aff188ee1130fd4ce8da237a14a" category="cell">AWS S3互換SDKは、StorageGRID、ONTAP NASバケット、およびONTAP S3との相互作用に使用されます</block>
+  <block id="5089f79c96b1cd9cdecdeaddcd1e71b7" category="doc">9.操作ガイド</block>
+  <block id="58c9d6f4b87763d2e5bc2b354160eb31" category="paragraph">このガイドでは、日常的な実行、監視、インシデントトリアージ、トレーニング復旧、アーカイブ検証、容量調整、およびデータ保護について説明します。セクション 8 の構成シナリオと併用して、ローカル、ONTAP S3、および LustreFS のトレーニングモードにわたって同じパイプラインを一貫して運用します。</block>
+  <block id="344af90fb825e9d37eea0ac3e3353033" category="section-title">9.1 実行手順</block>
+  <block id="b1a83eeccc0e6232e21054e7a1a55efa" category="paragraph">実行を<block ref="e59e6f48ee59b344987bec71a10ad326" prefix=" " category="inline-code"></block>でトリガーし、<block ref="99dfd056f67cd45b069217c19bb4f726" prefix=" " category="inline-code"></block> ペイロードを使用します。このスクリプトは、一意の名前が付けられた手動実行を1つ送信し、終了状態に達するまでポーリングを行い、失敗したタスクのローカルログの末尾が利用可能な場合はそれを出力します。各主要タスクは起動時に<block ref="7d6b979c2c06708bf14b5ef145e72a76" prefix=" " category="inline-code"></block>レコードを出力するため、オペレーターは送信されたペイロードのみに依存することなく、評価済みの設定を確認できます。</block>
+  <block id="e833547b416d9863e9b0a011fc5685be" category="section-title">9.2 モニタリングと可観測性</block>
+  <block id="1ef11bd9d61d2f3c2191a9612c6fb7b8" category="paragraph">Airflow UI または CLI で DAG の状態を監視し、実行 ID と<block ref="f8fa1cd8b7e66ffd748bc457b500b439" prefix=" " category="inline-code"></block>に関連付けます。ガードログは grep に対応しています：<block ref="a97739f1cca9a4ae927a6fd7173ecf69" prefix=" " category="inline-code"></block>、<block ref="00905a154705190882f65e1f06c87086" prefix=" " category="inline-code"></block>、<block ref="ca1f0e49174d17af28c314531c2cd62f" prefix=" " category="inline-code"></block>、および<block ref="f1115409130881e65ad486b84468cc2d" prefix=" " category="inline-code"></block>。これらのエントリを確認して、各実行における変換エンジン、選択された XCP 宛先、トレーニングソース、およびチェックポイント再利用の決定を検証してください。</block>
+  <block id="bfcef5de55997145107af731a049adb0" category="section-title">9.3 トラブルシューティングクイックリファレンス</block>
+  <block id="5ab2bd89333cc2f0a67d79dbb22af2e6" category="paragraph">この表を使用して、よくあるタスクの失敗と最初の是正措置を関連付けてください。実行を再試行する前に、ソースの接続とマウントの問題を解決してください。無効な設定や利用できないエンドポイントを修正せずに再試行すると、同じエラーが再現されます。</block>
+  <block id="9a717b6435e24f212d740a3a9a281b5d" category="cell">現象</block>
+  <block id="4dbfdac6a5d3d06ff050267af6613643" category="cell">原因の可能性</block>
+  <block id="b5a4b64b2aa505bd7c11f79b8a9f458d" category="cell">解決策</block>
+  <block id="33a00b8baec47c50f62ef82c248f6a36" category="cell"><block ref="97742e99cd3474b025ff64e50724ced1" prefix="" category="inline-code"></block></block>
+  <block id="ecbc8cb8270ab1e9472ca045861bcecc" category="cell">欠落/誤り<block ref="67920c3d3dc2fcbbb0511988f98ac5d5" prefix=" " category="inline-code"></block>（<block ref="c0c7a5ec9a483e3ad0b879fd4fd64242" prefix=" " category="inline-code"></block>内）</block>
+  <block id="fd3d72ca8f1f3d726f4f976f29aafd3c" category="cell">プロファイル名と認証情報のマップを確認する</block>
+  <block id="a9732916b88b4157a9e1c084fbb4fb9a" category="cell"><block ref="8bb6a81f51fc9005cd498a4b7021da64" prefix="" category="inline-code"></block></block>
+  <block id="65156bc4dd99209e777e9d7978069848" category="cell">LustreFSがマウントされていないか、または間違っています<block ref="d4baa9abe0f21e414ec3b460845aa4f2" prefix=" " category="inline-code"></block></block>
+  <block id="95be8136f503c255725244850fd4e9c8" category="cell">ファイルシステムの種類を確認するには<block ref="81b19feab9a1d6c2bbeb4cdd67a970a9" prefix=" " category="inline-code"></block>；正しいパス</block>
+  <block id="1f70d8ba1c856f7e05780ca92d22103f" category="cell"><block ref="6d946f3f506abddaa380e20122813731" prefix="" category="inline-code"></block></block>
+  <block id="982796a196dba98b181c6e562f56e5fd" category="cell">生データS3プレフィックスにテキストJSONが存在しません</block>
+  <block id="f41a30049bf0df0b758e4b25452e857a" category="cell">アップロード<block ref="e259ccfa53a0b8b1915afd0b147122c5" prefix=" " category="inline-code"></block>、<block ref="2ca834a656a179410acd72087d3e1bd5" prefix=" " category="inline-code"></block>、<block ref="7d5571305a06a1f22015a0962bc6784e" prefix=" " category="inline-code"></block></block>
+  <block id="f48a3d71866d5eb2993f22dcc05b00b8" category="cell">プリフライト終了コード 1</block>
+  <block id="ba43630d21c570f1cd6e64e1d418df84" category="cell">接続とホスト/ユーザーを確認する<block ref="70fe17e89c62ccb2692c96e9d32b9aa3" prefix=" " category="inline-code"></block></block>
+  <block id="d80ed669ba2d0c32dc420026f74ea3a5" category="cell">プリフライト終了コード 2</block>
+  <block id="c79974782ae842bdae69ebb2fcdf195c" category="cell">NFSパスがエクスポート/表示されていません</block>
+  <block id="27c4f5f1a686ba7602f58dccf2c3042e" category="cell">エクスポートを確認する<block ref="3cab90b76943426dea69dfbe22624cbb" prefix=" " category="inline-code"></block></block>
+  <block id="1c4a4da7fdd49b75e0e59275df626880" category="section-title">9.4 チェックポイント操作</block>
+  <block id="997fcd55276350ba295657d5da4193a5" category="paragraph">チェックポイントは、<block ref="b40e4f0b6e8f3138e6ccde4cb7ae520c" prefix=" " category="inline-code"></block>にのみ適用されます。<block ref="fc0dbeb2de215f1816783b6d9d045c56" prefix=" " category="inline-code"></block>を設定して有効な完了済みトレーニング結果を再利用し、冗長なモデルトレーニングをスキップするか、<block ref="c3ab04d6952eb6a898fd20601002eccd" prefix=" " category="inline-code"></block>を使用してスキップせずにチェックポイントの適格性を検証します。初期テスト中、またはトレーニングの入力、構成、または期待される成果物が変更された場合は、再利用を無効のままにしてください（<block ref="3262d48df5d75e3452f0f16b313b7808" prefix="(" category="inline-code"></block>）。</block>
+  <block id="7148bad0f4e4d9fffd6c48a7586aa289" category="section-title">9.5 手動アーカイブ操作</block>
+  <block id="bfebebbd0b2abef16676b0e7cf93b9f7" category="paragraph"><block ref="9b01afe752758ca1490be1a65ae10ec7" prefix=" " category="inline-code"></block>を設定し、<block ref="2878a1b91d2fb362479266e9dec90bdc" prefix=" " category="inline-code"></block>を意図的に選択してください。ガバナンス上、トレーニングが成功したらすぐにコアモデルのベースラインが必要な場合は<block ref="b40e4f0b6e8f3138e6ccde4cb7ae520c" prefix=" " category="inline-code"></block>を使用し、アーカイブに最終予測を含める必要がある場合は<block ref="6202f2dbb43be62721979683c867ba8c" prefix=" " category="inline-code"></block>を使用してください。<block ref="b40e4f0b6e8f3138e6ccde4cb7ae520c" prefix=" " category="inline-code"></block>が選択された実行は、アーカイブ分岐の後も微調整と推論を継続しますが、その後の出力はアーカイブされません。実行スタンプ付きの StorageGRID プレフィックス配下のアップロードを確認し、選択したステージ、検出されたファイル、およびアップロード数について<block ref="1421d24f791396da38c8f28c327ad0fc" prefix=" " category="inline-code"></block>ログをレビューしてください。</block>
+  <block id="277f7f3bc086a0076576bc55397c3cfa" category="section-title">9.6 スケーリングに関するガイダンス</block>
+  <block id="4ef0ef404c4c665c9856adf58927e284" category="paragraph"><block ref="e2dfdfe902add95b4f3a18f63b340ca5" prefix=" " category="inline-code"></block>、<block ref="5257ab466c539326517ed6aa66482386" prefix=" " category="inline-code"></block>、<block ref="dfd5910097d39d53f81cb0f40aae61dc" prefix=" " category="inline-code"></block>、および<block ref="1570a0563cfe735ca4167b38ba5dd2db" prefix=" " category="inline-code"></block>を入力量とサービスレベル目標に合わせて調整します。データの形状とルーティングを検証するために、まず境界付きサンプルから始め、StorageGRID、ONTAP NAS、XCP、および選択したトレーニング層に十分な容量とスループットが確保された後、全行実行には<block ref="e42719f63a96caa3e2bfeff42587863d" prefix=" " category="inline-code"></block>を使用します。</block>
+  <block id="3fb50352d1144e419a176247348db0f3" category="section-title">9.7 バックアップとリカバリ</block>
+  <block id="98db08d8a0a0bb1eaedc818218c749e6" category="paragraph">ONTAP Snapshot とバックアップを使用して、ONTAP NAS の準備済みデータバケットを保護します。生データバケットとアーカイブバケットに StorageGRID の保護ポリシーと保持ポリシーを適用します。アーカイブバケットは、パイプラインの再実行とは無関係に履歴を保持します。これらのストレージ保護機能をトレーニングチェックポイントレコードと組み合わせることで、タスク、ホスト、またはサイトレベルでの中断後でも、実行範囲の正しいデータとベースラインアーティファクトを復元できます。</block>
+  <block id="d176998e87fd0c34a006c318cb60e0e5" category="doc">NetAppストレージプラットフォーム（StorageGRID、ONTAP、およびEシリーズ）全体でのAIパイプラインの効率化</block>
+  <block id="f0b928c93dad631e98c796070142bf95" category="paragraph">この検証済みのアーキテクチャは、Apache Airflow によってオーケストレーションされる、統制されたストレージ階層対応の AI データパイプラインを提供します。このソリューションは、NetApp StorageGRID から生の表形式データとテキストデータを取り込み、ONTAP NAS バケット上に決定論的なデータセットとマニフェストを準備し、NetApp XCP を使用して、実行時の設定に応じて準備済みデータを NetApp ONTAP S3 または LustreFS に移動します。次に、scikit-learn モデルをトレーニングして段階的にファインチューニングし、予測を生成し、トレーニングの成功した出力をチェックポイントし、モデル、メトリクス、マニフェスト、および予測の証拠を StorageGRID にアーカイブします。このアーキテクチャは、再現可能な実行、構成可能なストレージ配置、障害ガードレール、チェックポイントベースのリカバリ、および AI ライフサイクル全体にわたる監査可能なリネージを提供します。これは、NetApp ストレージ階層全体にわたる AI パイプラインの再現可能なデプロイと検証パターンを必要とするアーキテクト、データエンジニア、ML エンジニア、およびインフラストラクチャチームを対象としています。</block>
+  <block id="f61d6c3e3733db355168b7e1aee6780b" category="section-title">目次</block>
+  <block id="87833058f2ae21b5c1048667f833a2c4" category="list-text"><block ref="87833058f2ae21b5c1048667f833a2c4" category="inline-link-macro-rx"></block></block>
+  <block id="d7bd91e362787fb482e7c76a1894d678" category="inline-link-macro">解決策概要、ビジネス価値、顧客メリット</block>
+  <block id="c1a7b9940ec10f53c08e6a5200e99550" category="list-text"><block ref="c1a7b9940ec10f53c08e6a5200e99550" category="inline-link-macro-rx"></block></block>
+  <block id="b1fcf7691de9d60b17225ed7d159fd6a" category="inline-link-macro">アーキテクチャの概要</block>
+  <block id="5a4c98f148d8f2cca30447a936cf683e" category="list-text"><block ref="5a4c98f148d8f2cca30447a936cf683e" category="inline-link-macro-rx"></block></block>
+  <block id="66828b5e504733532af96e31320ec7d0" category="inline-link-macro">NetApp、サードパーティおよびオープンソースのテクノロジーコンポーネント</block>
+  <block id="1751e5e1b79a51ed146ee087f8f6a2f7" category="list-text"><block ref="1751e5e1b79a51ed146ee087f8f6a2f7" category="inline-link-macro-rx"></block></block>
+  <block id="1027742fbeb3907074e7bd75f34c0ab7" category="inline-link-macro">解決策設計およびストレージアーキテクチャの詳細</block>
+  <block id="66d0ea6ecef1b4cb2f1a4a504d47c576" category="list-text"><block ref="66d0ea6ecef1b4cb2f1a4a504d47c576" category="inline-link-macro-rx"></block></block>
+  <block id="3be80a7cacb7f569d25459f784b57866" category="inline-link-macro">データモビリティとNetApp XCP</block>
+  <block id="1280d7cc2dff24ad5850879f002f878e" category="list-text"><block ref="1280d7cc2dff24ad5850879f002f878e" category="inline-link-macro-rx"></block></block>
+  <block id="b91a41e0b2d6325cbee2868afee8890c" category="inline-link-macro">デプロイメントアーキテクチャ</block>
+  <block id="d29352a8c78acb41359dcdcd685357a4" category="list-text"><block ref="d29352a8c78acb41359dcdcd685357a4" category="inline-link-macro-rx"></block></block>
+  <block id="a0313047032a3a146d6049bc90ffb1bf" category="inline-link-macro">構成リファレンス</block>
+  <block id="ee8a8f154b1502e6137c41bc5340e918" category="list-text"><block ref="ee8a8f154b1502e6137c41bc5340e918" category="inline-link-macro-rx"></block></block>
+  <block id="54443d700c17f38f44c225ccb9215860" category="inline-link-macro">操作ガイド</block>
+  <block id="ce180cabf5b8db3701ada4db3064d2ec" category="list-text"><block ref="ce180cabf5b8db3701ada4db3064d2ec" category="inline-link-macro-rx"></block></block>
+  <block id="269a49d038b9a8139ab57945408a0197" category="inline-link-macro">セキュリティに関する考慮事項、検証およびテスト</block>
+  <block id="2d028c511f87a856130b8faa1bcad8bb" category="list-text"><block ref="2d028c511f87a856130b8faa1bcad8bb" category="inline-link-macro-rx"></block></block>
+  <block id="fe19e7a395b73341318847148fe453ab" category="inline-link-macro">NetApp 差別化と競争上の位置付け、付録</block>
+  <block id="fd851090582d7d69fc754d5c0fcf3814" category="list-text"><block ref="fd851090582d7d69fc754d5c0fcf3814" category="inline-link-macro-rx"></block></block>
+  <block id="77a4484e0ff253726225ede780910ec0" category="doc">10.セキュリティに関する考慮事項、検証およびテスト</block>
+  <block id="fe47432ca494e9bbb78ee738edb197ef" category="paragraph">この統合されたセクションでは、AIパイプラインを安全に運用するために必要な制御と、設計が代表的な環境で期待どおりに動作することを証明するために使用される検証活動について説明します。パイプラインで使用されるストレージ階層の分離、最小権限アクセスモデル、チェックポイントロジック、および実行範囲の系統追跡といった要素は、検証計画と運用上の安全対策にも反映されます。</block>
+  <block id="63dfc205f269db6d8332a683f451c226" category="section-title">10.1 セキュリティに関する考慮事項</block>
+  <block id="81f55c2537337ef7570791ad89e6178e" category="paragraph">セキュリティ対策は、監査に必要なデータ系列を維持しつつ、各ストレージ層とパイプライン機能を分離する必要があります。StorageGRID 生データ、ONTAP NAS で準備されたデータ、選択した XCP 宛先、および StorageGRID アーカイブには、それぞれ個別の最小権限の認証情報を使用してください。ネットワーク トラフィックを暗号化し、すべてのシークレットは DAG 定義、使用例、およびシェル履歴の外部に保存してください。</block>
+  <block id="c76e3867213cff8946148c6510af0736" category="cell">推奨事項</block>
+  <block id="a1b90cdc7ec76259d651da09ab470ff5" category="cell">認証情報管理</block>
+  <block id="2749b06ea1ab6573d6730ea8a09a9949" category="cell">Airflow Connections/Variables またはシークレットマネージャーを使用し、インラインプレーンテキストは避けてください。<block ref="ab705a77421e8c7b3037722d58fe2675" prefix=" " category="inline-code"></block></block>
+  <block id="000bc935231021ae0fe6521680ed904e" category="cell">転送中のデータ</block>
+  <block id="8da03a5081daf9fd66479f4524a2e808" category="cell">TLS対応のS3エンドポイントを使用し、サポートされている場合は暗号化されたNFS/Lustreトランスポートを使用する</block>
+  <block id="65bd83537129be15c8027ec94bec5bd3" category="cell">アクセス制御</block>
+  <block id="ab37a13cef2222f883c64cfaa4a66e76" category="cell">ロールごとにS3クレデンシャルのスコープを設定し（StorageGRID 生データ、ONTAP NAS 準備済みデータ、XCP 宛先、StorageGRID アーカイブ）、最低限必要な権限に制限する</block>
+  <block id="9d438f4fb0a44ca03f194d7170e2c79a" category="cell">設定ファイル内のシークレット</block>
+  <block id="c8f1b85a0451f65162a724b7b2c43ccf" category="cell">テスト中に公開された認証情報はすべてローテーションし、トリガースクリプトやシェル履歴は機密情報として扱ってください。</block>
+  <block id="02cd298e74149a3e270da2fd6a626c14" category="cell">監査証跡</block>
+  <block id="6e44d9613675330c807c5277dbb16dc8" category="cell">コンプライアンスの証拠として、データ準備マニフェスト、チェックポイント記録、およびアーカイブマニフェストを活用してください。</block>
+  <block id="cb18b9c3368c9bb84abcfbd4a37331dd" category="section-title">10.2 検証とテスト</block>
+  <block id="a23db05d2d73e8506c3b5f3393f5f85b" category="paragraph">検証により、パイプラインの構成可能な動作が、ルーティング、障害処理、データ転送、および複数ファイル検出の各パス全体で確実に機能することが確認されました。各検証テスト領域は、実際のAirflow DAGトリガーを使用して代表的な環境で実行され、ログ出力とストレージマニフェストの正確性が検証されました。</block>
+  <block id="42b970cdb36cee2517da02c632af6945" category="section-title">10.2.1 機能ルーティングの検証</block>
+  <block id="2125c8d6e52c8ee7a8a1e5f8acee3582" category="paragraph">このテスト領域は、<block ref="4cb7fb5c858deba7c9c4234ea87ca5ff" prefix=" " category="inline-code"></block>の際のエンドツーエンドのデータとアーティファクトのルーティングを検証します。</block>
+  <block id="c917cab995ae8a21f5e3cb1f1791ab83" category="list-text">*目的：* データ準備、XCP移動、モデルトレーニング、ファインチューニング、および推論において、選択されたXCP宛先が一貫して使用されることを検証します。<block ref="c0828e0381730befd1f7a025057c74fb" prefix="(" category="inline-code"></block>または<block ref="c1ab44fd888254255acf3ece33dfe88e" prefix=" " category="inline-code"></block>）</block>
+  <block id="bd8fd2b0dc20b1951dfbf284879948be" category="list-text">*テスト手順：* トリガーされた DAG は以下で実行されます<block ref="3b67ce44d0063b3445779bdcdc23a85b" prefix=" " category="inline-code"></block>および<block ref="82f0ef32b20753a5a513103532fa02f2" prefix=" " category="inline-code"></block>。XCom の出力、有効構成ログ、および保存場所を確認しました。</block>
+  <block id="f125c73143d174acddedd606c209fad7" category="list-text">*検証結果：*</block>
+  <block id="6e4d848c09492596b8f8fedb49c69538" category="list-text"><block ref="392989018ea1a795a5a4c97dcb3d88f3" prefix=" " category="inline-code"></block>では、フォーマットされた表形式の分割ファイルとテキストファイルが、<block ref="52a995e2bb78ad881a462f83adad1bf9" prefix=" " category="inline-code"></block>配下のONTAP NAS準備済みデータ層にステージングされました。</block>
+  <block id="e6e03c876819145cf3f2986b9ec2cf43" category="list-text"><block ref="7ac288520c3e86dc65075db9af673f9a" prefix=" " category="inline-code"></block>では、準備されたデータセットが、下流のモデルステージのために選択されたXCP宛先に転送されました。</block>
+  <block id="4ac01b333d06ed287c11fc18492266a2" category="list-text"><block ref="b40e4f0b6e8f3138e6ccde4cb7ae520c" prefix=" " category="inline-code"></block>では、モデル入力は XCP 宛先からロードされ、ベースラインアーティファクト（<block ref="07c9091af56a867b94e87b12338934d3" prefix="(" category="inline-code"></block>、<block ref="4f801ad7ef04bc6937f342d5c8231669" prefix=" " category="inline-code"></block>、<block ref="6642fa1c6f2710c44f023b7377e6eeb8" prefix=" " category="inline-code"></block>、<block ref="7ea5e9049cfd7967a4e9e8a1595b8dc2" prefix=" " category="inline-code"></block>）は<block ref="0a3ed063fee81c274a5f15dd0f0c41c8" prefix=" " category="inline-code"></block>に公開されました。</block>
+  <block id="4a22119382245302a07506240920f58c" category="list-text"><block ref="24cf8a9f2a179bf0692d4ab1650b014d" prefix=" " category="inline-code"></block>では、ベースベクトライザー/分類器アーティファクトがXCP宛先から具体化され、段階的に調整され、<block ref="ec0cc1867b2a3504e6a04ea71043e1b5" prefix=" " category="inline-code"></block>および<block ref="ff6c46df37ea393281f31f41ffe6b679" prefix=" " category="inline-code"></block>として公開されました。</block>
+  <block id="59169420bc28526e1a63ed65ef1e34c7" category="list-text"><block ref="6202f2dbb43be62721979683c867ba8c" prefix=" " category="inline-code"></block>で、調整済みのテキスト分類器とベースライン回帰モデルおよびベクトル化器がXCP宛先から具体化され、予測が生成されました。</block>
+  <block id="531c2943eddee706a16875a4c846c495" category="section-title">10.2.2 ローカルフォールバックと非XCP実行検証</block>
+  <block id="60b00f5acc92e2c5c8fad4af40eb045a" category="paragraph">このテスト領域では、XCPデータモビリティが無効になっている場合のパイプラインの動作を検証します<block ref="50474986c650a53cd355f0890af7cc07" prefix="(" category="inline-code"></block>）。</block>
+  <block id="711a4ccc5e7a62fe619b967bbe85f759" category="list-text">*目的：* SSH接続、リモートXCPホスト、またはXCP認証プロファイルを必要とせずに、直接ローカルで準備されたデータパスを使用してパイプラインがシームレスに動作することを確認します。</block>
+  <block id="14a9ecc98b0e3742f0b032d670fdbfe1" category="list-text">*テスト手順：* トリガーされたパイプラインを<block ref="50474986c650a53cd355f0890af7cc07" prefix=" " category="inline-code"></block>およびデフォルトのS3/ローカルパスで実行しました。</block>
+  <block id="16c92c74a439529e358f1ab4222d54fb" category="list-text">XCPのプリフライトおよびコピー処理は安全にスキップされました。</block>
+  <block id="61d5a416385868fb58344cdf6e3543e2" category="list-text"><block ref="b40e4f0b6e8f3138e6ccde4cb7ae520c" prefix="" category="inline-code"></block>、<block ref="24cf8a9f2a179bf0692d4ab1650b014d" prefix=" " category="inline-code"></block>、および<block ref="6202f2dbb43be62721979683c867ba8c" prefix=" " category="inline-code"></block>は、ローカルに準備されたデータディレクトリから直接読み込み、アーティファクトをローカルに公開します。</block>
+  <block id="d0d704515aad79c5ce1a1d03ee993860" category="list-text">XCPを無効にした際に、XCP S3認証情報の解決エラーやSSHプリフライトエラーが発生しなかったことを確認しました。</block>
+  <block id="a47bfbe77e53897d42f49c754a9c7121" category="section-title">10.2.3 パフォーマンスとティアの比較（ONTAP S3 対 LustreFS）</block>
+  <block id="3de4adc3a64b75596d60149266021a7f" category="paragraph">このテスト領域では、ONTAP S3 オブジェクトストレージと LustreFS 並列ファイルシステム階層間の I/O レイテンシ、検出オーバーヘッド、およびトレーニングスループットを評価します。</block>
+  <block id="40f2ed03d15b073ecad4c8ae72733a82" category="list-text">*目的：* LustreFS を使用した Eシリーズと、ONTAP S3 アクティブトレーニングティアを使用した ONTAP AFF/AFX のパフォーマンス特性を定量化する。</block>
+  <block id="80b25a3669c326e4cb9b3d29a9cbac8b" category="list-text">*テスト手順：* 同一のデータセットサイズ（14,400+ 行、複数ファイルのテキスト/表形式入力）で、ファイル検出時間、トレーニングデータセットの読み込み遅延、および成果物の公開/具体化時間を測定しました。</block>
+  <block id="157219a3b20f577c7c24e46769d8af13" category="list-text">*LustreFS Tier:* モデルトレーニング中のファイル検出オーバーヘッドが低く、ランダムアクセス読み取りレイテンシが高速であることが実証されており、ファイル数が多く、GPU 負荷の高い並列トレーニングワークロードに最適です。</block>
+  <block id="3a0a502d0b9e1b177efe2720b5b1b826" category="list-text">*ONTAP S3 ティア：* シンプルなマルチプロトコル管理で高いスループットを提供し、クライアント側ファイルシステムのマウントを必要とせずに、コスト重視の弾力的なアクセスが可能なアクティブストレージに最適です。</block>
+  <block id="e043a5ee8c5a66a880c0084283038997" category="section-title">10.2.4 障害回復とトレーニングチェックポイントの検証</block>
+  <block id="97eede2c11ae797cd6849a8e487229de" category="paragraph">このテスト領域では、<block ref="b40e4f0b6e8f3138e6ccde4cb7ae520c" prefix=" " category="inline-code"></block>を対象としたチェックポイント再開システムを検証します。</block>
+  <block id="06e7cc167cbd4ae0ddedd314df434cb1" category="list-text">*目的：* パイプラインリカバリが、以前の成功したトレーニング実行を正確に検出し、アーティファクトの整合性を維持しながら冗長な計算をスキップすることを確認します。</block>
+  <block id="2b5c4a64046e2486c337e4c5fd5f53a9" category="list-text">*テスト手順：*</block>
+  <block id="5a7acf08448c4163206b370409643f2a" category="list-text">パイプラインを<block ref="e00be78ee16e63c2f21334aadbf4b09f" prefix=" " category="inline-code"></block>と<block ref="8f6596c838940b2a315665d30cf97bcf" prefix=" " category="inline-code"></block>で実行しました。</block>
+  <block id="25fad48a00cf38a3397423df93ace0d0" category="list-text">タスクの失敗または再実行のシミュレート（<block ref="6014d03cea9fffcf77cc620ce64c4f8e" prefix=" " category="inline-code"></block>を使用）。</block>
+  <block id="7e7445ceb0cdede991d57602b85663d4" category="list-text">テスト済み<block ref="c3ab04d6952eb6a898fd20601002eccd" prefix=" " category="inline-code"></block>および<block ref="3262d48df5d75e3452f0f16b313b7808" prefix=" " category="inline-code"></block>再利用モード。</block>
+  <block id="6e9c1bcd34c62188cfb51d2796ed955e" category="list-text"><block ref="457fc07af08397af0e5d5649787fcc1b" prefix=" " category="inline-code"></block>が設定され、有効なチェックポイント JSON + すべてのコアアーティファクトが S3/LustreFS に存在していた場合、<block ref="b40e4f0b6e8f3138e6ccde4cb7ae520c" prefix=" " category="inline-code"></block>は決定<block ref="81af5ad2e3428ff2033f884b232187e7" prefix=" " category="inline-code"></block>とともに即座に終了し、<block ref="c66f769ad92d5497fc53be627b7867f1" prefix=" " category="inline-code"></block>をログに記録しました。</block>
+  <block id="ac1fffb343a5fe70f80877a793f9d2ce" category="list-text">Downstream<block ref="24cf8a9f2a179bf0692d4ab1650b014d" prefix=" " category="inline-code"></block>および<block ref="6202f2dbb43be62721979683c867ba8c" prefix=" " category="inline-code"></block>検証済みのチェックポイント成果物を正常にマテリアライズしました。</block>
+  <block id="79e2dd997b96c9a4924137e71f1f38c9" category="list-text"><block ref="c3ab04d6952eb6a898fd20601002eccd" prefix=" " category="inline-code"></block>が設定されると、ガードはトレーニングをスキップせずにアーティファクトの存在を検証しました。</block>
+  <block id="2714ddd3d88d3b61fa74f509382b5625" category="section-title">10.2.5 スケーラビリティと複数ファイルデータセットの検証</block>
+  <block id="82d0af427e547090fd3a576a3beac4b2" category="paragraph">このテスト領域では、大規模な複数ファイルからなる表形式およびテキスト形式のデータセット全体にわたるパイプラインのスケーラビリティを検証します。</block>
+  <block id="a343ad781aad534de482b25312255ef4" category="list-text">**目的：** データセットの自動検出、Spark変換エンジンの実行、およびLakehouseテーブル形式のサポートを確認する（<block ref="63bcabf86a9a991864777c631c5b7617" prefix="(" category="inline-code"></block>および<block ref="46ebfdc1519946f436cd1081b525d98f" prefix=" " category="inline-code"></block>）。</block>
+  <block id="63c8c2896e32363f52fda9fe16f3f460" category="list-text">StorageGRID 生データプレフィックス<block ref="d9073f930b78a3eb9d11fa2659a09dca" prefix="(" category="inline-code"></block>）配下の数十個のCSV/Parquetファイルに対して取り込みと準備を実行しました。</block>
+  <block id="457175968aa4949a0e9c9b06372e31f3" category="list-text">明示的なファイル選択をテストしました<block ref="ea8041c6af489a1a25b1a095f9ff8da1" prefix=" " category="inline-code"></block>自動全ファイル検出との比較<block ref="e42719f63a96caa3e2bfeff42587863d" prefix="(" category="inline-code"></block>）。</block>
+  <block id="437dc0183488713975e2e2d7f5db49f5" category="list-text">PySparkを使用して<block ref="74f510566296e4855844c01c925b6162" prefix=" " category="inline-code"></block>および<block ref="1fa9f2eb30fa2c5d9b6079c7cad25603" prefix=" " category="inline-code"></block>で準備を実行しました。</block>
+  <block id="776d98f3ae221855c0bcb1a4619e30cc" category="list-text">Sparkの分散処理により、大規模な複数パートからなる表形式データセットの取り込み、フィルタリング、分割、およびフォーマットが正常に完了しました。</block>
+  <block id="5b9361d0c6e6918d938060c3ab911711" category="list-text">自動検出機能は、有効な表形式のCSV/Parquetオブジェクトをすべて正確に識別し、表形式ではないアーティファクトを無視しました。</block>
+  <block id="8e250ea9ebd6bb5753bbb0beda74df19" category="list-text">Delta LakeとIcebergのテーブル形式はどちらも正しく作成され、<block ref="c14d9bf81a1758ecfa63ad49c7d2ec2e" prefix=" " category="inline-code"></block>に登録され、下流のモデルトレーニングがフォーマットされた分割データを検出して読み込みました。</block>
+  <block id="c101166418f16de422fdc9e916353a9b" category="section-title">10.2.6 顧客評価ワークフローの例、サイジングの前提条件、および検証指標</block>
+  <block id="dde5c7a33bf1328266c1902d3d02d17d" category="paragraph">このワークフローは、設計が自社のAIパイプラインの成熟度、データ主権に関する要件、およびパフォーマンス目標に適合するかどうかをお客様が評価するのに役立ちます。まず代表的なデータセットと1回のパイプライン実行から始め、各受入基準が満たされた後にのみ、データ量、ファイル数、モデルの複雑さ、および同時実行数を増やしてください。結果を<block ref="9fb3dba6eca678cbea9b624e31c94ac5" prefix=" " category="inline-code"></block>ごとに記録し、ONTAP S3とLustreFSの比較で同じ入力データと設定を使用するようにしてください。</block>
+  <block id="bd900915317c283ac797c4873d96019d" category="cell">評価ステップ</block>
+  <block id="79845a58c9ab4daacfc2a4d221d50c6d" category="cell">サイズ決定の前提条件／決定事項</block>
+  <block id="4d6fe485f2affa54c54a694495880206" category="cell">検証指標と受容証拠</block>
+  <block id="9c5ac97d361fa6741e0292e07adbe33a" category="cell">1.基準値を設定する</block>
+  <block id="254a39edfbe41eb645a6fe6423ca5cd8" category="cell">限定されたサンプルに対して<block ref="1022552a06ee5264e0e7db7678d9ce04" prefix=" " category="inline-code"></block>を使用して、Python準備パスを実行します。</block>
+  <block id="9b1c38df606f84777ee337a5adecfc53" category="cell">セクション7.1.1の参照検証環境を、初期の機能ベースラインとして使用してください。</block>
+  <block id="efd05005cf2bf66077efa079099e6083" category="cell">DAGの完了成功、入力行数と出力分割数、モデルメトリクス、タスク実行時間、CPU、メモリ、ローカルディスクの使用率。</block>
+  <block id="cf594a6060dfd71bf42ab1d484ee1fa2" category="cell">2.データ主権の検証</block>
+  <block id="efbbc0ecf77afa125d5a3339b080d92e" category="cell">生データ、準備済みデータ、アクティブなトレーニングデータ、およびアーカイブは、承認済みのストレージエンドポイントとリージョンに保管してください。各階層の認証情報および保持ポリシーを確認してください。</block>
+  <block id="3c92230c7a2bf21b4bf7f8dd58b6685b" category="cell">データを移動する前に、許可された場所、アクセスロール、暗号化要件、および保持ポリシーを定義してください。</block>
+  <block id="4b3581c3b4d2b761346bc0493b861b0f" category="cell">エンドポイント、バケット、プレフィックス、リージョンは、有効な構成とマニフェストに記録されている。最小権限アクセス検証。アーカイブおよび削除ポリシーの証拠。</block>
+  <block id="87f897e410ec0df988b9d0f587eaf4f3" category="cell">3.データモビリティの検証</block>
+  <block id="5c7af2c0a5e44e41df921503ddf11ca2" category="cell">XCP を有効にして、同じ準備済み実行を ONTAP S3 にコピーし、次に LustreFS に繰り返します。</block>
+  <block id="9f021aab6da71547f565e6029b1fc803" category="cell">準備済みの実行、アーティファクト、作業スペース、および同時実行のために、10 GbE 接続と十分な宛先容量を確保してください。</block>
+  <block id="3bd1ad7c253e4ed8f4229d76aeabceef" category="cell">XCP 完了ステータス、コピーされたバイト数とファイル数、コピー時間とスループット、ソース/宛先ファイル数とチェックサムまたはマニフェスト比較、プリフライトの成功。</block>
+  <block id="a57ff9b8aeb7efe08863c2aa7ae712b7" category="cell">4.トレーニング層への適合性を検証する</block>
+  <block id="94397da248572ff2c81df7d1ddaf8f51" category="cell">選択した各宛先に対して、同じデータセットとモデル設定を使用して、トレーニング、ファインチューニング、および推論を実行します。</block>
+  <block id="28b8b22225539b1abb0d1785fc6b0585" category="cell">オブジェクトベースのワークフローには ONTAP S3 を使用し、並列トレーニング I/O やファイル数の多さが正当化される場合は、E シリーズと LustreFS を使用します。</block>
+  <block id="b668662ca4247f75201afa6b47691bdc" category="cell">データセットの検出と読み込み時間、トレーニング、ファインチューニング、推論の所要時間、成果物の公開/具体化の所要時間、該当する場合の CPU/GPU 使用率、モデル品質の一貫性。</block>
+  <block id="7e0cf315d3e99839efee2879f7bd8d20" category="cell">5.スケールと回復を検証する</block>
+  <block id="212e6ce3bdb6463825ae2fe3dc442344" category="cell">すべての行に対して増加<block ref="0188f3f091ff883d0c9bf4fd73e8f6af" prefix=" " category="inline-code"></block>させ、ファイル数と同時実行数を増やし、チェックポイントの再利用とアーカイブをテストします。</block>
+  <block id="b4550a8276424f75ae50bd8093cec60d" category="cell">保持される実行スコープのデータセットとアーティファクトのサイズ容量および将来の拡張のための余裕；SparkおよびAirflowの同時タスクに必要なCPUとメモリのサイズを算出する。</block>
+  <block id="6e17cd5c9febdb1140939b313158ef5a" category="cell">エンドツーエンドの経過時間、実行成功率、キュー時間、チェックポイント再開の決定と経過時間、アーカイブの完全性、実行ごとのストレージ増加量、リカバリ時間目標（RTO）の達成率。</block>
+  <block id="3a2f5d1bd1ac61faad5440ebeb59c963" category="paragraph">評価を開始する前に、お客様はエンドツーエンドの実行時間、XCP スループット、トレーニングデータの読み込み時間、最大同時実行数、復旧時間、およびストレージ保持時間に関する定量的な目標を定義する必要があります。測定されたベースラインと各スケールテストの結果をこれらの目標値と比較し、アーキテクチャが意図されたワークロードと運用要件を満たしているかどうかを判断する必要があります。</block>
+  <block id="4ead30b83aa62f168161c1b50379049d" category="doc">5.解決策設計およびストレージ アーキテクチャの詳細</block>
+  <block id="a076198aa499d107d246bf95085dfa52" category="section-title">5.1 設計原則</block>
+  <block id="6715f465fe1e34f3d25b02ac9e516520" category="paragraph">コード変更に対する設定；型付き契約による明確なステージ境界；一貫性のあるアーティファクトルーティング；実行可能なエラーを伴うフェイルファスト検証；ストレージ層への非依存性。</block>
+  <block id="36ee8823744267868da8874590b074bc" category="section-title">5.2 ステージデザインの概要</block>
+  <block id="64c6da2436465d11573858d46056b95d" category="cell">段階</block>
+  <block id="89b338a49062f34d2599838abe19a332" category="cell">設計概要</block>
+  <block id="1f715e306a8c1a0a9dbe74addb6c07ae" category="cell">取り込み</block>
+  <block id="18ad907a09491f2f015adc24ccf9bc0b" category="cell"><block ref="a9ba0ac6818f785f16c4ec33a68daae2" prefix="" category="inline-code"></block>は<block ref="8152603d62286c8bf3a5e38e9783e25a" prefix=" " category="inline-code"></block>、<block ref="334c4a4c42fdb79d7ebc3e73b517e6f8" prefix=" " category="inline-code"></block>、<block ref="b49fd71c8cebb94efe280affb9a31c4c" prefix=" " category="inline-code"></block>、または<block ref="af844fc364e7f6a693732ee729fa8435" prefix=" " category="inline-code"></block>を選択し、正規化されたメタデータを返します</block>
+  <block id="5cb83e5ef3cd25eb53fa55d635a7758f" category="cell">データ準備</block>
+  <block id="5ca82b70c6e84daeacbbcc95fb5a97cc" category="cell">生の StorageGRID 表形式キーを検出/受け入れ、Airbyte/プレーン CSV を正規化し、決定論的な train/val/infer 分割を生成して、実行スタンプ付きの prepared-data プレフィックスとマニフェストを ONTAP NAS バケットに書き込みます。</block>
+  <block id="437df779f37b464d6542801e9e85079c" category="cell">データモビリティ（XCP）</block>
+  <block id="ce69da3527c06924ecd3f666a8c0c3d7" category="cell">ONTAP NAS NFSエクスポートから準備されたデータをコピーし、<block ref="4674a08755fd498fb7f7b950ac4069cd" prefix=" " category="inline-code"></block>XCPターゲットとトレーニング読み取りパスを駆動します</block>
+  <block id="1dc3b66849b234d8d054492be9525186" category="cell">ローカルまたはXCP宛先（S3/LustreFS）からトレーニング；マルチフォーマット（CSV/Parquet/JSON）検出</block>
+  <block id="9e6aea3c5e45188f0b77ae5263a5846d" category="cell">微調整</block>
+  <block id="1c7b160ed248c0a13aea1636579b9af8" category="cell">XCP宛先から基本モデルをマテリアライズし、<block ref="166675adabd3faa5d0d69a56aa736d81" prefix=" " category="inline-code"></block>拡張されたクラスセットで調整済みモデルを再公開します。</block>
+  <block id="b478c982042746e1a072bf65039e48ca" category="cell">同じ XCP 宛先から調整済みのアーティファクトを具体化します。設定可能な分割/テキスト スコープ</block>
+  <block id="7e8f3341aa068c38408847eb10200602" category="cell">チェックポイント/再開</block>
+  <block id="8aa6d9a54d875dec0b0097004a2f3080" category="cell"><block ref="b40568a4ec8e470c8b057f66ccf98f4f" prefix="" category="inline-code"></block>完了レコードを保持します。<block ref="249dd87402612547d77c4e73f823e1d1" prefix=" " category="inline-code"></block>後続の実行時に検証/再利用します</block>
+  <block id="2da31bb10b4f6940bab26ea97a8f5b1c" category="cell">アーカイブ</block>
+  <block id="8dfcb92f708e31a9bf71f8aa077e994d" category="cell"><block ref="b40e4f0b6e8f3138e6ccde4cb7ae520c" prefix="" category="inline-code"></block>コアとなる学習済みモデルを即座にアーカイブします。<block ref="6202f2dbb43be62721979683c867ba8c" prefix=" " category="inline-code"></block>予測結果を待機し、結果セット全体をアーカイブします。オプションでXCP入力の組み込みと生データフォルダのクリーンアップが可能です。</block>
+  <block id="9f6ec9a20a962f4bf3cdb6c9f0517e22" category="section-title">5.3 構成主導型哲学</block>
+  <block id="61ee06bb1a4a978e5b30eeb9b9d77972" category="paragraph">非機密のストレージ、エンジン、および動作の選択はすべて<block ref="ab705a77421e8c7b3037722d58fe2675" prefix=" " category="inline-code"></block>パラメータです。S3とLustreFSの切り替え、またはPythonとSparkの切り替えにはコードの変更は不要で、Airflowが管理するシークレットストレージが必要な認証情報を解決します。</block>
+  <block id="43570fbc51c014ae495ba791a7d22ab9" category="section-title">5.4 ストレージ アーキテクチャの詳細</block>
+  <block id="4ae42f0f6bb061b857e581d8a4dd76ff" category="paragraph">ストレージ アーキテクチャは、AIライフサイクルを目的に即した階層に分割します：StorageGRIDは生データおよびアーカイブオブジェクトを保持し、ONTAP NASバケットには準備済みおよび実行スタンプ付きのデータセットが格納され、ONTAP S3またはLustreFSが選択されたアクティブなトレーニング階層を提供します。この分離により、ソースデータ、準備済みデータ、モデル成果物、およびアーカイブされた証拠を個別に管理しながら、共有された<block ref="f8fa1cd8b7e66ffd748bc457b500b439" prefix=" " category="inline-code"></block>を通じてリネージを保持します。</block>
+  <block id="3a01fa252ae34fbd4a8e9441fcc403d9" category="section-title">5.4.1 ストレージレイアウト図</block>
+  <block id="537465e529f1badf97edd4384dfe4027" category="cell">論理ストレージパス</block>
+  <block id="c3b6ff3cbd50c0a647e1ed3171d5a844" category="cell">保存されているコンテンツ／アーティファクト</block>
+  <block id="cfd1bea32c3dc7a9298e1ecb938ecdef" category="cell">StorageGRID 生データ層</block>
+  <block id="4c41d432287f80b5f384cf8bf88def88" category="cell"><block ref="e31275420c69a315ad06fd478312e8af" prefix="" category="inline-code"></block></block>
+  <block id="e94a53160b3b50582cdac17fd8e8f39d" category="cell">表形式のCSVパーツ<block ref="b33a8a61554b4ee27edf10ee5cac3898" prefix="(" category="inline-code"></block>）、テキスト入力<block ref="e259ccfa53a0b8b1915afd0b147122c5" prefix="(" category="inline-code"></block>、<block ref="2ca834a656a179410acd72087d3e1bd5" prefix=" " category="inline-code"></block>、<block ref="7d5571305a06a1f22015a0962bc6784e" prefix=" " category="inline-code"></block>）</block>
+  <block id="401138d65cfa4ee83107bb4fac8e6f72" category="cell">ONTAP NAS 準備済みティア</block>
+  <block id="52e69ea48647d5a0289bd16a1503b26c" category="cell"><block ref="6d30ab26b54af649cd283c72d5970b29" prefix="" category="inline-code"></block></block>
+  <block id="5014424e92a2aba8c353011cf52e1f3b" category="cell">フォーマットされた分割<block ref="64a44d2ba35b7c43cefbd4ec6ace291e" prefix="(" category="inline-code"></block>）、テキストファイル、<block ref="e1435d95bb4acc31d24ff4a79a692b3b" prefix=" " category="inline-code"></block>、Lakehouse テーブル<block ref="c14d9bf81a1758ecfa63ad49c7d2ec2e" prefix="(" category="inline-code"></block> Delta/Iceberg）</block>
+  <block id="0d3ad22cbf606577a4cb0e0a66f2d211" category="cell">アクティブトレーニングティア（XCP Dest）</block>
+  <block id="580a66a1f17aadd1ad1ca6e5443e2244" category="cell"><block ref="f200155a0aed4ca0269919dd636cf544" prefix="" category="inline-code"></block></block>
+  <block id="836cb8847ddd0db6b0978c266e152f4f" category="cell">コピーされたデータ分割、トレーニング済みモデルバイナリ<block ref="d2ca4b0bccd1ab5e50e8208dfe178d3d" prefix="(" category="inline-code"></block>）、評価指標<block ref="60027b9a629942140fbdc73a7646f7d2" prefix="(" category="inline-code"></block>）</block>
+  <block id="4a02e61ad6864f3bfc04161d049395ac" category="cell">StorageGRID アーカイブティア</block>
+  <block id="f107d40230fb42b27e2164e2a8cfa02c" category="cell"><block ref="4dac5612d9ec9e882fb472cd0bc1b789" prefix="" category="inline-code"></block></block>
+  <block id="d7193b10ca33ef0c138cd29c8a147452" category="cell">段階的ベースラインまたはフルモデルの成果物、予測の証拠<block ref="ec39d308f2a8d67cdfe4b7f36be6b684" prefix="(" category="inline-code"></block>、<block ref="a77dc6001e3622c0c0d8e54b04451ff2" prefix=" " category="inline-code"></block>）</block>
+  <block id="0b7b1be00659843d581ad5487b6e7665" category="cell">階層間の系譜と流れ</block>
+  <block id="c8dcf495cca7fecf10540e5eaede66fd" category="cell">生データ → 準備済みデータ → アクティブティア → アーカイブデータ</block>
+  <block id="58b230e12ab15f01f7f3f337bfb5a440" category="cell">エンドツーエンドのデータ移動とアーティファクトの系統は、共有された<block ref="f8fa1cd8b7e66ffd748bc457b500b439" prefix=" " category="inline-code"></block>を介してすべてのストレージ階層にわたってリンクされています。</block>
+  <block id="813827a4b718f8218840f13fc42ec103" category="paragraph">この図は、すべてのストレージ階層にわたる単一のパイプライン実行における論理バケットとプレフィックスのレイアウトを示しています。</block>
+  <block id="dd228c56f38e1e7fafdd657d4343ce7a" category="image-alt">単一パイプライン実行のための論理ストレージレイアウト</block>
+  <block id="9431ece604f55ab3eb71411430e448b4" category="section-title">5.4.2 ストレージサイジングに関するガイダンス</block>
+  <block id="b24180cef03e26a329e51a90bfee7e93" category="paragraph">各階層をそれぞれの役割と保持ポリシーに応じて個別にサイズ設定してください。ONTAP NASおよび選択した XCP 宛先は同時アクティブ実行に対応する必要がありますが、StorageGRID の容量は主に生データとアーカイブ保持によって決まります。パイプラインの同時処理ピーク時の計画には、一時的な処理容量と成長のための余裕を考慮してください。</block>
+  <block id="db8e6d43ab4f95f8019db79a1abe73a1" category="cell">サイズ基準</block>
+  <block id="630fe32f14d0d21a78934325b6efb998" category="cell">StorageGRID 生データバケット</block>
+  <block id="d9e074a97daf0ce5b461cf42068706ae" category="cell">取り込み量×保持期間</block>
+  <block id="1e09baff40cea09221cd078bcd3298d2" category="cell">ONTAP NAS 準備済みデータバケット</block>
+  <block id="c748d67e44b488190b9c29b5163130ce" category="cell">準備済みデータセットのサイズ × 保持された実行回数</block>
+  <block id="47a7fa4e295bf38ec19fa66ef92a7fd9" category="cell">XCPの宛先（S3またはLustre）</block>
+  <block id="71f524b56c9110b0464e341677c065fd" category="cell">同時トレーニングデータセットのピークサイズ{plus}モデルアーティファクトのオーバーヘッド</block>
+  <block id="86cbd27b6e6c30b85f585221365bfbac" category="cell">アーカイブバケット</block>
+  <block id="b7b56fd894bb9ceef22ce3fc250ec55f" category="cell">保持ポリシー × アーカイブ段階の選択（model++_++training = smaller；inferencing = larger）</block>
+  <block id="590f6902df2bf8eec2bf9f8cf1c61f0a" category="section-title">5.4.3 ストレージのパフォーマンスに関する考慮事項</block>
+  <block id="ae76e1567e70e5d23f71f9b9cd706d96" category="paragraph">XCPの宛先は実行ごとに<block ref="4674a08755fd498fb7f7b950ac4069cd" prefix=" " category="inline-code"></block>選択され、すべてのワークロードを単一の階層に強制的に集中させるのではなく、ストレージのパフォーマンスをワークロードに合わせて調整することが可能になります。行数の多いデータセット、多数の同時読み取り処理、またはI/O負荷の高いトレーニングには、LustreFSを選択してください。コスト効率を重視し、柔軟なアクセスを必要とするワークロードであり、パフォーマンス要件が並列ファイルシステムを必要としない場合は、ONTAP S3を選択してください。いずれの場合も、XCPはデータとモデルの成果物を、選択されたトレーニング階層に合わせて保持します。</block>
+  <block id="29602a1d92913856ae69ab34f9161dc2" category="doc">2.解決策概要、ビジネス価値、顧客メリット</block>
+  <block id="04ad6fc392728e568f701dec395a3f80" category="section-title">2.1 解決策の概要</block>
+  <block id="1bcd157e7f67855021834a0e22816e05" category="paragraph">パイプラインはAirflow DAG<block ref="4df7faef846a10d1b392009cede02fd2" prefix=" " category="inline-code"></block>として実装されており、タスク<block ref="bf7189d19d6e68b3e85680474f1c364f" prefix=" " category="inline-code"></block>、<block ref="392989018ea1a795a5a4c97dcb3d88f3" prefix=" " category="inline-code"></block>、<block ref="0d23a483d4f4e6084bd576dfb5d22a76" prefix=" " category="inline-code"></block>、<block ref="d4bf281557521bbc56e8562f2a79d4b2" prefix=" " category="inline-code"></block>、<block ref="b40e4f0b6e8f3138e6ccde4cb7ae520c" prefix=" " category="inline-code"></block>、<block ref="24cf8a9f2a179bf0692d4ab1650b014d" prefix=" " category="inline-code"></block>、<block ref="6202f2dbb43be62721979683c867ba8c" prefix=" " category="inline-code"></block>、<block ref="9094b028fa14a21915d212b5fb4c5fcf" prefix=" " category="inline-code"></block>、<block ref="7322f5c6abe7430601b1ccc06306e4ca" prefix=" " category="inline-code"></block>、および<block ref="5bbf39b317038a7fd1c2007c79f2f56a" prefix=" " category="inline-code"></block>で構成されています。</block>
+  <block id="3bcf4724289c1e921a0463acc4ba0adf" category="section-title">2.2 ユースケースと問題提起</block>
+  <block id="52b37c7972f8546dc0bcc1a3630b95b4" category="paragraph">お客様は、StorageGRIDを生データソースとして使用した表形式回帰モデルとテキスト分類モデルのトレーニングを実施し、定期的に更新する必要があります。パイプラインはONTAP NASバケット内のデータを準備し、NetApp XCPを使用して、実行ごとの宛先選択に基づき、ONTAP S3またはLustreFSにトレーニング用データを配信します。</block>
+  <block id="2156fe5452e0914984da2f8d92e39343" category="section-title">2.3 対象顧客プロファイルと業界への適用可能性</block>
+  <block id="2082147b4c6347a153e3ad75241d6840" category="paragraph">金融サービス（リスク/不正モデル）、製造業（予知保全）、ヘルスケア（分類/トリアージ）、小売業（需要予測）など、NetAppインフラストラクチャー上で統制された再現可能な機械学習トレーニングを必要とするあらゆる企業。</block>
+  <block id="98f03c125377947df2a54c91b13d09cb" category="section-title">2.4 解決策の範囲と境界</block>
+  <block id="48b51af027c0cda59989ce495e5b4bd9" category="paragraph">*対象範囲：* 取り込みゲート、データ準備 （Python/Spark）、XCP データ移動 （S3/LustreFS）、scikit-learn トレーニングと増分微調整、推論、チェックポイント、手動アーカイブ。*対象外：* リアルタイム モデル提供 API、ストリーミング取り込み、GPU ベースの深層学習フレームワーク。</block>
+  <block id="e871e8265d4c938a227d6797c521b333" category="section-title">2.5 前提事項と前提条件</block>
+  <block id="dc1c7b4a53bb5d8c5f3fd175519e1de5" category="list-text">StorageGRID の S3 互換エンドポイントは Airflow から到達可能で、生データへのアクセスとアーカイブに使用できます。</block>
+  <block id="ca95209e88cdfb9210412231c00c75fa" category="list-text">ONTAP NASバケットはAirflowからアクセス可能で、準備済みデータの書き込みに使用され、NFS経由でXCPホストに公開されます。</block>
+  <block id="aaa3045b16f276fd095e0771347c478f" category="list-text">NetApp ONTAP S3互換エンドポイントは、トレーニング先としてONTAP S3が選択された場合に、AirflowとXCPからアクセス可能です。</block>
+  <block id="184589991ab45408aa6cfea87d43b71c" category="list-text">NetApp XCPがインストールされており、SSH経由でアクセス可能です（Airflow接続<block ref="70fe17e89c62ccb2692c96e9d32b9aa3" prefix=" " category="inline-code"></block>）。</block>
+  <block id="005215fff61604a86b12b2cdc3c36430" category="list-text">LustreFSが選択されている場合、XCPホスト上にLustreFSクライアントがマウントされます。</block>
+  <block id="579e86188d7575ff34b8d459acca4b91" category="list-text">Airflow 2.x （<block ref="6686853da3491a56c98917cc5c4ddea2" prefix=" " category="inline-code"></block>、<block ref="3483ff058deda3dad41fa7925fab2dac" prefix=" " category="inline-code"></block> 付き）；オプション PySpark &amp;#43; Delta/Iceberg パッケージ。</block>
+  <block id="ffcb633e2f3b12689c94bb2ee569e81a" category="section-title">2.6 ビジネス推進要因</block>
+  <block id="f78bed7e4d9042b3fc6fe3a1a428acaf" category="paragraph">モデル構築にかかる時間を短縮し、段階的なトレーニングによってインフラコストを削減し、単発的なスクリプト作成のリスクを排除します。</block>
+  <block id="2aea47512e9b3a06b37f85736d342995" category="section-title">2.7 価値提案の概要</block>
+  <block id="892d0758993f2087606d8215953e37ac" category="paragraph">StorageGRID、ONTAP NAS、ONTAP S3、LustreFS、XCPをAirflowオーケストレーションと組み合わせることで、ストレージ階層を認識し、監視可能で、回復力のあるAIパイプラインが実現します。</block>
+  <block id="a0088c6108e7e45a440e9b0e3ccabff3" category="section-title">2.8 ステークホルダーの利益</block>
+  <block id="ac8b4a1f7bd101b66c3b615cdd7a2bdf" category="cell">利害関係者</block>
+  <block id="8c3b0099eed5df08053dc956ae63ee43" category="cell">データエンジニアリング</block>
+  <block id="b414ab24dd635dc4c503c4aaa7e3e6dc" category="cell">宣言型、パラメータ駆動型の準備処理、自動ファイル検出、Spark/Delta/Iceberg のサポート</block>
+  <block id="d5170d610c4cf9f4c710ca75573b44eb" category="cell">データサイエンス／機械学習</block>
+  <block id="9edb9ea8ecf532073c0eafe324d3b62e" category="cell">段階的な微調整、ステージ全体にわたる一貫したアーティファクトソース、再現可能な分割</block>
+  <block id="87727a06ba270d2c9eafe81149c048c4" category="cell">IT運用</block>
+  <block id="098a60ad036a27963f425ac9aae6deeb" category="cell">実行時ストレージの選択、ガード/有効構成ログ、チェックポイントベースのリカバリ</block>
+  <block id="1650c4bf68f08634cd219eba44103ccd" category="cell">コンプライアンス／ガバナンス</block>
+  <block id="4684a120a0c62b7d13ef80d0ddce3989" category="cell">マニフェストとアーカイブ記録は監査可能な系譜を提供し、保存ステージを設定可能です</block>
+  <block id="977e4b92e9c67503cdd190ad48929fa7" category="section-title">2.9 TCOに関する考慮事項</block>
+  <block id="5c44823756606f9b434544d323004696" category="paragraph">段階的なファインチューニングとチェックポイントからの再開により、繰り返し発生するコンピューティングコストが削減されます。ストレージ階層の柔軟性により、すべてのワークロードに対してハイパフォーマンス ストレージを過剰にプロビジョニングすることを回避できます。</block>
+  <block id="7dfe87c319fc151303fa1fd12838f522" category="section-title">2.10 ROI に関する考慮事項</block>
+  <block id="31a1e1054c1f4ad6946f1139fc6ede39" category="paragraph">モデル更新サイクルの短縮、手動メンテナンスの削減、障害発生時の復旧時間の短縮。</block>
+  <block id="8a5df26a7f8369cf8cdc5ba99e62cf3d" category="sidebar">NetAppストレージ プラットフォーム全体におけるAIパイプラインの効率化</block>
+  <block id="a69c37005efb30e78d65b6481b870f64" category="sidebar">解決策概要、ビジネス価値、顧客メリット</block>
+  <block id="ebd8431a0b14e9588377860f5d21d80b" category="sidebar">アーキテクチャの概要</block>
+  <block id="2584c2a5d0ce11ce02481fe4f9f5b9b2" category="sidebar">NetApp、サードパーティ、およびオープンソースの技術コンポーネント</block>
+  <block id="ba805c003296f5beca6876cb586aef5f" category="sidebar">解決策のデザインとストレージ アーキテクチャの詳細</block>
+  <block id="22487892b8757ebc6e562fbc2dacaea8" category="sidebar">データモビリティとNetApp XCP</block>
+  <block id="46d93ce059017fe679dc02b4bfab8803" category="sidebar">デプロイメントアーキテクチャ</block>
+  <block id="f4ea6a3bf251250dd4aa9cbf64093651" category="sidebar">構成リファレンス</block>
+  <block id="542a293babb1f752a7bc3955516d4d9e" category="sidebar">操作ガイド</block>
+  <block id="eda25134f7653bbf8614a1931b31992c" category="sidebar">セキュリティに関する考慮事項、検証およびテスト</block>
+  <block id="74cdeb3238b25b8cba8bfeae3d88eefb" category="sidebar">NetApp の差別化と競争上の位置付け、付録</block>
 </blocks>

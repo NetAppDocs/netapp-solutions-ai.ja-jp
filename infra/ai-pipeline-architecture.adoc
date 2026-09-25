@@ -1,0 +1,63 @@
+---
+sidebar: sidebar 
+permalink: infra/ai-pipeline-architecture.html 
+keywords:  
+summary:  
+---
+= 3.アーキテクチャの概要
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media/
+
+
+カーティケヤン ナガリンガム、NetApp
+
+このセクションでは、検証済みのAIパイプラインの論理的なワークフロー、コンポーネント間の相互作用、物理的な展開、およびデータリネージについて説明します。これらの図は、Apache Airflow が StorageGRID から ONTAP NAS へのデータ移動をオーケストレーションし、オプションで NetApp XCP を使用してモデル実行用のデータを ONTAP S3 または LustreFS に配置し、統制された結果を StorageGRID のアーカイブストレージに返す方法を示しています。
+
+
+
+[[3-1-high-level-three-tier-ai-storage-architecture]]
+== 3.1 高レベルの3層AI ストレージ アーキテクチャ
+
+NetApp AI ストレージ アーキテクチャは、各ライフサイクル段階に最適なストレージ層にデータを配置します。StorageGRID は、拡張性とコスト効率に優れた生データの取り込みと、管理されたアーカイブに使用されます。ONTAP NAS と ONTAP S3 は、アクティブな準備、データ移動のステージング、およびオブジェクトベースのトレーニングワークフローとして使用されます。Eシリーズと LustreFS は、高スループットの並列トレーニング I/O が必要な場合に使用されます。Apache Airflow はライフサイクルをオーケストレーションし、NetApp XCP は準備されたデータを ONTAP NAS 層から選択したアクティブなトレーニング層に移行します。
+
+image::ai-pipeline-three-tier-storage-arch.png[高レベルの3層AI ストレージ アーキテクチャ]
+
+
+
+[[3-2-high-level-solution-architecture]]
+== 3.2 高レベル ソリューション アーキテクチャ
+
+このワークフロー図は、生の StorageGRID データから、準備、オプションの XCP モビリティ、モデル実行、チェックポイント、およびアーカイブまでの Airflow 制御のライフサイクルを示しています。 `enable++_++xcp`トレーニング前に、準備されたデータが ONTAP NAS バケットから ONTAP S3 または LustreFS にコピーされるかどうかを決定します。アーカイブの各ブランチは独立しています： `manual++_++archive++_++stage=model++_++training`トレーニング直後にベースラインをアーカイブし、 `manual++_++archive++_++stage=inferencing`予測結果が生成された後、完全な結果をアーカイブします。
+
+image::ai-pipeline-overview.png[高レベル ソリューション アーキテクチャ]
+
+
+
+[[3-3-component-interaction-diagram]]
+== 3.3 コンポーネント相互作用図
+
+このシーケンス図は、各交換処理をどのプラットフォームコンポーネントが実行するかを示しています。Airflow は StorageGRID から生のオブジェクトを読み取り、準備されたデータを ONTAP NAS バケットに書き込み、その後 SSH 経由で XCP を呼び出します。XCP は ONTAP NAS NFS エクスポートを読み取り、設定済みのトレーニング層に書き込みます。最後の条件ブロックは、StorageGRID アーカイブコンテンツが選択された手動アーカイブ段階によって異なることを示しています。
+
+image::ai-pipeline-component-interaction.png[コンポーネント相互作用図]
+
+
+
+[[3-4-physical-deployment-architecture]]
+== 3.4 物理/デプロイメント アーキテクチャ
+
+この配置図は、必要なホスト、ストレージエンドポイント、およびネットワークインターフェースを示しています。Airflow ホストは S3 API を使用して StorageGRID、ONTAP NAS バケット、および選択された ONTAP S3 宛先にアクセスし、SSH を使用して XCP ホストを制御します。XCP ホストは NFS 経由で準備済みデータソースにアクセスし、ONTAP S3 または LustreFS マウントに書き込みます。LustreFS を選択した場合、Airflow ホストもトレーニングデータを読み取り、アーティファクトを具体化するために LustreFS をマウントする必要があります。
+
+image::ai-pipeline-physical-deployment.png[物理/展開アーキテクチャ]
+
+
+
+[[3-5-data-flow-overview]]
+== 3.5 データフローの概要
+
+この簡潔なフロー図は、データと成果物の由来を要約したものです。各実行には固有の `run++_++stamp`が割り当てられ、準備されたデータ、XCP 出力、モデル成果物、予測、およびアーカイブされたオブジェクトを同一の実行に追跡可能な形で保持します。XCP の宛先選択はトレーニングデータとモデル成果物の階層を制御し、 `manual++_++archive++_++stage`は StorageGRID がベースライン トレーニング パッケージを受け取るか、完全な推論パッケージを受け取るかを制御します。
+
+image::ai-pipeline-data-flow.png[データフローの概要]
