@@ -48,7 +48,7 @@ FlexCacheボリュームを作成するには、 BlueXPを使用することを�
 
 BlueXPを使用しない場合は、 ONTAP System Manager またはONTAP CLI を使用してFlexCacheボリュームを作成できます。  System ManagerでFlexCacheボリュームを作成するには、link:https://docs.netapp.com/us-en/ontap/task_nas_flexcache.html["ONTAPのドキュメント"] 。  ONTAP CLIを使用してFlexCacheボリュームを作成するには、link:https://docs.netapp.com/us-en/ontap/flexcache/index.html["ONTAPのドキュメント"] 。
 
-このプロセスを自動化したい場合は、link:https://docs.netapp.com/us-en/bluexp-automation/["BlueXP API"] 、そのlink:https://devnet.netapp.com/restapi.php["ONTAP REST API"]、またはlink:https://docs.ansible.com/ansible/latest/collections/netapp/ontap/index.html["ONTAP Ansibleコレクション"]。
+このプロセスを自動化する場合は、link:https://docs.netapp.com/us-en/bluexp-automation/["BlueXP API"]、link:https://docs.netapp.com/us-en/ontap-restapi/index.html["ONTAP REST API"]、またはlink:https://docs.ansible.com/ansible/latest/collections/netapp/ontap/index.html["ONTAP Ansibleコレクション"]を使用できます。
 
 
 NOTE: System Manager はAmazon FSx ONTAPでは使用できません。
@@ -92,7 +92,7 @@ SnapMirror関係を作成するには、 BlueXPを使用することをお勧め
 
 BlueXPを使用しない場合は、 ONTAP System Manager またはONTAP CLI を使用してSnapMirror関係を作成できます。  System ManagerでSnapMirror関係を作成するには、link:https://docs.netapp.com/us-en/ontap/task_dp_configure_mirror.html["ONTAPのドキュメント"] 。  ONTAP CLIを使用してSnapMirror関係を作成するには、link:https://docs.netapp.com/us-en/ontap/data-protection/snapmirror-replication-workflow-concept.html["ONTAPのドキュメント"] 。
 
-このプロセスを自動化したい場合は、link:https://docs.netapp.com/us-en/bluexp-automation/["BlueXP API"] 、そのlink:https://devnet.netapp.com/restapi.php["ONTAP REST API"]、またはlink:https://docs.ansible.com/ansible/latest/collections/netapp/ontap/index.html["ONTAP Ansibleコレクション"]。
+このプロセスを自動化する場合は、link:https://docs.netapp.com/us-en/bluexp-automation/["BlueXP API"]、link:https://docs.netapp.com/us-en/ontap-restapi/index.html["ONTAP REST API"]、またはlink:https://docs.ansible.com/ansible/latest/collections/netapp/ontap/index.html["ONTAP Ansibleコレクション"]を使用できます。
 
 
 NOTE: System Manager はAmazon FSx ONTAPでは使用できません。
@@ -111,7 +111,7 @@ SnapMirror関係を解除するには、 BlueXPを使用することをお勧め
 
 BlueXPを使用しない場合は、 ONTAP System Manager またはONTAP CLI を使用してSnapMirror関係を解除できます。  System ManagerとのSnapMirror関係を解除するには、link:https://docs.netapp.com/us-en/ontap/task_dp_serve_data_from_destination.html["ONTAPのドキュメント"] 。  ONTAP CLIを使用してSnapMirror関係を解除するには、link:https://docs.netapp.com/us-en/ontap/data-protection/make-destination-volume-writeable-task.html["ONTAPのドキュメント"] 。
 
-このプロセスを自動化したい場合は、link:https://docs.netapp.com/us-en/bluexp-automation/["BlueXP API"] 、そのlink:https://devnet.netapp.com/restapi.php["ONTAP REST API"]、またはlink:https://docs.ansible.com/ansible/latest/collections/netapp/ontap/index.html["ONTAP Ansibleコレクション"]。
+このプロセスを自動化する場合は、link:https://docs.netapp.com/us-en/bluexp-automation/["BlueXP API"]、link:https://docs.netapp.com/us-en/ontap-restapi/index.html["ONTAP REST API"]、またはlink:https://docs.ansible.com/ansible/latest/collections/netapp/ontap/index.html["ONTAP Ansibleコレクション"]を使用できます。
 
 
 

@@ -34,4 +34,4 @@ image:apache-spark-014.png["クラウド サービス パートナーのソリ�
 
 NetApp NPS は、それぞれ Direct Connect 接続と Express Route 接続を介して Amazon AWS と Microsoft Azure に接続されているため、お客様は In-Place Analytics モジュールを活用して、Amazon と AWS の両方の分析クラスターからデータにアクセスできます。その結果、オンプレミスとNPSストレージの両方でONTAPソフトウェアが実行されるため、 https://docs.netapp.com/us-en/ontap/data-protection/snapmirror-replication-concept.html["SnapMirror"^] NPS データをオンプレミス クラスターにミラーリングし、オンプレミスと複数のクラウドにわたるハイブリッド クラウド分析を提供できます。
 
-最高のパフォーマンスを得るために、 NetAppでは通常、複数のネットワーク インターフェイスと直接接続または高速ルートを使用してクラウド インスタンスからデータにアクセスすることを推奨しています。弊社には他にもデータムーバーソリューションがあります。 https://mysupport.netapp.com/documentation/docweb/index.html?productID=63942&language=en-US["XCP"^]そして https://cloud.netapp.com/cloud-sync-service["BlueXPコピーと同期"^]顧客がアプリケーション対応型で安全かつコスト効率に優れたハイブリッド クラウド Spark クラスターを構築できるように支援します。
+最高のパフォーマンスを得るには、NetAppでは一般的に、クラウドインスタンスからデータにアクセスするために複数のネットワークインターフェースと直接接続または高速ルートを使用することを推奨しています。お客様がアプリケーション対応、セキュアで対費用効果の高いハイブリッドクラウドの Spark クラスターを構築できるよう、 https://mysupport.netapp.com/documentation/docweb/index.html?productID=63942&language=en-US["XCP"^]および https://www.netapp.com/data-services/copy-and-sync/["コピーと同期"^]を含む他のデータ移行ソリューションもご用意しています。

@@ -149,7 +149,7 @@ EF80プラットフォームは、各コントローラに2ポートのホスト
 
 各EF80アレイは、コントローラ間のミラーリングのために専用のスロット4 I/Oモジュールも使用します。コントローラAのポート4aをコントローラBのポート4aに、コントローラAのポート4bをコントローラBのポート4bに接続してください。これらの接続はキャッシュミラーリングとI/O転送を提供するものであり、ホストのNVMe-oFトラフィックには使用されません。参照してくださいlink:https://docs.netapp.com/us-en/e-series/install-hw-ef50-ef80/install-cable.html#step-1-cable-the-inter-controller-mirroring-connections["EF50とEF80のコントローラ間ミラーリング接続ケーブルを接続する"^]。
 
-EFシリーズの全モデルの詳細仕様については、link:https://www.netapp.com/pdf.html?item=/media/14036-ds-4082.pdf["NetApp EFシリーズ オールフラッシュ アレイ データシート"^]を参照してください。
+EFシリーズの全モデルの詳細仕様については、link:https://www.netapp.com/pdf.html?item=/media/19339-ds-4082.pdf["NetApp EFシリーズ オールフラッシュ アレイ データシート"^]を参照してください。
 
 
 

@@ -108,7 +108,7 @@ image:ai-edge-007.png["入出力ダイアログまたは書かれたコンテン
 
 
 
-NOTE: 詳細については、 https://www.netapp.com/pdf.html?item=/media/19339-DS-4082.pdf["NetApp EFシリーズNetApp EFシリーズ オールフラッシュアレイ EF600、F300、EF570、EF280 データシート"^] 。
+NOTE: 詳細については、 https://www.netapp.com/pdf.html?item=/media/19339-ds-4082.pdf["NetApp EFシリーズNetApp EFシリーズ オールフラッシュアレイ EF600、F300、EF570、EF280 データシート"^]を参照してください。
 
 
 

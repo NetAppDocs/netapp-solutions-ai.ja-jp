@@ -78,7 +78,7 @@ E シリーズとStorageGRID の両方の検証では、Hadoop レプリケー�
 [[financial-sentiment-analysis]]
 == 金融感情分析
 
-我々は出版したlink:https://www.netapp.com/pdf.html?item=/media/17123-tr4910pdf.pdf["TR-4910: NetApp AIによる顧客コミュニケーションからの感情分析"^]エンドツーエンドの会話型AIパイプラインを構築した。 https://github.com/NetApp/netapp-dataops-toolkit["NetApp DataOps ツールキット"^] 、 AFFストレージ、 NVIDIA DGX システム。パイプラインは、DataOpsツールキットを活用して、バッチオーディオ信号処理、自動音声認識（ASR）、転移学習、感情分析を実行します。 https://developer.nvidia.com/riva["NVIDIA Riva SDK"^] 、そして https://developer.nvidia.com/tao["タオフレームワーク"^]。感情分析のユースケースを金融サービス業界に拡大し、SparkNLP ワークフローを構築し、名前付きエンティティの認識などのさまざまな NLP タスク用に 3 つの BERT モデルをロードし、NASDAQ トップ 10 企業の四半期決算発表の文章レベルの感情を取得しました。
+私たちはlink:https://www.netapp.com/pdf.html?item=/media/17123-tr4910.pdf["TR-4910: NetApp AIによる顧客コミュニケーションからの感情分析"^]を公開しました。その中で、 https://github.com/NetApp/netapp-dataops-toolkit["NetApp DataOps ツールキット"^]、AFF ストレージ、および NVIDIA DGX System を使用してエンドツーエンドの会話型 AI パイプラインが構築されました。このパイプラインは、DataOps Toolkit、 https://developer.nvidia.com/riva["NVIDIA Riva SDK"^]、および https://developer.nvidia.com/tao["タオフレームワーク"^]を活用して、バッチ音声信号処理、自動音声認識（ASR）、転移学習、および感情分析を実行します。感情分析のユースケースを金融サービス業界に拡大するため、SparkNLP ワークフローを構築し、固有表現認識などの様々な NLP タスクに対応する 3 つの BERT モデルをロードし、NASDAQ 上位 10 社の四半期決算説明会における文レベルの感情分析を実施しました。
 
 次のスクリプト `sentiment_analysis_spark. py`FinBERT モデルを使用して HDFS 内のトランスクリプトを処理し、次の表に示すように、肯定的、中立的、否定的な感情カウントを生成します。
 

@@ -42,7 +42,7 @@ IBM の GPFS は、HDFS の代替となるエンタープライズ ファイル 
 [[netapp-in-place-analytics-module]]
 === NetAppインプレース分析モジュール
 
-NetApp In-Place Analytics Module (NIPAM) は、Hadoop クラスターが NFS データにアクセスするためのドライバーとして機能します。接続プール、NFS InputStream、ファイル ハンドル キャッシュ、NFS OutputStream の 4 つのコンポーネントがあります。詳細については、以下を参照してください。  https://www.netapp.com/pdf.html?item=/media/16351-tr-4382pdf.pdf[] 。
+NetApp インプレース分析モジュール（NIPAM）は、Hadoop クラスタが NFS データにアクセスするためのドライバとして機能します。接続プール、NFS InputStream、ファイルハンドルキャッシュ、および NFS OutputStream の 4 つのコンポーネントで構成されています。詳細については、 https://www.netapp.com/pdf.html?item=/media/16351-tr-4382.pdf[]を参照してください。
 
 
 

@@ -22,7 +22,7 @@ Lustre と NetApp Eシリーズストレージのデプロイメントをプラ�
 == NetAppのリソース
 
 * link:https://imt.netapp.com/imt/#welcome["NetApp Interoperability Matrix Tool"^]。*E-Series Lustre* を検索します。
-* link:https://www.netapp.com/pdf.html?item=/media/14036-ds-4082.pdf["NetApp EFシリーズ オールフラッシュ アレイ データシート"^]
+* link:https://www.netapp.com/pdf.html?item=/media/19339-ds-4082.pdf["NetApp EFシリーズ オールフラッシュ アレイ データシート"^]
 * link:https://docs.netapp.com/us-en/e-series-santricity/["NetApp SANtricity System Manager ドキュメント"^]
 * link:https://github.com/NetApp/ansible-lustre/tree/release/1.0.0["NetApp ansible-lustreコレクション"^]。インベントリフィールドのガイダンスについては、link:ai-eseries-lustre-deploy-inventory.html["Lustre Ansibleインベントリをカスタマイズする"]を参照してください。
 * link:https://github.com/NetApp/netapp-lustre/tree/master["NetApp Lustre ソースリポジトリ"^]。NetAppは、Rocky Linux 9.8およびRed Hat Enterprise Linux 9.8用のLustreサーバーRPMパッケージ（ビルド済み）を提供します。NetAppソースから、クライアントオペレーティングシステムとカーネル用のLustreクライアントパッケージをビルドします。
