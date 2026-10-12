@@ -15,6 +15,7 @@ summary:
 
 カーティケヤン ナガリンガム、NetApp
 
+[role="lead"]
 このセクションでは、検証済みのAIパイプラインの論理的なワークフロー、コンポーネント間の相互作用、物理的な展開、およびデータリネージについて説明します。これらの図は、Apache Airflow が StorageGRID から ONTAP NAS へのデータ移動をオーケストレーションし、オプションで NetApp XCP を使用してモデル実行用のデータを ONTAP S3 または LustreFS に配置し、統制された結果を StorageGRID のアーカイブストレージに返す方法を示しています。
 
 

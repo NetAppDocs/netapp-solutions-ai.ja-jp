@@ -7261,4 +7261,5 @@
   <block id="23de458a279cb77c771a906ae7fbf52f" category="paragraph">ただし、より大容量のストレージ容量やより高速なネットワーク速度が必要な場合は、NetApp AFF A220またはNetApp AFF A250ストレージシステムを使用する必要があります。さらに、本ソリューションの検証では、最大容量1.5PB、帯域幅10GBpsのNetApp EF280システムも使用されました。より高い帯域幅とともにより大容量のストレージ容量をご希望の場合は、<block ref="9290c81f76b74b66b7051d50d766b467" category="inline-link-rx"></block>を使用できます。</block>
   <block id="a340a80086a468e2556a247456572a89" category="admonition">詳細については、<block ref="a80bca4324b2437c5bf5f4b3248c6eb8" category="inline-link-rx"></block>を参照してください。</block>
   <block id="f217c81f72a98d73a2ef32abaa405554" category="paragraph">このプロセスを自動化する場合は、<block ref="f07bcb7e875f8bb20680b339fb58364a" category="inline-link-macro-rx"></block>、<block ref="7fc386eb564c4560b9bf182228e7a332" category="inline-link-macro-rx"></block>、または<block ref="62c3d824298cc8f488bda82279b91e73" category="inline-link-macro-rx"></block>を使用できます。</block>
+  <block id="ecf051eb19810ee05a1158848fdacf1c" category="paragraph">AIデータパイプラインソリューションは、NetApp、サードパーティ、およびオープンソースのコンポーネントを使用します。</block>
 </blocks>
