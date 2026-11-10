@@ -823,9 +823,7 @@
   <block id="7caace9abf76a798c629a9134d1bb259" category="summary">NFS と S3 のデュアル プロトコル アクセスの潜在的な使用例としては、機械学習とデータ サイエンスの分野が挙げられます。たとえば、データ サイエンティストのチームが AWS SageMaker を使用して機械学習プロジェクトに取り組んでいる場合、NFS 形式で保存されたデータにアクセスする必要があります。ただし、他のチーム メンバーと共同作業したり、S3 を使用する他のアプリケーションと統合したりするには、S3 バケットを介してデータにアクセスして共有する必要がある場合もあります。</block>
   <block id="ee8cf3bf54dea46135e299d79fa1c179" category="paragraph">このソリューションでは、次のテクノロジーが活用されています。</block>
   <block id="a03ea23912d3b35c875ff398aa4888af" category="list-text">*AWS SageMaker ノートブック*開発者やデータ サイエンティストに機械学習機能を提供し、高品質の ML モデルを効率的に作成、トレーニング、デプロイできるようにします。</block>
-  <block id="bbe2552dc6295d353c02fd85c243f334" category="list-text">* NetApp BlueXP。*オンプレミスだけでなく、AWS、Azure、Google Cloud 上のストレージの検出、展開、操作を可能にします。データ損失、サイバー脅威、予期しない停止に対するデータ保護を提供し、データ ストレージとインフラストラクチャを最適化します。</block>
   <block id="aa6fa71ab9848c5875470d36bbc2138a" category="list-text">* NetApp Cloud Volumes ONTAP*  AWS、Azure、Google Cloud 上で NFS、SMB/CIFS、iSCSI、S3 プロトコルを使用したエンタープライズ グレードのストレージ ボリュームを提供し、ユーザーにクラウド内のデータへのアクセスと管理の柔軟性を提供します。</block>
-  <block id="eea496572a01ca3e5ced1dfe99a5809c" category="paragraph">ML データを保存するためにBlueXPから作成されたNetApp Cloud Volumes ONTAP 。</block>
   <block id="923baf107dc23ca10f968a4fdecd4f4f" category="paragraph">次の図は、ソリューションの技術コンポーネントを示しています。</block>
   <block id="8afbfe3aeb9c594404d5c244cf8f6024" category="inline-image-macro">この図はソリューションの技術的なコンポーネントを示しています。</block>
   <block id="d3d9ae40ce6d205245ae4b8c9649b6e2" category="paragraph"><block ref="d3d9ae40ce6d205245ae4b8c9649b6e2" category="inline-image-macro-rx" type="image"></block></block>
@@ -7262,4 +7260,6 @@
   <block id="a340a80086a468e2556a247456572a89" category="admonition">詳細については、<block ref="a80bca4324b2437c5bf5f4b3248c6eb8" category="inline-link-rx"></block>を参照してください。</block>
   <block id="f217c81f72a98d73a2ef32abaa405554" category="paragraph">このプロセスを自動化する場合は、<block ref="f07bcb7e875f8bb20680b339fb58364a" category="inline-link-macro-rx"></block>、<block ref="7fc386eb564c4560b9bf182228e7a332" category="inline-link-macro-rx"></block>、または<block ref="62c3d824298cc8f488bda82279b91e73" category="inline-link-macro-rx"></block>を使用できます。</block>
   <block id="ecf051eb19810ee05a1158848fdacf1c" category="paragraph">AIデータパイプラインソリューションは、NetApp、サードパーティ、およびオープンソースのコンポーネントを使用します。</block>
+  <block id="32931592cf6b28ce447e74b088c750ed" category="list-text">*NetApp Console。*オンプレミス環境だけでなく、AWS、Azure、Google Cloud 上でのストレージの検出、展開、運用に対応する単一のコントロール プレーンを提供します。データ損失、サイバー脅威、予期せぬ障害からデータを保護し、データストレージとインフラストラクチャを最適化します。</block>
+  <block id="9286b2cd1be0332fa04417bf36c30a89" category="paragraph">MLデータを保存するためにNetApp Consoleから作成されたNetApp Cloud Volumes ONTAP。</block>
 </blocks>
